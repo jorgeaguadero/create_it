@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 //const multer = require('multer');
 //const { v4: uuidv4 } = require('uuid');
 
+//TODO pendiente gestión de fotos
 const { spacesRepository } = require('../repositories');
 
 async function createSpaces(req, res, next) {

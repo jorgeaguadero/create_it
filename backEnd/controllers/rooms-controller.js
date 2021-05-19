@@ -1,8 +1,10 @@
 const Joi = require('joi');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const multer = require('multer');
-const { v4: uuidv4 } = require('uuid');
+//const multer = require('multer');
+//const { v4: uuidv4 } = require('uuid');
+
+//TODO pendiente gestión de fotos
 
 const { roomsRepository, spacesRepository } = require('../repositories');
 

@@ -116,34 +116,8 @@ async function updateProfile(req, res, next) {
     }
 }
 
-//TODO FOTOs AVATAR
-/*async function updateAvatar(req, res, next) {
-    try {
-        const { id_user } = req.params;
-        const {file}=req.file.path
+//TODO FOTO AVATAR
 
-        const user = await usersRepository.updateAvatar(data, id_user);
-
-        res.status(201);
-        res.send(user);
-    } catch (error) {
-        next(error);
-    }
-}
-
-async function deleteAvatar(req, res, next) {
-    try {
-        const { id } = req.params;
-        isCorrectUser(id, req.auth.id); // Comprobar que el id es correcto
-
-        const user = await usersRepository.deleteImage(id);
-
-        res.status(201); // correct status: 204
-        res.send(user);
-    } catch (error) {
-        next(error);
-    }
-}*/
 async function updatePassword(req, res, next) {
     try {
         const { id_user } = req.params;
