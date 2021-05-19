@@ -57,7 +57,7 @@ async function deleteBooking(id_booking) {
 
     return id_booking;
 }
-
+//TODO ajustar query para obtener bookings por el id_space--> modificar DB
 async function getBookingsBySpace(id_space) {
     const query = 'SELECT * FROM bookings INNER JOIN spaces ON spaces.id_space = ?';
     const [booking] = await database.pool.query(query, id_space);
@@ -72,6 +72,13 @@ async function getBookingsByRoom(id_room) {
     return booking;
 }
 
+async function getBookingDate(id_booking) {
+    const query = 'SELECT bookings.start_date FROM bookings WHERE id_booking = ?';
+    const date = await database.pool.query(query, id_booking);
+
+    return date;
+}
+
 module.exports = {
     getRoomPrice,
     getExtraPrice,
@@ -82,4 +89,5 @@ module.exports = {
     getBookingsByUser,
     getBookingsByRoom,
     getBookingsBySpace,
+    getBookingDate,
 };

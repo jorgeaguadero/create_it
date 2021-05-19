@@ -42,7 +42,7 @@ async function createBooking(req, res, next) {
             });
         } else {
             const priceExtra = await bookingsRepository.getExtraPrice(start_date, id_extra);
-            //me devuelve la fecha con una hora menos-->un dia menos
+            //me devuelve la fecha con una hora menos-->un dia menos formateo a ISO
             const totalPrice = priceRoom.price + priceExtra.price;
             const booking = await bookingsRepository.createBookingWithExtra(
                 id,
@@ -111,7 +111,7 @@ async function getBookingsByRoom(req, res, next) {
         next(err);
     }
 }
-
+//Falta ajustar en repositorio
 async function getBookingsBySpace(req, res, next) {
     try {
         const { id_space } = req.params;

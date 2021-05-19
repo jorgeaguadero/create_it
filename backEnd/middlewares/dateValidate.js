@@ -1,5 +1,5 @@
 //https://date-fns.org/v2.21.3/docs/Getting-Started
-const { formatISO, isBefore, parseISO } = require('date-fns');
+const { formatISO, isBefore, parseISO, isAfter } = require('date-fns');
 
 //CONTROLES DE FECHAS PARA RESERVAS Y MODIFICACIONES
 function isBeforeDate(start_date) {
@@ -7,6 +7,16 @@ function isBeforeDate(start_date) {
     const date = parseISO(start_date);
     const result = isBefore(eventDate, date);
     return result;
+}
+
+function isAfterDate(start_date) {
+    const eventDate = new Date();
+    const result = isAfter(eventDate, start_date);
+    if (!result) {
+        const error = new Error('la fecha tiene que ser posterior a la reserva');
+        throw error;
+    }
+    return eventDate;
 }
 
 //TODO COMPARAR FECHA DE RESERVA  >= HOY
@@ -17,4 +27,5 @@ function isBeforeDate(start_date) {
 
 module.exports = {
     isBeforeDate,
+    isAfterDate,
 };
