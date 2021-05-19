@@ -4,6 +4,7 @@ const roomsController = require('./rooms-controller');
 const extrasController = require('./extras.controller');
 const bookingsController = require('./booking-controller');
 const reviewsController = require('./reviews-controller');
+const incidentsController = require('./incidents-controller');
 
 module.exports = {
     usersController,
@@ -12,4 +13,5 @@ module.exports = {
     extrasController,
     bookingsController,
     reviewsController,
+    incidentsController,
 };

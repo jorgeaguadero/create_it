@@ -12,6 +12,7 @@ const {
     extrasController,
     bookingsController,
     reviewsController,
+    incidentsController,
 } = require('./controllers');
 
 const {
@@ -22,6 +23,7 @@ const {
     validateRoom,
     validateExtra,
     validateBooking,
+    validateReview,
 } = require('./middlewares/validate-auth');
 
 const { PORT } = process.env;
@@ -37,7 +39,8 @@ app.post('/api/users', usersController.registrer);
 app.post('/api/users/login', usersController.login);
 //actualizar datos de perfil (foto/bio)--> añadir tarjeta
 app.patch('/api/users/:id_user', validateAuthorization, validateUser, usersController.updateProfile);
-//actualizar contraseña
+//actualizar contraseña -->
+//TODO Comprobar que nueva y vieja no son iguales
 app.patch('/api/users/:id_user/updatePassword', validateAuthorization, validateUser, usersController.updatePassword);
 // borrarme como usuario
 app.delete('/api/users/:id_user', validateAuthorization, validateUser, usersController.deleteUser);
@@ -65,9 +68,11 @@ app.post('/api/spaces', validateAuthorization, validateAdmin, spacesController.c
 //modificar espacio
 app.patch('/api/spaces/:id_space', validateAuthorization, validateAdmin, validateSpace, spacesController.updateSpace);
 //Listar Espacios
-app.get('/api/spaces', validateAuthorization, validateAdmin, spacesController.getSpaces);
+//TODO todo el mundo puede listar?
+app.get('/api/spaces', spacesController.getSpaces);
 //Listar Espacios individuales
-app.get('/api/spaces/:id_space', validateAuthorization, validateAdmin, validateSpace, spacesController.viewSpace);
+//TODO todo el mundo puede listar?
+app.get('/api/spaces/:id_space', validateSpace, spacesController.viewSpace);
 // borrar espacio
 app.delete('/api/spaces/:id_space', validateAuthorization, validateAdmin, validateSpace, spacesController.deleteSpace);
 
@@ -130,17 +135,38 @@ app.get(
         validateAdmin,
         bookingsController.getBookingsByRoom
     ),
-    //TODO --> RESEÑAS
-    //--> Crear reseña (user) una vez ha finalizado la reserva
-    //TODO modificar api para ser mas estrictos user-booking
-    app.post('/api/reviews/user/:id_user/boo:id_booking', validateAuthorization, reviewsController.createReview);
-//TODO --> ver reseñas creadas (user)
-//TODO --> ver todas las reseñas
-//TODO --> Borrar mis reseñas
-//TODO --> Borrar reseñas
-//--> INCIDENCIAS
-//TODO --> Crear incidencia (user)
+    // --> RESEÑAS
+    ////--> Crear reseña (user) una vez ha finalizado la reserva
+    //TODO modificar api para ser mas estrictos user-booking revisar
+    app.post(
+        '/api/users/:id_user/bookings/:id_booking/reviews',
+        validateAuthorization,
+        validateBooking,
+        reviewsController.createReview
+    );
+////--> ver reseñas creadas por usuario (admin & user)
+app.get('/api/users/:id_user/reviews', validateAuthorization, reviewsController.getReviewsByUserId);
+//// --> ver todas las reseñas
+app.get('/api/reviews', validateAuthorization, validateAdmin, reviewsController.getAllReviews);
 
+//TODO -> ver reseñas por espacio
+
+//TODO --> Borrar reseña user
+app.delete(
+    '/api/users/:id_user/reviews/:id_review',
+    validateAuthorization,
+    validateReview,
+    reviewsController.deleteReviewById
+);
+//TODO --> Borrar reseñas
+
+//--> INCIDENCIAS
+//TODO --> Crear incidencia (user) verificar como en las reseñas que user es propietario de booking
+app.post(
+    '/api/users/:id_user/bookings/:id_booking/incident',
+    validateAuthorization,
+    incidentsController.createIncident
+);
 //TODO --> Ver incidencias (user || admin--> todas)
 //TODO --> Gestionar incidencias (admin)
 

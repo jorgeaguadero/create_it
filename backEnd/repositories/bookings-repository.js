@@ -72,13 +72,6 @@ async function getBookingsByRoom(id_room) {
     return booking;
 }
 
-async function getBookingDate(id_booking) {
-    const query = 'SELECT bookings.start_date FROM bookings WHERE id_booking = ?';
-    const date = await database.pool.query(query, id_booking);
-
-    return date;
-}
-
 module.exports = {
     getRoomPrice,
     getExtraPrice,
@@ -89,5 +82,4 @@ module.exports = {
     getBookingsByUser,
     getBookingsByRoom,
     getBookingsBySpace,
-    getBookingDate,
 };

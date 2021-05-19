@@ -5,6 +5,7 @@ const extrasRepository = require('./extras-repository');
 const bookingsRepository = require('./bookings-repository');
 const reviewsRepository = require('./reviews-repository');
 const datesRepository = require('./dates-repository');
+const incidentsRepository = require('./incidents-repository');
 module.exports = {
     usersRepository,
     spacesRepository,
@@ -13,4 +14,5 @@ module.exports = {
     bookingsRepository,
     reviewsRepository,
     datesRepository,
+    incidentsRepository,
 };

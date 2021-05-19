@@ -126,6 +126,23 @@ async function validateBooking(req, res, next) {
     }
 }
 
+async function validateReview(req, res, next) {
+    try {
+        const { id_review } = req.params;
+        const review = await bookingsRepository.getReviewById(id_review);
+        if (!review) {
+            const err = new Error('No existe review con ese código');
+            err.code = 401;
+            throw err;
+        }
+
+        next();
+    } catch (err) {
+        res.status(err.status || 500);
+        res.send({ error: err.message });
+    }
+}
+
 async function validateAdmin(req, res, next) {
     const { role } = req.auth;
     try {
@@ -148,4 +165,5 @@ module.exports = {
     validateRoom,
     validateExtra,
     validateBooking,
+    validateReview,
 };
