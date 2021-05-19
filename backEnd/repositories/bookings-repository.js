@@ -26,9 +26,15 @@ async function getExtraPrice(start, extra) {
     }
 }
 
-async function findBookingById(id) {
+async function getBookingById(id) {
     const query = 'SELECT * FROM bookings WHERE id_booking = ?';
     const [booking] = await database.pool.query(query, id);
+
+    return booking[0];
+}
+async function getBookingsByUser(id_user) {
+    const query = 'SELECT * FROM bookings WHERE id_user = ?';
+    const [booking] = await database.pool.query(query, id_user);
 
     return booking[0];
 }
@@ -37,26 +43,33 @@ async function createBooking(id_user, id_room, start_date, price) {
     const query = 'INSERT INTO bookings (id_user,id_room, start_date,price) VALUES (?,?,?,?)';
     const [result] = await database.pool.query(query, [id_user, id_room, start_date, price]);
 
-    return findBookingById(result.insertId);
+    return getBookingById(result.insertId);
 }
-async function createBookingWithExtra(id_user, id_room, start_date, price) {
+async function createBookingWithExtra(id_user, id_room, id_extra, start_date, price) {
     const query = 'INSERT INTO bookings (id_user,id_room,id_extra, start_date,price) VALUES (?,?,?,?,?)';
     const [result] = await database.pool.query(query, [id_user, id_room, id_extra, start_date, price]);
 
-    return findBookingById(result.insertId);
+    return getBookingById(result.insertId);
+}
+async function deleteBooking(id_booking) {
+    const query = `DELETE FROM bookings WHERE id_booking = ${id_booking}`;
+    await database.pool.query(query);
+
+    return id_booking;
 }
 
-async function updateBooking(data, id) {
-    const replaceNotNull = async (row, value, id_extra = id) => {
-        if (value !== undefined) {
-            const query = `UPDATE extras SET ${row} = '${value}' WHERE id_extra = '${id_extra}'`;
-            await database.pool.query(query);
-        }
-    };
+async function getBookingsBySpace(id_space) {
+    const query = 'SELECT * FROM bookings INNER JOIN spaces ON spaces.id_space = ?';
+    const [booking] = await database.pool.query(query, id_space);
 
-    for (const row in data) await replaceNotNull(row, data[row]);
+    return booking;
+}
 
-    return getExtraById(id);
+async function getBookingsByRoom(id_room) {
+    const query = 'SELECT * FROM bookings WHERE id_room = ?';
+    const [booking] = await database.pool.query(query, id_room);
+
+    return booking;
 }
 
 module.exports = {
@@ -64,6 +77,9 @@ module.exports = {
     getExtraPrice,
     createBooking,
     createBookingWithExtra,
-    findBookingById,
-    updateBooking,
+    getBookingById,
+    deleteBooking,
+    getBookingsByUser,
+    getBookingsByRoom,
+    getBookingsBySpace,
 };

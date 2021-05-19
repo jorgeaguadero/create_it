@@ -1,7 +1,10 @@
 const Joi = require('joi');
+const { formatISO } = require('date-fns');
 
+//TODO VALIDATE USER PASARLO A MIDDLEWARE Y ASI ADMIN PUEDE TENER PERMISOS EXTRA
+const { validateUser } = require('../utils/users-auth');
 const { bookingsRepository, extrasRepository } = require('../repositories');
-const { validateUpdateDate, updateDate } = require('../middlewares/dateValidate');
+const { isBeforeDate } = require('../middlewares/dateValidate');
 
 async function createBooking(req, res, next) {
     try {
@@ -20,46 +23,62 @@ async function createBooking(req, res, next) {
             start_date,
         });
 
+        if (!isBeforeDate(start_date)) {
+            const error = new Error('la fecha tiene que ser posterior a hoy');
+            throw error;
+        }
+
         const priceRoom = await bookingsRepository.getRoomPrice(start_date, id_room);
         if (!id_extra) {
             const booking = await bookingsRepository.createBooking(id, id_room, start_date, priceRoom.price);
             res.status(201);
 
-            res.send(booking);
+            res.send({
+                booking: booking.id_booking,
+                user: booking.id_user,
+                room: booking.id_room,
+                date: booking.start_date,
+                price: booking.price,
+            });
         } else {
             const priceExtra = await bookingsRepository.getExtraPrice(start_date, id_extra);
-
+            //me devuelve la fecha con una hora menos-->un dia menos
             const totalPrice = priceRoom.price + priceExtra.price;
-            booking = await bookingsRepository.createBookingWithExtra(id, id_room, id_extra, start_date, totalPrice);
+            const booking = await bookingsRepository.createBookingWithExtra(
+                id,
+                id_room,
+                id_extra,
+                start_date,
+                totalPrice
+            );
+            const fechaBien = formatISO(booking.start_date, { representation: 'date' });
             res.status(201);
 
-            res.send(booking);
+            res.send(fechaBien);
         }
     } catch (err) {
         next(err);
     }
 }
-/*async function updateBooking(req, res, next) {
+
+//TODO EXTRA comprobar que estoy dentro del plazo para modificar
+//TODO EXTRA modificar reserva
+
+async function deleteBooking(req, res, next) {
     try {
         const { id_booking } = req.params;
-        const data = req.body;
 
-    //todo comprobar que estoy dentro del plazo para modificar
-    //todo modificar reserva
+        let booking = await bookingsRepository.getBookingByIdBookingById(id_booking);
 
-        res.status(201);
+        validateUser(req, booking);
+        const start_date = booking.start_date;
 
-        res.send(`Datos de: ${extra.extra_code} cambiados`);
-    } catch (error) {
-        next(error);
-    }
-}*/
-/*async function deleteBooking(req, res, next) {
-    try {
-        const { id_booking } = req.params;
-       
-    //todo comprobar que estoy dentro del plazo para cancelar
-    //todo cancelar reserva
+        if (isBeforeDate(start_date)) {
+            const error = new Error('Minimo tiene que haber un dia de antelacion');
+            throw error;
+        }
+
+        booking = await bookingsRepository.deleteBooking(id_booking);
 
         res.status(201);
 
@@ -67,8 +86,47 @@ async function createBooking(req, res, next) {
     } catch (error) {
         next(error);
     }
-}*/
+}
+
+async function getBookingsByUser(req, res, next) {
+    try {
+        const { id_user } = req.params;
+        validateUser(req, req.params);
+
+        const bookings = await bookingsRepository.getBookingsByUser(id_user);
+
+        res.send(bookings);
+    } catch (err) {
+        next(err);
+    }
+}
+
+async function getBookingsByRoom(req, res, next) {
+    try {
+        const { id_room } = req.params;
+        const bookings = await bookingsRepository.getBookingsByRoom(id_room);
+
+        res.send(bookings);
+    } catch (err) {
+        next(err);
+    }
+}
+
+async function getBookingsBySpace(req, res, next) {
+    try {
+        const { id_space } = req.params;
+        const bookings = await bookingsRepository.getBookingsBySpace(id_space);
+
+        res.send(bookings);
+    } catch (err) {
+        next(err);
+    }
+}
+
 module.exports = {
     createBooking,
-    updateBooking,
+    deleteBooking,
+    getBookingsByUser,
+    getBookingsByRoom,
+    getBookingsBySpace,
 };

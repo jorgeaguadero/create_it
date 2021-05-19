@@ -20,6 +20,7 @@ const {
     validateSpace,
     validateRoom,
     validateExtra,
+    validateBooking,
 } = require('./middlewares/validate-auth');
 
 const { PORT } = process.env;
@@ -99,28 +100,51 @@ app.delete('/api/extras/:id_extra', validateAuthorization, validateAdmin, valida
 //crear reserva --> Falta validar bien fechas + reservas por horas o dias seguidos?
 app.post('/api/bookings', validateAuthorization, bookingsController.createBooking);
 //TODO --> Modificar reserva
-app.patch('/api/bookings/:id_booking', validateAuthorization, bookingsController.updateBooking);
+//app.patch('/api/bookings/:id_booking', validateAuthorization, bookingsController.updateBooking);
 //TODO --> borrar reserva
+app.delete('/api/bookings/:id_booking', validateAuthorization, validateBooking, bookingsController.deleteBooking);
 //TODO --> Ver mis reservas (todas/solo activas)
-//TODO --> Ver reservas de todos (activas/realizadas)
+app.get('/api/users/:id_user/bookings', validateAuthorization, bookingsController.getBookingsByUser);
+//TODO --> Ver reservas de todos (activas/realizadas) EXTRA
 //TODO --> Borrar reserva(admin)
+app.delete(
+    '/api/admin/bookings/:id_booking',
+    validateAuthorization,
+    validateAdmin,
+    validateBooking,
+    bookingsController.deleteBooking
+);
+//Ver reservas por espacio
+app.get(
+    '/api/admin/bookings/space/:id_space',
+    validateAuthorization,
+    validateAdmin,
 
-//TODO --> INCIDENCIAS
-//TODO --> Crear incidencia (user)
-//TODO --> Ver incidencias (user || admin--> todas)
-//TODO --> Gestionar incidencias (admin)
+    bookingsController.getBookingsBySpace
+),
+    ////Ver Reservas por sala
+    app.get(
+        '/api/admin/bookings/room/:id_room',
+        validateAuthorization,
+        validateAdmin,
+        bookingsController.getBookingsByRoom
+    ),
+    //TODO --> INCIDENCIAS
+    //TODO --> Crear incidencia (user)
+    //TODO --> Ver incidencias (user || admin--> todas)
+    //TODO --> Gestionar incidencias (admin)
 
-//TODO --> RESEÑAS
-//TODO --> Crear reseña (user) una vez ha finalizado la reserva
-//TODO --> ver reseñas creadas (user)
-//TODO --> ver todas las reseñas
-//TODO --> Borrar mis reseñas
-//TODO --> Borrar reseñas
+    //TODO --> RESEÑAS
+    //TODO --> Crear reseña (user) una vez ha finalizado la reserva
+    //TODO --> ver reseñas creadas (user)
+    //TODO --> ver todas las reseñas
+    //TODO --> Borrar mis reseñas
+    //TODO --> Borrar reseñas
 
-app.use(async (err, req, res, next) => {
-    const status = err.isJoi ? 400 : err.code || 500;
-    res.status(status);
-    res.send({ error: err.message });
-});
+    app.use(async (err, req, res, next) => {
+        const status = err.isJoi ? 400 : err.code || 500;
+        res.status(status);
+        res.send({ error: err.message });
+    });
 
 app.listen(PORT, () => console.log(`Coworking project listening at port ${PORT}`));

@@ -5,6 +5,7 @@ const { usersRepository } = require('../repositories');
 const { spacesRepository } = require('../repositories');
 const { roomsRepository } = require('../repositories');
 const { extrasRepository } = require('../repositories');
+const { bookingsRepository } = require('../repositories');
 
 async function validateAuthorization(req, res, next) {
     try {
@@ -108,6 +109,23 @@ async function validateExtra(req, res, next) {
     }
 }
 
+async function validateBooking(req, res, next) {
+    try {
+        const { id_booking } = req.params;
+        const booking = await bookingsRepository.getBookingById(id_booking);
+        if (!booking) {
+            const err = new Error('No existe reserva con ese código');
+            err.code = 401;
+            throw err;
+        }
+
+        next();
+    } catch (err) {
+        res.status(err.status || 500);
+        res.send({ error: err.message });
+    }
+}
+
 async function validateAdmin(req, res, next) {
     const { role } = req.auth;
     try {
@@ -129,4 +147,5 @@ module.exports = {
     validateSpace,
     validateRoom,
     validateExtra,
+    validateBooking,
 };
