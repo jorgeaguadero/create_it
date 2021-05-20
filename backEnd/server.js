@@ -172,8 +172,8 @@ app.get('/api/users/:id_user/incidents', validateAuthorization, incidentsControl
 //TODO --> Gestionar incidencias (admin)
 app.patch('/api/incidents/:id_incident', validateAuthorization, validateAdmin, incidentsController.closeIncident);
 
-app.use(async (err, req, res, next) => {
-    const status = err.isJoi ? 400 : err.code || 500;
+app.use((err, req, res, next) => {
+    const status = err.isJoi ? 400 : err.httpCode || 500;
     res.status(status);
     res.send({ error: err.message });
 });

@@ -33,13 +33,13 @@ async function createRooms(req, res, next) {
         const room = await roomsRepository.getRoomByCode(room_code);
         if (room) {
             const err = new Error(`Ya existe una sala con el código ${room.room_code}`);
-            err.code = 409;
+            err.httpCode = 409;
             throw err;
         }
         const spaceExist = await spacesRepository.getSpaceById(id_space);
         if (!spaceExist) {
             const err = new Error(`No existe la sala ${id_space}`);
-            err.code = 409;
+            err.httpCode = 409;
             throw err;
         }
 
@@ -105,7 +105,7 @@ async function deleteRoom(req, res, next) {
         //TODO
         /*LÓGICA PARA VER SI TIENE RESERVAS PENDIENTES if (user.pending_payment === 0) {
             const err = new Error('No puedes borrar tu usuario hasta que no se realicen los pagos pendientes');
-            err.code = 403;
+            err.httpCode = 403;
             throw err;
         }*/
         room = await roomsRepository.deleteRoom(id_room);

@@ -34,7 +34,7 @@ async function createSpaces(req, res, next) {
         const space = await spacesRepository.getSpaceByEmail(email);
         if (space) {
             const err = new Error(`Ya existe un espacio con el email ${email}`);
-            err.code = 409;
+            err.httpCode = 409;
             throw err;
         }
         const createdSpace = await spacesRepository.createSpace({
@@ -105,7 +105,7 @@ async function deleteSpace(req, res, next) {
         //TODO
         /*LÓGICA PARA VER SI TIENE RESERVAS PENDIENTES if (user.pending_payment === 0) {
             const err = new Error('No puedes borrar tu usuario hasta que no se realicen los pagos pendientes');
-            err.code = 403;
+            err.httpCode = 403;
             throw err;
         }*/
         space = await spacesRepository.deleteSpace(id_space);

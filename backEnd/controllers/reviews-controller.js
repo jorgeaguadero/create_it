@@ -84,7 +84,7 @@ async function deleteReviewById(req, res, next) {
         //TODO extraer
         if (Number(id_user) !== review[0].id_user) {
             const err = new Error('Sólo el dueño de la review o el admin puede borrar');
-            err.code = 403;
+            err.httpCode = 403;
 
             throw err;
         }

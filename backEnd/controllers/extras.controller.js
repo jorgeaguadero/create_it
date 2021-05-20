@@ -26,13 +26,13 @@ async function createExtras(req, res, next) {
         const extra = await extrasRepository.getExtraByCode(extra_code);
         if (extra) {
             const err = new Error(`Ya existe un extra con el código ${extra.extra_code}`);
-            err.code = 409;
+            err.httpCode = 409;
             throw err;
         }
         const spaceExist = await spacesRepository.getSpaceById(id_space);
         if (!spaceExist) {
             const err = new Error(`No existe el espacio ${id_space}`);
-            err.code = 409;
+            err.httpCode = 409;
             throw err;
         }
 
@@ -95,7 +95,7 @@ async function deleteExtra(req, res, next) {
         let extra = await extrasRepository.getExtraById(id_extra);
         /*LÓGICA PARA VER SI TIENE RESERVAS PENDIENTES if (user.pending_payment === 0) {
             const err = new Error('No puedes borrar tu usuario hasta que no se realicen los pagos pendientes');
-            err.code = 403;
+            err.httpCode = 403;
             throw err;
         }*/
         extra = await extrasRepository.deleteExtra(id_extra);

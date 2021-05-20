@@ -42,14 +42,14 @@ async function validateUser(req, res, next) {
         const user = await usersRepository.findUserById(id);
         if (!user) {
             const err = new Error('No existe usuario con ese email');
-            err.code = 401;
+            err.httpCode = 401;
             throw err;
         }
 
         // Comprobar que el id del parametro y el del usuario que intenta acceder son el mismo
         if (Number(id_user) !== id) {
             const err = new Error('No tienes permisos para acceder');
-            err.code = 403;
+            err.httpCode = 403;
             throw err;
         }
         next();
@@ -65,7 +65,7 @@ async function validateSpace(req, res, next) {
         const space = await spacesRepository.getSpaceById(id_space);
         if (!space) {
             const err = new Error('No existe este espacio');
-            err.code = 401;
+            err.httpCode = 401;
             throw err;
         }
 
@@ -81,7 +81,7 @@ async function validateRoom(req, res, next) {
         const room = await roomsRepository.getRoomById(id_room);
         if (!room) {
             const err = new Error('No existe sala con ese código');
-            err.code = 401;
+            err.httpCode = 401;
             throw err;
         }
 
@@ -98,7 +98,7 @@ async function validateExtra(req, res, next) {
         const extra = await extrasRepository.getExtraById(id_extra);
         if (!extra) {
             const err = new Error('No existe extra con ese código');
-            err.code = 401;
+            err.httpCode = 401;
             throw err;
         }
 
@@ -115,7 +115,7 @@ async function validateBooking(req, res, next) {
         const booking = await bookingsRepository.getBookingById(id_booking);
         if (!booking) {
             const err = new Error('No existe reserva con ese código');
-            err.code = 401;
+            err.httpCode = 401;
             throw err;
         }
 
@@ -132,7 +132,7 @@ async function validateReview(req, res, next) {
         const review = await bookingsRepository.getReviewById(id_review);
         if (!review) {
             const err = new Error('No existe review con ese código');
-            err.code = 401;
+            err.httpCode = 401;
             throw err;
         }
 

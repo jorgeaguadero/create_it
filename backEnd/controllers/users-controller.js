@@ -13,7 +13,10 @@ async function registrer(req, res, next) {
 
         const schema = Joi.object({
             name: Joi.string().required(),
-            email: Joi.string().email().required(),
+            email: Joi.string()
+                .email()
+                .required()
+                .error(() => new Error('mail invalido')),
             password: Joi.string().min(6).max(12).required(),
             repeatedPassword: Joi.string().min(6).max(12).required(),
         });
@@ -27,14 +30,14 @@ async function registrer(req, res, next) {
 
         if (password !== repeatedPassword) {
             const err = new Error('Las contraseñas no coinciden');
-            err.code = 400;
+            err.httpCode = 400;
             throw err;
         }
 
         const user = await usersRepository.getUserByEmail(email);
         if (user) {
             const err = new Error(`Ya existe un usuario con el email ${email}`);
-            err.code = 409;
+            err.httpCode = 409;
             throw err;
         }
 
@@ -100,7 +103,7 @@ async function updateProfile(req, res, next) {
     try {
         const { id_user } = req.params;
         const data = req.body;
-
+        //TODO Joi
         const user = await usersRepository.updateProfile(data, id_user);
 
         res.status(201);
@@ -129,13 +132,13 @@ async function updatePassword(req, res, next) {
         const isValidPassword = await bcrypt.compare(data.password, user.passwordHash);
         if (!isValidPassword) {
             const err = new Error('La contraseña actual es incorrecta');
-            err.code = 401;
+            err.httpCode = 401;
             throw err;
         }
 
         if (data.newPassword !== data.repeatedNewPassword) {
             const err = new Error('Las constraseñas no coinciden');
-            err.code = 400;
+            err.httpCode = 400;
             throw err;
         }
 
@@ -143,6 +146,7 @@ async function updatePassword(req, res, next) {
         user = await usersRepository.updatePassword(passwordHash, id_user);
 
         res.status(201);
+        //TODO respuestas json
         res.send(`user ${user.id_user} ha cambiado la contraseña`);
     } catch (error) {
         next(error);
@@ -155,7 +159,7 @@ async function deleteUser(req, res, next) {
         const user = await usersRepository.findUserById(id_user);
         if (user.pending_payment === 0) {
             const err = new Error('No puedes borrar tu usuario hasta que no se realicen los pagos pendientes');
-            err.code = 403;
+            err.httpCode = 403;
             throw err;
         }
         await usersRepository.deleteUser(id_user);
