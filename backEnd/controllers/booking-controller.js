@@ -5,7 +5,7 @@ const { formatISO } = require('date-fns');
 const { validateUser } = require('../utils/users-auth');
 const { bookingsRepository, extrasRepository } = require('../repositories');
 const { isBeforeDate } = require('../middlewares/dateValidate');
-
+//TODO CAMBIAR BASE DE DATOS PARA AJUSTAR A PAGOS !!!!
 async function createBooking(req, res, next) {
     try {
         const { id } = req.auth;
@@ -58,6 +58,29 @@ async function createBooking(req, res, next) {
         }
     } catch (err) {
         next(err);
+    }
+}
+async function payBooking(req, res, next) {
+    try {
+        const { id_booking } = req.params;
+
+        let booking = await bookingsRepository.getBookingByIdBookingById(id_booking);
+
+        validateUser(req, booking);
+
+        //TODO CAMBIAR BASE DE DATOS PARA AJUSTAR A PAGOS !!!!
+        if (booking.payment_state === '1') {
+            const error = new Error('ya está pagado');
+            throw error;
+        }
+
+        booking = await bookingsRepository.payBooking(id_booking);
+
+        res.status(201);
+
+        res.send(`pago ${id_booking} realizado`);
+    } catch (error) {
+        next(error);
     }
 }
 
@@ -129,4 +152,5 @@ module.exports = {
     getBookingsByUser,
     getBookingsByRoom,
     getBookingsBySpace,
+    payBooking,
 };

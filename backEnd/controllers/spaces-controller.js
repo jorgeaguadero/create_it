@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 
 //TODO pendiente gestión de fotos
 const { spacesRepository } = require('../repositories');
-
+//TODO AÑADIR MEDIA DE RATING DE REVIEWS POR ESPACIO+ NUM REVIEWS??-> SINO SERIA 0 al inicio sin más info
 async function createSpaces(req, res, next) {
     try {
         const { id_user, space_name, description, location, address, email, phone } = req.body;

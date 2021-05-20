@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 
 const { usersRepository } = require('../repositories');
 
-//Todo Añadir envio de mail --> token de validacion ?? --> sendgrid +nanoid
+//Todo Añadir envio de mail para confirmaciones  --> token de validacion ?? --> sendgrid +nanoid
 async function registrer(req, res, next) {
     try {
         const { name, email, password, repeatedPassword } = req.body;
@@ -68,8 +68,6 @@ async function login(req, res, next) {
 
         await schema.validateAsync({ email, password });
 
-        // 1. Comprobamos que existe el usuario en la base de datos
-
         const user = await usersRepository.getUserByEmail(email);
 
         if (!user) {
@@ -77,8 +75,6 @@ async function login(req, res, next) {
             error.code = 404;
             throw error;
         }
-
-        // 2. Comprobamos que el password es correcto
 
         const isValidPassword = await bcrypt.compare(password, user.passwordHash);
 
@@ -88,7 +84,6 @@ async function login(req, res, next) {
             throw error;
         }
 
-        // 3. Construimos el JWT para enviárselo al cliente.
         const tokenPayload = { id: user.id_user, role: user.role };
 
         const token = jwt.sign(tokenPayload, process.env.SECRET, { expiresIn: '2d' });
@@ -116,7 +111,7 @@ async function updateProfile(req, res, next) {
     }
 }
 
-//TODO FOTO AVATAR
+//TODO FOTO AVATAR --> multer uuid??
 
 async function updatePassword(req, res, next) {
     try {

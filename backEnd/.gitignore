@@ -1,6 +1,5 @@
 .env
 node_modules
-incidents-controller.js
-incidents-repository.js
+
 
 

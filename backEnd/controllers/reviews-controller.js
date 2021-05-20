@@ -49,16 +49,11 @@ async function createReview(req, res, next) {
 async function getReviewsByUserId(req, res, next) {
     try {
         const { id_user } = req.params;
-        const { sortfield, sortdir } = req.query;
         const { role } = req.auth;
-
-        const sortSchema = Joi.object({
-            sortfield: Joi.string().valid('rating'),
-            sortdir: Joi.string().valid('asc', 'desc'),
-        });
 
         await sortSchema.validateAsync({ sortfield, sortdir });
         //Evaluamos primero el rol--> si es admin puede ver las reservas
+        //TODO extraer?
         if (role === 'user' && Number(id_user) !== req.auth.id) {
             const err = new Error('El usuario no tiene permisos');
             err.status = 403;

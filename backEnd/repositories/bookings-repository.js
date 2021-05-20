@@ -38,7 +38,7 @@ async function getBookingsByUser(id_user) {
 
     return booking[0];
 }
-
+//TODO INSERTAR PENDIENTE DE PAGO EN USUARIO Y BOOKINGS
 async function createBooking(id_user, id_room, start_date, price) {
     const query = 'INSERT INTO bookings (id_user,id_room, start_date,price) VALUES (?,?,?,?)';
     const [result] = await database.pool.query(query, [id_user, id_room, start_date, price]);
@@ -57,6 +57,17 @@ async function deleteBooking(id_booking) {
 
     return id_booking;
 }
+//TODO INSERTAR PENDIENTE DE PAGO EN USUARIO Y BOOKINGS
+/*async function payBooking(id_booking, id_user) {
+    const queryPayBooking = `UPDATE bookings SET payment_state=1 WHERE id_booking = ${id_booking}`;
+    await database.pool.query(queryPayBooking);
+    
+    const queryPayUser = `UPDATE users SET pending_payment=1 WHERE id_user = ${id_user}`;
+    await database.pool.query(queryPayuser);
+//TODO envio mail aqui o en controller
+   return ('Payment OK');
+}*/
+
 //TODO ajustar query para obtener bookings por el id_space--> modificar DB
 async function getBookingsBySpace(id_space) {
     const query = 'SELECT * FROM bookings INNER JOIN spaces ON spaces.id_space = ?';
@@ -82,4 +93,5 @@ module.exports = {
     getBookingsByUser,
     getBookingsByRoom,
     getBookingsBySpace,
+    //payBooking,
 };
