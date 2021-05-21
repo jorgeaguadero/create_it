@@ -6,6 +6,7 @@ async function getSpaceByEmail(email) {
 
     return spaces[0];
 }
+
 async function getSpaceById(id) {
     const query = 'SELECT * FROM spaces WHERE id_space= ?';
     const [spaces] = await database.pool.query(query, id);

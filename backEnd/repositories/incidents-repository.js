@@ -18,8 +18,9 @@ async function getAllIncidents() {
 async function getIncidentById(id) {
     const query = 'SELECT * FROM incidents WHERE id_incident = ?';
     const [incident] = await database.pool.query(query, id);
-
-    return incident;
+    
+    //TODO ver datos de devolucion
+    return incident[0];
 }
 
 async function createIncident(id_booking, incident_date, type, description, id_user) {
