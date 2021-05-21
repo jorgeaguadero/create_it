@@ -7,6 +7,7 @@ const { roomsRepository } = require('../repositories');
 const { extrasRepository } = require('../repositories');
 const { bookingsRepository } = require('../repositories');
 
+//VALIDADORES DE AUTORIZACION PARA USUARIOS /ADMIN
 async function validateAuthorization(req, res, next) {
     try {
         const { authorization } = req.headers;
@@ -35,6 +36,21 @@ async function validateAuthorization(req, res, next) {
         next(err);
     }
 }
+
+async function validateAdmin(req, res, next) {
+    const { role } = req.auth;
+    try {
+        if (role !== 'admin') {
+            const err = new Error('Solo admins');
+            err.status = 403;
+            throw err;
+        }
+        next();
+    } catch (err) {
+        next(err);
+    }
+}
+
 async function validateUser(req, res, next) {
     try {
         const { id_user } = req.params;
@@ -47,7 +63,7 @@ async function validateUser(req, res, next) {
         }
 
         // Comprobar que el id del parametro y el del usuario que intenta acceder son el mismo
-        if (Number(id_user) !== id) {
+        if (role === 'user' && Number(id_user) !== id) {
             const err = new Error('No tienes permisos para acceder');
             err.httpCode = 403;
             throw err;
@@ -143,20 +159,7 @@ async function validateReview(req, res, next) {
     }
 }
 
-async function validateAdmin(req, res, next) {
-    const { role } = req.auth;
-    try {
-        if (role !== 'admin') {
-            const err = new Error('Solo admins');
-            err.status = 403;
-            throw err;
-        }
-        next();
-    } catch (err) {
-        next(err);
-    }
-}
-
+//Comentario de prueba para rama
 module.exports = {
     validateAuthorization,
     validateUser,
