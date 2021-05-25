@@ -4,7 +4,6 @@ const jwt = require('jsonwebtoken');
 //const multer = require('multer');
 //const { v4: uuidv4 } = require('uuid');
 
-//TODO pendiente gestión de fotos
 const { spacesRepository } = require('../repositories');
 const { usersRepository } = require('../repositories');
 //TODO AÑADIR MEDIA DE RATING DE REVIEWS POR ESPACIO+ NUM REVIEWS??-> SINO SERIA 0 al inicio sin más info
@@ -98,6 +97,23 @@ async function updateSpace(req, res, next) {
     }
 }
 
+async function setSpacesPhotos(req, res, next) {
+    try {
+        const { files } = req;
+        const { id_space } = req.params;
+        //const { description } = req.body;
+        files.forEach(async (photo) => {
+            const url = `static/spaces/${id_space}/${photo.filename}`;
+            await spacesRepository.setSpacesPhotos(id_space, url);
+        });
+
+        res.status(201);
+        res.send({ Message: `Fotos subidas correctamente` });
+    } catch (err) {
+        next(err);
+    }
+}
+
 async function getSpaces(req, res, next) {
     try {
         const spaces = await spacesRepository.getSpaces();
@@ -144,4 +160,5 @@ module.exports = {
     viewSpace,
     getSpaces,
     deleteSpace,
+    setSpacesPhotos,
 };

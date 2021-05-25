@@ -56,7 +56,23 @@ async function createRooms(req, res, next) {
     }
 }
 
-//TODO jois para actualizar
+async function setRoomsPhotos(req, res, next) {
+    try {
+        const { files } = req;
+        const { id_room } = req.params;
+        //const { description } = req.body;
+        files.forEach(async (photo) => {
+            const url = `static/spaces/${id_room}/${photo.filename}`;
+            await roomsRepository.setRoomsPhotos(id_room, url);
+        });
+
+        res.status(201);
+        res.send({ Message: `Fotos subidas correctamente` });
+    } catch (err) {
+        next(err);
+    }
+}
+//// jois para actualizar
 async function updateRoom(req, res, next) {
     try {
         const { id_room } = req.params;
@@ -153,4 +169,5 @@ module.exports = {
     getRoomsBySpace,
     deleteRoom,
     querySeeker,
+    setRoomsPhotos,
 };

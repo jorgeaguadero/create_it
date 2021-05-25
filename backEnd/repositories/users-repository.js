@@ -34,6 +34,12 @@ async function updateProfile(data, id, ModDate) {
     return findUserById(id);
 }
 
+async function updateAvatar(url, id) {
+    const query = `UPDATE users SET avatar = '${url}' WHERE id_user = '${id}'`;
+    await database.pool.query(query);
+    return findUserById(id);
+}
+
 async function findUserById(id) {
     const query = 'SELECT * FROM users WHERE id_user= ?';
     const [user] = await database.pool.query(query, id);
@@ -62,6 +68,5 @@ module.exports = {
     updatePassword,
     deleteUser,
     getUsers,
-
-    //updateAvatar
+    updateAvatar,
 };

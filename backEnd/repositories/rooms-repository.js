@@ -74,6 +74,11 @@ async function createRoom(data) {
     return getRoomByCode(data.room_code);
 }
 
+async function setRoomsPhotos(id, url, description = 'prueba') {
+    const query = 'INSERT INTO rooms_photo (id_room,description, url) VALUES (?,?,?)';
+    photo = await database.pool.query(query, [id, description, url]);
+    return { Message: `foto subida` };
+}
 async function updateRoom(data, id) {
     const replaceNotNull = async (row, value, id_room = id) => {
         if (value !== undefined) {
@@ -108,4 +113,5 @@ module.exports = {
     deleteRoom,
     getRoomByCode,
     getRoomsByQuery,
+    setRoomsPhotos,
 };

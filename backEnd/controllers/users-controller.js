@@ -2,8 +2,8 @@ const Joi = require('joi');
 const sgMail = require('@sendgrid/mail');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-//const multer = require('multer');
-//const { v4: uuidv4 } = require('uuid');
+const multer = require('multer');
+const { v4: uuidv4 } = require('uuid');
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
@@ -189,7 +189,23 @@ async function updateProfile(req, res, next) {
     }
 }
 
-//TODO FOTO AVATAR --> multer uuid??
+//TODO FOTO AVATAR -
+
+async function updateAvatar(req, res, next) {
+    try {
+        const { file } = req;
+        const { id_user } = req.params;
+
+        const url = `static/users/${id_user}/${file.filename}`;
+        const image = await usersRepository.updateAvatar(url, id_user);
+
+        res.status(201);
+        res.send(image);
+    } catch (err) {
+        next(err);
+    }
+}
+
 //TODO Comprobar que nueva y vieja no son iguales
 async function updatePassword(req, res, next) {
     try {
@@ -292,6 +308,6 @@ module.exports = {
     viewProfileUser,
     getUsers,
     logout,
-    //updateAvatar,
+    updateAvatar,
     //deleteAvatar,
 };

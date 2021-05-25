@@ -2,7 +2,7 @@ require('dotenv').config();
 const path = require('path');
 const fs = require('fs');
 const express = require('express');
-//const multer = require('multer');
+const multer = require('multer');
 const { v4: uuidv4 } = require('uuid');
 
 const cors = require('cors');
@@ -32,9 +32,67 @@ const {
 const { validateAuth } = require('./middlewares');
 const { PORT } = process.env;
 
+const staticPath = path.resolve(__dirname, 'static');
+//TODO extraer??
+const userAvatar = multer({
+    storage: multer.diskStorage({
+        destination: function (req, file, cb) {
+            const { id_user } = req.params;
+            const folder = path.join(__dirname, `static/users/${id_user}/`);
+            fs.mkdirSync(folder, { recursive: true });
+
+            cb(null, folder);
+        },
+        filename: function (req, file, cb) {
+            cb(null, uuidv4() + path.extname(file.originalname));
+        },
+    }),
+    limits: {
+        fileSize: 1024 * 1024, // 1 MB
+    },
+});
+
+const spacePhotos = multer({
+    storage: multer.diskStorage({
+        destination: function (req, file, cb) {
+            const { id_space } = req.params;
+            const folder = path.join(__dirname, `static/spaces/${id_space}/`);
+            fs.mkdirSync(folder, { recursive: true });
+
+            cb(null, folder);
+        },
+        filename: function (req, file, cb) {
+            cb(null, uuidv4() + path.extname(file.originalname));
+        },
+    }),
+    limits: {
+        fileSize: 1024 * 1024, // 1 MB
+    },
+});
+
+const roomPĥotos = multer({
+    storage: multer.diskStorage({
+        destination: function (req, file, cb) {
+            const { id_room } = req.params;
+            const folder = path.join(__dirname, `static/rooms/${id_room}/`);
+            fs.mkdirSync(folder, { recursive: true });
+
+            cb(null, folder);
+        },
+        filename: function (req, file, cb) {
+            cb(null, uuidv4() + path.extname(file.originalname));
+        },
+    }),
+    limits: {
+        fileSize: 1024 * 1024, // 1 MB
+    },
+});
+
 const app = express();
-app.use(cors());
+//app.use(cors());
 app.use(express.json());
+
+app.use(express.static(staticPath));
 
 //users -->>ok
 //registro
@@ -54,21 +112,31 @@ app.get('/api/users/:id_user', validateAuthorization, validateUser, usersControl
 //ver perfiles (solo admin)
 app.get('/api/users', validateAuthorization, validateAdmin, usersController.getUsers);
 //logout
-//app.post('/api/users/logout', usersController.logout);
+app.post('/api/users/logout', usersController.logout);
 
 //Actualizar avatar de usuario, POST en vez de PATCH/PUT porque borro el avatar de antes
-/*app.post(
-    '/users/:id/avatar',
+app.post(
+    '/api/users/:id_user/avatar',
     validateAuthorization,
-    uploadImg.uploadUserImg.single('userImg'),
-    usersController.updateImage
-);*/
+    validateUser,
+    userAvatar.single('avatar'),
+    usersController.updateAvatar
+);
 
 //TODO --> Admin borrar todo // Listar usuarios pendientes de pago??
 
 //ESPACIOS
 //Admin crear espacio (Similar a registro de user pero siendo admin)
 app.post('/api/spaces', validateAuthorization, validateAdmin, spacesController.createSpaces);
+//Subir Fotos
+app.post(
+    '/api/spaces/:id_space/photos',
+    validateAuthorization,
+    validateAdmin,
+    validateSpace,
+    spacePhotos.array('photos'),
+    spacesController.setSpacesPhotos
+);
 //modificar espacio
 app.patch('/api/spaces/:id_space', validateAuthorization, validateAdmin, validateSpace, spacesController.updateSpace);
 //Listar Espacios
@@ -81,6 +149,15 @@ app.delete('/api/spaces/:id_space', validateAuthorization, validateAdmin, valida
 //TODO pagos pendientes
 //crear room
 app.post('/api/rooms', validateAuthorization, validateAdmin, roomsController.createRooms);
+//subir fotos
+app.post(
+    '/api/rooms/:id_room/photos',
+    validateAuthorization,
+    validateAdmin,
+    validateRoom,
+    roomPĥotos.array('photos'),
+    roomsController.setRoomsPhotos
+);
 //modificar room
 app.patch('/api/rooms/:id_room', validateAuthorization, validateAdmin, validateRoom, roomsController.updateRoom);
 //Listar rooms de un espacio
@@ -91,8 +168,6 @@ app.get('/api/rooms/:id_room', validateRoom, roomsController.viewRoom);
 app.get('/api/prueba/', roomsController.querySeeker);
 // borrar room
 app.delete('/api/rooms/:id_room', validateAuthorization, validateAdmin, validateRoom, roomsController.deleteRoom);
-
-//TODO --> fotos salas???
 
 //--> EXTRAS
 //crear extra
