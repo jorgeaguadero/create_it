@@ -24,6 +24,7 @@ const {
     validateExtra,
     validateBooking,
     validateReview,
+    validateIncident,
 } = require('./middlewares/validate-auth');
 
 const { validateAuth } = require('./middlewares');
@@ -144,17 +145,32 @@ app.delete(
 );
 
 //--> INCIDENCIAS
-//TODO --> Crear incidencia (user) verificar como en las reseñas que user es propietario de booking
+////--> Crear incidencia (user) verificar como en las reseñas que user es propietario de booking
 app.post(
     '/api/bookings/:id_booking/incident',
     validateAuthorization,
     validateBooking,
     incidentsController.createIncident
 );
-//TODO --> Ver incidencias (user || admin--> todas)
+////--> Gestionar incidencias (admin)
+app.patch(
+    '/api/incidents/:id_incident',
+    validateAuthorization,
+    validateAdmin,
+    validateIncident,
+    incidentsController.closeIncident
+);
+
+////--> Ver incidencias (user || admin--> todas)
 app.get('/api/users/:id_user/incidents', validateAuthorization, incidentsController.getIncidentsByUserId);
-//TODO --> Gestionar incidencias (admin)
-app.patch('/api/incidents/:id_incident', validateAuthorization, validateAdmin, incidentsController.closeIncident);
+////--> Ver incidencias (user || admin--> todas)
+app.get(
+    '/api/spaces/:id_space/incidents',
+    validateAuthorization,
+    validateAdmin,
+    validateSpace,
+    incidentsController.getIncidentsOpenBySpace
+);
 
 app.use((err, req, res, next) => {
     const status = err.isJoi ? 400 : err.httpCode || 500;

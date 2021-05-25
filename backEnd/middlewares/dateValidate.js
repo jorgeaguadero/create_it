@@ -1,5 +1,6 @@
 //https://date-fns.org/v2.21.3/docs/Getting-Started
-const { isEqual, isBefore, parseISO, isAfter, zonedTimeToUtc, utcToZonedTime } = require('date-fns');
+const { isEqual, isBefore, parseISO, isAfter } = require('date-fns');
+const { zonedTimeToUtc, utcToZonedTime } = require('date-fns-tz');
 const timeZone = 'Europe/Berlin';
 
 //CONTROLES DE FECHAS PARA RESERVAS Y MODIFICACIONES
@@ -17,7 +18,7 @@ function isAfterDate(start_date) {
         const error = new Error('la fecha tiene que ser posterior a la reserva');
         throw error;
     }
-    return utcToZonedTime(evendate, timeZone);
+    return (dateFormated = utcToZonedTime(evendate, timeZone));
 }
 
 function isEqualDate(start_date) {
@@ -31,7 +32,7 @@ function isEqualDate(start_date) {
 }
 
 function formatDate(date) {
-    return utcToZonedTime(date, timeZone);
+    return (dateFormated = utcToZonedTime(date, timeZone));
 }
 
 //TODO EXTRAS

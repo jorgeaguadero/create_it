@@ -23,6 +23,7 @@
     "@hapi/joi-date": "^2.0.1",
     "bcryptjs": "^2.4.3",
     "date-fns": "^2.21.3",
+    "date-fns-tz": "^1.1.4",
     "dotenv": "^9.0.2",
     "express": "^4.17.1",
     "fs": "*",

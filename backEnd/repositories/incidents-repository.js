@@ -40,10 +40,19 @@ async function closeIncident(id_incident, closed_date, state) {
     return getIncidentById(id_incident);
 }
 
+async function getIncidentsOpenBySpace(id) {
+    const query = 'SELECT * FROM incidents WHERE id_space = ? AND state=0';
+    const incidents = await database.pool.query(query, id);
+
+    //TODO ver datos de devolucion
+    return incidents[0];
+}
+
 module.exports = {
     getAllIncidents,
     getIncidentsByUserId,
     createIncident,
     getIncidentById,
     closeIncident,
+    getIncidentsOpenBySpace,
 };

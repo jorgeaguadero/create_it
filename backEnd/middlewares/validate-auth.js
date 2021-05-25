@@ -7,7 +7,7 @@ const { roomsRepository } = require('../repositories');
 const { extrasRepository } = require('../repositories');
 const { bookingsRepository } = require('../repositories');
 const { reviewsRepository } = require('../repositories');
-
+const { incidentsRepository } = require('../repositories');
 //VALIDADORES DE AUTORIZACION PARA USUARIOS /ADMIN
 async function validateAuthorization(req, res, next) {
     try {

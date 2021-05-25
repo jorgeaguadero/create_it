@@ -24,7 +24,7 @@ async function createIncident(req, res, next) {
         //Para pruebas compruebo asi y meto la fecha desde aqui
         isBeforeDate(booking.start_date);
         const incident_date = new Date();
-        const { createdIncident } = await incidentsRepository.createIncident(
+        let createdIncident = await incidentsRepository.createIncident(
             id_booking,
             booking.id_space,
             incident_date,
@@ -32,11 +32,44 @@ async function createIncident(req, res, next) {
             description,
             id
         );
-
-        const dateUTC = formatDate(createdIncident.incident_date);
+        createdIncident.state === 0 ? (createdIncident.state = 'Open') : (createdIncident.state = 'Closed');
+        //const dateUTC = formatDate(createdIncident.incident_date);
 
         res.status(201);
-        res.send({ Message: dateUTC });
+        res.send({
+            'Id Incidencia': createIncident.id_incident,
+            State: createdIncident.state,
+            Message: createdIncident.incident_date,
+        });
+    } catch (err) {
+        next(err);
+    }
+}
+
+async function closeIncident(req, res, next) {
+    try {
+        const { id_incident } = req.params;
+        const { state } = req.body;
+
+        const schema = Joi.object({
+            state: Joi.number().required(),
+        });
+
+        await schema.validateAsync({ state });
+
+        const closed_date = new Date();
+        //TODO comprobar que está cerrada ya
+        let closedIncident = await incidentsRepository.getIncidentById(id_incident);
+        if (closedIncident.state === 1) {
+            const err = new Error('La incidencia está cerrada');
+            err.httpCode = 401;
+            throw err;
+        }
+
+        closedIncident = await incidentsRepository.closeIncident(id_incident, closed_date, state);
+        closedIncident.state = 'Closed';
+        res.status(201);
+        res.send(closedIncident);
     } catch (err) {
         next(err);
     }
@@ -46,15 +79,11 @@ async function createIncident(req, res, next) {
 async function getIncidentsByUserId(req, res, next) {
     try {
         const { id_user } = req.params;
-        const { role, id } = req.auth;
 
-        if (role === 'user' && Number(id_user) !== id) {
-            const err = new Error('El usuario no tiene permisos');
-            err.status = 403;
-            throw err;
-        }
-        const reviews = await incidentsRepository.getIncidentsByUserId(id_user);
-        res.send(reviews);
+        validateProperty(req, req.params);
+        const incidents = await incidentsRepository.getIncidentsByUserId(id_user);
+
+        res.send(incidents);
     } catch (err) {
         next(err);
     }
@@ -69,23 +98,13 @@ async function getAllIncidents(req, res, next) {
     }
 }
 
-async function closeIncident(req, res, next) {
+async function getIncidentsOpenBySpace(req, res, next) {
     try {
-        const { id_incident } = req.params;
-        const { state } = req.body;
+        const { id_space } = req.params;
 
-        const schema = Joi.object({
-            state: Joi.number().required(), //Cambiar a open/close?
-        });
+        const incidents = await incidentsRepository.getIncidentsOpenBySpace(id_space);
 
-        await schema.validateAsync({ state });
-        //TODO Validador de incidencias
-        const closed_date = new Date();
-        //TODO comprobar que está cerrada ya
-
-        const closedIncident = await incidentsRepository.closeIncident(id_incident, closed_date, state);
-        res.status(201);
-        res.send(closedIncident);
+        res.send(incidents);
     } catch (err) {
         next(err);
     }
@@ -96,4 +115,5 @@ module.exports = {
     getIncidentsByUserId,
     getAllIncidents,
     closeIncident,
+    getIncidentsOpenBySpace,
 };
