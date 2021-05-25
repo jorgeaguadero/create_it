@@ -45,15 +45,20 @@ async function getRoomsByQuery(data) {
     if (!start_date) {
         return firstResults[0];
     }
-    const finishResults = [];
 
+    //Declaro fuera para que pueda acceder a ella desde dentro de la funcion
+    //Y después devolver el resultado con todo pusheado
+    const finishResults = [];
     //TODO COrregir
     const findByDate = async (room, start = start_date) => {
         let query = `SELECT * FROM bookings WHERE start_date= '${start}'AND id_room=${room}`;
         const [bookings] = await database.pool.query(query);
         if (!bookings[0]) {
             query = `SELECT * FROM rooms WHERE  id_room=${room}`;
-            finishResults.push(await database.pool.query(query));
+
+            //TODO tengo que hacer push de resultados[0]
+            let result = await database.pool.query(query);
+            finishResults.push(result[0]);
         }
     };
 
