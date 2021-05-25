@@ -34,7 +34,7 @@ async function createIncident(req, res, next) {
         );
         createdIncident.state === 0 ? (createdIncident.state = 'Open') : (createdIncident.state = 'Closed');
         //const dateUTC = formatDate(createdIncident.incident_date);
-
+        //TODO envio Mail
         res.status(201);
         res.send({
             'Id Incidencia': createIncident.id_incident,
@@ -68,6 +68,7 @@ async function closeIncident(req, res, next) {
 
         closedIncident = await incidentsRepository.closeIncident(id_incident, closed_date, state);
         closedIncident.state = 'Closed';
+        //TODO envio Mail
         res.status(201);
         res.send(closedIncident);
     } catch (err) {

@@ -126,10 +126,31 @@ async function viewRoom(req, res, next) {
     }
 }
 
+async function querySeeker(req, res, next) {
+    try {
+        const data = req.query;
+
+        /*const schema = Joi.object({
+            id_space: Joi.number(),
+            price: Joi.number(),
+            capacity: Joi.number(),
+            start_date: Joi.date(),
+        });
+        await schema.validateAsync(data);*/
+        //primero filtramos los parametros y después vemos si esta disponible
+        const queryRooms = await roomsRepository.getRoomsByQuery(data);
+        res.status(201);
+        res.send(queryRooms);
+    } catch (error) {
+        next(error);
+    }
+}
+
 module.exports = {
     createRooms,
     updateRoom,
     viewRoom,
     getRoomsBySpace,
     deleteRoom,
+    querySeeker,
 };

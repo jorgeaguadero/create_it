@@ -5,6 +5,8 @@ const express = require('express');
 //const multer = require('multer');
 const { v4: uuidv4 } = require('uuid');
 
+const cors = require('cors');
+
 const {
     usersController,
     spacesController,
@@ -31,7 +33,7 @@ const { validateAuth } = require('./middlewares');
 const { PORT } = process.env;
 
 const app = express();
-
+app.use(cors());
 app.use(express.json());
 
 //users -->>ok
@@ -62,7 +64,6 @@ app.get('/api/users', validateAuthorization, validateAdmin, usersController.getU
     usersController.updateImage
 );*/
 
-//TODO recuperar contraseña
 //TODO --> Admin borrar todo // Listar usuarios pendientes de pago??
 
 //ESPACIOS
@@ -71,14 +72,11 @@ app.post('/api/spaces', validateAuthorization, validateAdmin, spacesController.c
 //modificar espacio
 app.patch('/api/spaces/:id_space', validateAuthorization, validateAdmin, validateSpace, spacesController.updateSpace);
 //Listar Espacios
-//TODO todo el mundo puede listar?
 app.get('/api/spaces', spacesController.getSpaces);
 //Listar Espacios individuales
-//TODO todo el mundo puede listar?
 app.get('/api/spaces/:id_space', validateSpace, spacesController.viewSpace);
 // borrar espacio
 app.delete('/api/spaces/:id_space', validateAuthorization, validateAdmin, validateSpace, spacesController.deleteSpace);
-
 //ROOMS
 //TODO pagos pendientes
 //crear room
@@ -89,6 +87,8 @@ app.patch('/api/rooms/:id_room', validateAuthorization, validateAdmin, validateR
 app.get('/api/spaces/:id_space/rooms', validateSpace, roomsController.getRoomsBySpace);
 //Listar room individual
 app.get('/api/rooms/:id_room', validateRoom, roomsController.viewRoom);
+//Listar room por query params
+app.get('/api/prueba/', roomsController.querySeeker);
 // borrar room
 app.delete('/api/rooms/:id_room', validateAuthorization, validateAdmin, validateRoom, roomsController.deleteRoom);
 
@@ -111,8 +111,6 @@ app.get('/api/extras/:id_extra', validateExtra, extrasController.viewExtra);
 app.post('/api/bookings', validateAuthorization, validateRoom, validateExtra, bookingsController.createBooking);
 ////Pagar reserva
 app.post('/api/bookings/:id_booking', validateAuthorization, validateBooking, bookingsController.payBooking);
-//TODO EXTRA --> Modificar reserva
-//app.patch('/api/bookings/:id_booking', validateAuthorization, bookingsController.updateBooking);
 ////--> borrar reserva +Borrar reserva(admin)
 app.delete('/api/bookings/:id_booking', validateAuthorization, validateBooking, bookingsController.deleteBooking);
 //// --> Ver mis reservas // Admin -->reservas por usuario --> //TODOañadimos query params?

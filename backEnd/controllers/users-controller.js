@@ -1,8 +1,11 @@
 const Joi = require('joi');
+const sgMail = require('@sendgrid/mail');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 //const multer = require('multer');
 //const { v4: uuidv4 } = require('uuid');
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const { usersRepository } = require('../repositories');
 
@@ -64,6 +67,21 @@ async function registrer(req, res, next) {
             passwordHash,
         });
         res.status(201);
+        const msg = {
+            to: 'jorgeaguadero@gmail.com', // Change to your recipient
+            from: 'jorgeaguadero91@outlook.es', // Change to your verified sender
+            subject: 'Sending with SendGrid is Fun',
+            text: 'and easy to do anywhere, even with Node.js',
+            html: '<strong>and easy to do anywhere, even with Node.js</strong>',
+        };
+        sgMail
+            .send(msg)
+            .then(() => {
+                console.log('Email sent');
+            })
+            .catch((error) => {
+                console.error(error);
+            });
 
         res.send({
             id: createdUser.id_user,
@@ -75,7 +93,7 @@ async function registrer(req, res, next) {
         next(err);
     }
 }
-//TODO comprobar si ya está logado o no
+//TODO comprobar si ya está logado o no --> front
 async function login(req, res, next) {
     try {
         const { email, password } = req.body;
@@ -123,7 +141,6 @@ async function login(req, res, next) {
     }
 }
 
-//TODO logout
 async function logout(req, res, next) {
     try {
         const { id_user } = req.params;
@@ -165,7 +182,7 @@ async function updateProfile(req, res, next) {
         const user = await usersRepository.updateProfile(data, id_user, ModDate);
 
         res.status(201);
-
+        //TODO envio Mail
         res.send(user);
     } catch (error) {
         next(error);
@@ -219,7 +236,7 @@ async function updatePassword(req, res, next) {
 
         const passwordHash = await bcrypt.hash(data.newPassword, 10);
         user = await usersRepository.updatePassword(passwordHash, id_user);
-
+        //TODO envio Mail
         res.status(201);
         res.send(user);
     } catch (error) {

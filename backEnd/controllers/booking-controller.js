@@ -62,7 +62,7 @@ async function createBooking(req, res, next) {
             );
             const fechaBien = formatISO(booking.start_date, { representation: 'date' });
             res.status(201);
-
+            //TODO envio Mail
             res.send({ fecha: fechaBien, booking });
         }
     } catch (err) {
@@ -70,7 +70,6 @@ async function createBooking(req, res, next) {
     }
 }
 
-//TODO
 async function payBooking(req, res, next) {
     try {
         const { id_booking } = req.params;
@@ -95,9 +94,6 @@ async function payBooking(req, res, next) {
     }
 }
 
-//TODO EXTRA comprobar que estoy dentro del plazo para modificar
-//TODO EXTRA modificar reserva
-
 async function deleteBooking(req, res, next) {
     try {
         const { id_booking } = req.params;
@@ -110,7 +106,7 @@ async function deleteBooking(req, res, next) {
             const error = new Error('Minimo tiene que haber un dia de antelacion');
             throw error;
         }
-
+        //TODO envio Mail
         booking = await bookingsRepository.deleteBooking(id_booking, booking.id_user);
 
         res.status(201);
@@ -143,7 +139,7 @@ async function getBookingsByRoom(req, res, next) {
         next(err);
     }
 }
-//Falta ajustar en repositorio
+
 async function getBookingsBySpace(req, res, next) {
     try {
         const { id_space } = req.params;

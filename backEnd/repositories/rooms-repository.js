@@ -13,6 +13,55 @@ async function getRoomByCode(code) {
     return rooms[0];
 }
 
+async function getRoomsByQuery(data) {
+    let query = 'SELECT id_room from rooms';
+    const params = [];
+
+    const { id_space, price, capacity, start_date } = data;
+
+    if (id_space || price || capacity) {
+        query = `${query} WHERE `;
+        const conditions = [];
+
+        if (id_space) {
+            conditions.push('id_space=?');
+            params.push(id_space);
+        }
+
+        if (price) {
+            conditions.push('price<=?');
+            params.push(price);
+        }
+
+        if (capacity) {
+            conditions.push('capacity<=?');
+            params.push(capacity);
+        }
+
+        query = `${query} ${conditions.join(' AND ')}`;
+        firstResults = await database.pool.query(query, params);
+        //TODO si no hay --> error?
+    }
+    if (!start_date) {
+        return firstResults[0];
+    }
+    const finishResults = [];
+
+    //TODO COrregir
+    const findByDate = async (room, start = start_date) => {
+        let query = `SELECT * FROM bookings WHERE start_date= '${start}'AND id_room=${room}`;
+        const [bookings] = await database.pool.query(query);
+        if (!bookings[0]) {
+            query = `SELECT * FROM rooms WHERE  id_room=${room}`;
+            finishResults.push(await database.pool.query(query));
+        }
+    };
+
+    for (const room in firstResults[0]) await findByDate(room);
+
+    return finishResults;
+}
+
 async function createRoom(data) {
     const query = 'INSERT INTO rooms (id_space,room_code, description,price,capacity) VALUES (?,?,?,?,?)';
     await database.pool.query(query, [data.id_space, data.room_code, data.description, data.price, data.capacity]);
@@ -53,4 +102,5 @@ module.exports = {
     getRoomsBySpace,
     deleteRoom,
     getRoomByCode,
+    getRoomsByQuery,
 };
