@@ -5,13 +5,12 @@ const { extrasRepository } = require('../repositories');
 
 async function createExtras(req, res, next) {
     try {
-        const { id_space, extra_code, description, stock, price } = req.body;
+        const { id_space, extra_code, description, price } = req.body;
 
         const schema = Joi.object({
             id_space: Joi.number().required(),
             extra_code: Joi.string().required(),
             description: Joi.string().required(),
-            stock: Joi.number().required(),
             price: Joi.number().required(),
         });
 
@@ -19,7 +18,6 @@ async function createExtras(req, res, next) {
             id_space,
             extra_code,
             description,
-            stock,
             price,
         });
 
@@ -40,7 +38,6 @@ async function createExtras(req, res, next) {
             id_space,
             extra_code,
             description,
-            stock,
             price,
         });
         res.status(201);
@@ -60,7 +57,25 @@ async function updateExtra(req, res, next) {
 
         res.status(201);
 
-        res.send(`Datos de: ${extra.extra_code} cambiados`);
+        res.send({ extra, Message: `Datos de: ${extra.extra_code} cambiados` });
+    } catch (error) {
+        next(error);
+    }
+}
+
+async function deleteExtra(req, res, next) {
+    try {
+        const { id_extra } = req.params;
+        let extra = await extrasRepository.getExtraById(id_extra);
+        /*LÓGICA PARA VER SI TIENE RESERVAS PENDIENTES if (user.pending_payment === 0) {
+            const err = new Error('No puedes borrar tu usuario hasta que no se realicen los pagos pendientes');
+            err.httpCode = 403;
+            throw err;
+        }*/
+        extra = await extrasRepository.deleteExtra(id_extra);
+
+        res.status(201);
+        res.send({ extra, Message: `Extra ${extra} borrado` });
     } catch (error) {
         next(error);
     }
@@ -89,23 +104,6 @@ async function viewExtra(req, res, next) {
     }
 }
 
-async function deleteExtra(req, res, next) {
-    try {
-        const { id_extra } = req.params;
-        let extra = await extrasRepository.getExtraById(id_extra);
-        /*LÓGICA PARA VER SI TIENE RESERVAS PENDIENTES if (user.pending_payment === 0) {
-            const err = new Error('No puedes borrar tu usuario hasta que no se realicen los pagos pendientes');
-            err.httpCode = 403;
-            throw err;
-        }*/
-        extra = await extrasRepository.deleteExtra(id_extra);
-
-        res.status(201);
-        res.send(`Extra ${extra} borrado`);
-    } catch (error) {
-        next(error);
-    }
-}
 module.exports = {
     createExtras,
     updateExtra,

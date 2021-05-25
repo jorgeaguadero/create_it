@@ -1,7 +1,8 @@
 const Joi = require('joi');
 
 const { bookingsRepository, reviewsRepository } = require('../repositories');
-const { isAfterDate } = require('../middlewares/dateValidate');
+const { isAfterDate, isBeforeDate } = require('../middlewares/dateValidate');
+const { validateProperty } = require('../utils/users-auth');
 
 //-->Crear review (user)
 async function createReview(req, res, next) {
@@ -18,14 +19,13 @@ async function createReview(req, res, next) {
         await schema.validateAsync({ rating, text });
 
         //TODO extraer como función ??
-        if (Number(id_user) !== req.auth.id) {
-            const err = new Error('El usuario no tiene permisos');
-            err.status = 403;
-            throw err;
-        }
+        validateProperty(req, req.params);
 
         const booking = await bookingsRepository.getBookingById(id_booking);
-        const review_date = isAfterDate(booking.start_date);
+        validateProperty(req, booking);
+        const review_date = new Date();
+        //cambio a before para pruebas y añado fechade hor
+        /*const review_date = isBeforeDate(booking.start_date);*/
 
         reviews = await reviewsRepository.getReviewsByUserId(id);
         const reviewCheck = reviews.some((r) => r.id_booking === Number(id_booking));
@@ -37,9 +37,16 @@ async function createReview(req, res, next) {
             throw err;
         }
 
-        const createdReview = await reviewsRepository.createReview(id_booking, review_date, rating, text, id_user);
+        const createdReview = await reviewsRepository.createReview(
+            booking.id_space,
+            id_booking,
+            review_date,
+            rating,
+            text,
+            id_user
+        );
         res.status(201);
-        res.send(createdReview);
+        res.send({ createdReview });
     } catch (err) {
         next(err);
     }
@@ -49,19 +56,10 @@ async function createReview(req, res, next) {
 async function getReviewsByUserId(req, res, next) {
     try {
         const { id_user } = req.params;
-        const { role } = req.auth;
 
-        await sortSchema.validateAsync({ sortfield, sortdir });
-        //Evaluamos primero el rol--> si es admin puede ver las reservas
-        //TODO extraer?
-        if (role === 'user' && Number(id_user) !== req.auth.id) {
-            const err = new Error('El usuario no tiene permisos');
-            err.status = 403;
-            throw err;
-        }
-
-        const reviews = await reviewsRepository.getReviewsByUserId(id_user, sortfield, sortdir);
-        res.send(reviews);
+        const reviews = await reviewsRepository.getReviewsByUserId(id_user);
+        validateProperty(req, req.params);
+        res.send({ reviews });
     } catch (err) {
         next(err);
     }
@@ -76,23 +74,27 @@ async function getAllReviews(req, res, next) {
     }
 }
 
+async function getReviewsBySpace(req, res, next) {
+    try {
+        const { id_space } = req.params;
+
+        const reviews = await reviewsRepository.getReviewsBySpace(id_space);
+        res.send(reviews);
+    } catch (err) {
+        next(err);
+    }
+}
+
 async function deleteReviewById(req, res, next) {
     try {
-        const { id_user } = req.params;
-        const { id } = req.auth;
+        const { id_review } = req.params;
 
-        //TODO extraer
-        if (Number(id_user) !== review[0].id_user) {
-            const err = new Error('Sólo el dueño de la review o el admin puede borrar');
-            err.httpCode = 403;
+        validateProperty(req, req.params);
 
-            throw err;
-        }
-
-        await reviewsRepository.deleteReviewById(id_user);
+        await reviewsRepository.deleteReviewById(id_review);
 
         res.status(204);
-        res.send('borrada');
+        res.send({ Message: 'borrada' });
     } catch (err) {
         next(err);
     }
@@ -103,4 +105,5 @@ module.exports = {
     getReviewsByUserId,
     getAllReviews,
     deleteReviewById,
+    getReviewsBySpace,
 };

@@ -2,10 +2,10 @@ const Joi = require('joi');
 const { formatISO } = require('date-fns');
 
 //TODO VALIDATE USER PASARLO A MIDDLEWARE Y ASI ADMIN PUEDE TENER PERMISOS EXTRA
-const { validateUser } = require('../utils/users-auth');
 const { bookingsRepository, extrasRepository } = require('../repositories');
 const { isBeforeDate } = require('../middlewares/dateValidate');
-//TODO CAMBIAR BASE DE DATOS PARA AJUSTAR A PAGOS !!!!
+const { validateProperty } = require('../utils/users-auth');
+
 async function createBooking(req, res, next) {
     try {
         const { id } = req.auth;
@@ -28,24 +28,33 @@ async function createBooking(req, res, next) {
             throw error;
         }
 
-        const priceRoom = await bookingsRepository.getRoomPrice(start_date, id_room);
+        const infoRoom = await bookingsRepository.getRoomInfo(start_date, id_room);
+
         if (!id_extra) {
-            const booking = await bookingsRepository.createBooking(id, id_room, start_date, priceRoom.price);
+            const booking = await bookingsRepository.createBooking(
+                id,
+                infoRoom.id_space,
+                id_room,
+                start_date,
+                infoRoom.price
+            );
             res.status(201);
 
             res.send({
                 booking: booking.id_booking,
                 user: booking.id_user,
+                space: booking.id_space,
                 room: booking.id_room,
                 date: booking.start_date,
                 price: booking.price,
             });
         } else {
-            const priceExtra = await bookingsRepository.getExtraPrice(start_date, id_extra);
+            const infoExtra = await bookingsRepository.getExtraInfo(start_date, id_extra, infoRoom.id_space);
             //me devuelve la fecha con una hora menos-->un dia menos formateo a ISO
-            const totalPrice = priceRoom.price + priceExtra.price;
+            const totalPrice = infoRoom.price + infoExtra.price;
             const booking = await bookingsRepository.createBookingWithExtra(
                 id,
+                infoRoom.id_space,
                 id_room,
                 id_extra,
                 start_date,
@@ -54,31 +63,33 @@ async function createBooking(req, res, next) {
             const fechaBien = formatISO(booking.start_date, { representation: 'date' });
             res.status(201);
 
-            res.send(fechaBien);
+            res.send({ fecha: fechaBien, booking });
         }
     } catch (err) {
         next(err);
     }
 }
+
+//TODO
 async function payBooking(req, res, next) {
     try {
         const { id_booking } = req.params;
+        const { id } = req.auth;
 
-        let booking = await bookingsRepository.getBookingByIdBookingById(id_booking);
+        let booking = await bookingsRepository.getBookingById(id_booking);
+        //TODO utils
+        validateProperty(req, booking);
 
-        validateUser(req, booking);
-
-        //TODO CAMBIAR BASE DE DATOS PARA AJUSTAR A PAGOS !!!!
-        if (booking.payment_state === '1') {
+        if (booking.pending_payment === 0) {
             const error = new Error('ya está pagado');
             throw error;
         }
 
-        booking = await bookingsRepository.payBooking(id_booking);
-
+        result = await bookingsRepository.payBooking(id_booking, id);
+        //TODO envio Mail
         res.status(201);
 
-        res.send(`pago ${id_booking} realizado`);
+        res.send(result);
     } catch (error) {
         next(error);
     }
@@ -90,10 +101,9 @@ async function payBooking(req, res, next) {
 async function deleteBooking(req, res, next) {
     try {
         const { id_booking } = req.params;
+        let booking = await bookingsRepository.getBookingById(id_booking);
 
-        let booking = await bookingsRepository.getBookingByIdBookingById(id_booking);
-
-        validateUser(req, booking);
+        validateProperty(req, booking);
         const start_date = booking.start_date;
 
         if (isBeforeDate(start_date)) {
@@ -101,11 +111,10 @@ async function deleteBooking(req, res, next) {
             throw error;
         }
 
-        booking = await bookingsRepository.deleteBooking(id_booking);
+        booking = await bookingsRepository.deleteBooking(id_booking, booking.id_user);
 
         res.status(201);
-
-        res.send(`Reserva ${id_booking} cancelada`);
+        res.send({ Message: `Reserva ${id_booking} cancelada` });
     } catch (error) {
         next(error);
     }
@@ -113,10 +122,10 @@ async function deleteBooking(req, res, next) {
 
 async function getBookingsByUser(req, res, next) {
     try {
-        const { id_user } = req.params;
-        validateUser(req, req.params);
+        const { id } = req.auth;
+        validateProperty(req, req.params);
 
-        const bookings = await bookingsRepository.getBookingsByUser(id_user);
+        const bookings = await bookingsRepository.getBookingsByUser(id);
 
         res.send(bookings);
     } catch (err) {

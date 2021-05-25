@@ -14,16 +14,8 @@ async function getRoomByCode(code) {
 }
 
 async function createRoom(data) {
-    const query =
-        'INSERT INTO rooms (id_space,room_code,room_name, description,price,number_people) VALUES (?,?,?,?,?,?)';
-    await database.pool.query(query, [
-        data.id_space,
-        data.room_code,
-        data.room_name,
-        data.description,
-        data.price,
-        data.number_people,
-    ]);
+    const query = 'INSERT INTO rooms (id_space,room_code, description,price,capacity) VALUES (?,?,?,?,?)';
+    await database.pool.query(query, [data.id_space, data.room_code, data.description, data.price, data.capacity]);
 
     return getRoomByCode(data.room_code);
 }

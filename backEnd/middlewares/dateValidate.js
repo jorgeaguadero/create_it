@@ -1,5 +1,6 @@
 //https://date-fns.org/v2.21.3/docs/Getting-Started
-const { isEqual, isBefore, parseISO, isAfter } = require('date-fns');
+const { isEqual, isBefore, parseISO, isAfter, zonedTimeToUtc, utcToZonedTime } = require('date-fns');
+const timeZone = 'Europe/Berlin';
 
 //CONTROLES DE FECHAS PARA RESERVAS Y MODIFICACIONES
 function isBeforeDate(start_date) {
@@ -16,7 +17,7 @@ function isAfterDate(start_date) {
         const error = new Error('la fecha tiene que ser posterior a la reserva');
         throw error;
     }
-    return eventDate;
+    return utcToZonedTime(evendate, timeZone);
 }
 
 function isEqualDate(start_date) {
@@ -29,6 +30,10 @@ function isEqualDate(start_date) {
     return eventDate;
 }
 
+function formatDate(date) {
+    return utcToZonedTime(date, timeZone);
+}
+
 //TODO EXTRAS
 //TODO COMPARAR FECHA DE RESERVA  >= HOY
 //TODO COMPARAR FECHA MODIFICACION DE RESERVA < FECHA DE RESERVA-1 DIA
@@ -38,4 +43,5 @@ module.exports = {
     isBeforeDate,
     isAfterDate,
     isEqualDate,
+    formatDate,
 };

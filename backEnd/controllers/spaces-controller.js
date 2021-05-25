@@ -6,19 +6,29 @@ const jwt = require('jsonwebtoken');
 
 //TODO pendiente gestión de fotos
 const { spacesRepository } = require('../repositories');
+const { usersRepository } = require('../repositories');
 //TODO AÑADIR MEDIA DE RATING DE REVIEWS POR ESPACIO+ NUM REVIEWS??-> SINO SERIA 0 al inicio sin más info
 async function createSpaces(req, res, next) {
     try {
         const { id_user, space_name, description, location, address, email, phone } = req.body;
 
         const schema = Joi.object({
-            id_user: Joi.number().required(),
+            id_user: Joi.number()
+                .required()
+                .error(() => new Error('user')),
             space_name: Joi.string().required(),
             description: Joi.string().required(),
             location: Joi.string().required(),
             address: Joi.string(),
-            email: Joi.string().email().required(),
-            phone: Joi.number().min(9).required(),
+            email: Joi.string()
+                .email()
+                .required()
+                .error(() => new Error('mail')),
+            phone: Joi.string()
+                .min(9)
+                .max(14)
+                .required()
+                .error(() => new Error('mail')),
         });
 
         await schema.validateAsync({
@@ -35,6 +45,18 @@ async function createSpaces(req, res, next) {
         if (space) {
             const err = new Error(`Ya existe un espacio con el email ${email}`);
             err.httpCode = 409;
+            throw err;
+        }
+        const user = await usersRepository.findUserById(id_user);
+        if (!user) {
+            const err = new Error(`no existe ese usuario administrador`);
+            err.httpCode = 409;
+            throw err;
+        }
+        //comprobar que el administrador de la sala tiene rol de admin
+        if (user.role !== 'admin') {
+            const err = new Error('solo debe de administrar el administrador');
+            err.httpCode = 403;
             throw err;
         }
         const createdSpace = await spacesRepository.createSpace({
@@ -70,7 +92,7 @@ async function updateSpace(req, res, next) {
 
         res.status(201);
 
-        res.send(`Datos de: ${space.space_name} cambiados`);
+        res.send(space);
     } catch (error) {
         next(error);
     }
@@ -111,7 +133,7 @@ async function deleteSpace(req, res, next) {
         space = await spacesRepository.deleteSpace(id_space);
 
         res.status(201);
-        res.send(`Espacio ${space} borrado`);
+        res.send({ Message: `Espacio ${space} borrado` });
     } catch (error) {
         next(error);
     }

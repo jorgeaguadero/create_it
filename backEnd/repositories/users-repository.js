@@ -14,13 +14,13 @@ async function getUsers() {
 }
 
 async function createUser(data) {
-    const query = 'INSERT INTO users (first_name,email, passwordHash) VALUES (?,?,?)';
-    await database.pool.query(query, [data.name, data.email, data.passwordHash]);
+    const query = 'INSERT INTO users (first_name,last_name,email, passwordHash) VALUES (?,?,?,?)';
+    await database.pool.query(query, [data.name, data.last_name, data.email, data.passwordHash]);
 
     return getUserByEmail(data.email);
 }
 
-async function updateProfile(data, id) {
+async function updateProfile(data, id, ModDate) {
     const replaceNotNull = async (row, value, id_user = id) => {
         if (value !== undefined && row !== 'role') {
             const query = `UPDATE users SET ${row} = '${value}' WHERE id_user = '${id_user}'`;
@@ -29,15 +29,16 @@ async function updateProfile(data, id) {
     };
 
     for (const row in data) await replaceNotNull(row, data[row]);
-
+    const query = `UPDATE users SET modification_date = '${ModDate}' WHERE id_user = '${id}'`;
+    await database.pool.query(query);
     return findUserById(id);
 }
 
 async function findUserById(id) {
     const query = 'SELECT * FROM users WHERE id_user= ?';
-    const [users] = await database.pool.query(query, id);
+    const [user] = await database.pool.query(query, id);
 
-    return users[0];
+    return user[0];
 }
 
 async function updatePassword(passwordHash, id_user) {

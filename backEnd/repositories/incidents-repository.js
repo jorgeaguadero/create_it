@@ -18,15 +18,16 @@ async function getAllIncidents() {
 async function getIncidentById(id) {
     const query = 'SELECT * FROM incidents WHERE id_incident = ?';
     const [incident] = await database.pool.query(query, id);
-    
+
     //TODO ver datos de devolucion
     return incident[0];
 }
 
-async function createIncident(id_booking, incident_date, type, description, id_user) {
-    const query = 'INSERT INTO incidents (id_user,id_booking ,incident_date, type, description) VALUES (?, ?, ?, ?,?)';
+async function createIncident(bookingId, spaceId, incidentDate, type, description, userId) {
+    const query =
+        'INSERT INTO incidents (id_user,id_space,id_booking ,incident_date, type, description) VALUES (?, ?, ?,?, ?,?)';
 
-    const [result] = await database.pool.query(query, [id_user, id_booking, incident_date, type, description]);
+    const [result] = await database.pool.query(query, [userId, spaceId, bookingId, incidentDate, type, description]);
 
     return getIncidentById(result.insertId);
 }

@@ -1,42 +1,42 @@
 const Joi = require('joi');
 
 const { bookingsRepository, incidentsRepository } = require('../repositories');
-const { isAfterDate, isEqualDate } = require('../middlewares/dateValidate');
+const { isBeforeDate, isEqualDate, formatDate } = require('../middlewares/dateValidate');
+const { validateProperty } = require('../utils/users-auth');
 
 //-->crear Incidencia (user)
 async function createIncident(req, res, next) {
     try {
-        const { id_user, id_booking } = req.params;
-        const { id } = req.auth;
+        const { id_booking } = req.params;
         const { type, description } = req.body;
+        const { id } = req.auth;
+        const booking = await bookingsRepository.getBookingById(id_booking);
+        validateProperty(req, booking);
 
         const schema = Joi.object({
             type: Joi.string().min(1).max(500).required(),
             description: Joi.string().min(1).max(500).required(),
         });
-
         await schema.validateAsync({ type, description });
 
-        //TODO extraer como función ??
-        if (Number(id_user) !== id) {
-            const err = new Error('El usuario no tiene permisos');
-            err.status = 403;
-            throw err;
-        }
-
-        const booking = await bookingsRepository.getBookingById(id_booking);
         //comprobar que el incidente es el dia de la reserva por variar
         //const incident_date = isEqualDate(booking.start_date);
-        const incident_date = isAfterDate(booking.start_date);
-        const createdIncident = await incidentsRepository.createIncident(
+        //Para pruebas compruebo asi y meto la fecha desde aqui
+        isBeforeDate(booking.start_date);
+        const incident_date = new Date();
+        const { createdIncident } = await incidentsRepository.createIncident(
             id_booking,
+            booking.id_space,
             incident_date,
             type,
             description,
-            id_user
+            id
         );
+
+        const dateUTC = formatDate(createdIncident.incident_date);
+
         res.status(201);
-        res.send(createdIncident);
+        res.send({ Message: dateUTC });
     } catch (err) {
         next(err);
     }

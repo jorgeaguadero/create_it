@@ -9,20 +9,34 @@ const { usersRepository } = require('../repositories');
 //Todo Añadir envio de mail para confirmaciones  --> token de validacion ?? --> sendgrid +nanoid
 async function registrer(req, res, next) {
     try {
-        const { name, email, password, repeatedPassword } = req.body;
+        const { name, last_name, email, password, repeatedPassword } = req.body;
 
         const schema = Joi.object({
-            name: Joi.string().required(),
+            name: Joi.string()
+                .required()
+                .error(() => new Error('nombre')),
+            last_name: Joi.string()
+                .required()
+                .error(() => new Error('Apellido')),
             email: Joi.string()
                 .email()
                 .required()
                 .error(() => new Error('mail invalido')),
-            password: Joi.string().min(6).max(12).required(),
-            repeatedPassword: Joi.string().min(6).max(12).required(),
+            password: Joi.string()
+                .min(6)
+                .max(12)
+                .required()
+                .error(() => new Error('pass1')),
+            repeatedPassword: Joi.string()
+                .min(6)
+                .max(12)
+                .required()
+                .error(() => new Error('pass2')),
         });
 
         await schema.validateAsync({
             name,
+            last_name,
             email,
             password,
             repeatedPassword,
@@ -45,6 +59,7 @@ async function registrer(req, res, next) {
 
         const createdUser = await usersRepository.createUser({
             name,
+            last_name,
             email,
             passwordHash,
         });
@@ -60,13 +75,21 @@ async function registrer(req, res, next) {
         next(err);
     }
 }
+//TODO comprobar si ya está logado o no
 async function login(req, res, next) {
     try {
         const { email, password } = req.body;
 
         const schema = Joi.object({
-            email: Joi.string().email().required(),
-            password: Joi.string().min(5).max(20).required(),
+            email: Joi.string()
+                .email()
+                .required()
+                .error(() => new Error('mail invalido')),
+            password: Joi.string()
+                .min(6)
+                .max(12)
+                .required()
+                .error(() => new Error('pass invalido')),
         });
 
         await schema.validateAsync({ email, password });
@@ -99,32 +122,79 @@ async function login(req, res, next) {
         next(err);
     }
 }
+
+//TODO logout
+async function logout(req, res, next) {
+    try {
+        const { id_user } = req.params;
+        const { id } = req.auth;
+        if (Number(id_user) !== id) {
+            const err = new Error('No eres el usuario ');
+            err.httpCode = 403;
+            throw err;
+        }
+        const tokenPayload = {};
+
+        const token = jwt.sign(tokenPayload, process.env.SECRET);
+
+        res.send({
+            Message: 'Ha finalizado sesión con exito',
+            token,
+        });
+    } catch (err) {
+        next(err);
+    }
+}
+
+//TODO corregir fecha actualizacion --> formato
 async function updateProfile(req, res, next) {
     try {
         const { id_user } = req.params;
         const data = req.body;
-        //TODO Joi
-        const user = await usersRepository.updateProfile(data, id_user);
+        const ModDate = new Date();
+        const schema = Joi.object({
+            phone: Joi.string()
+                .min(9) //numeros int
+                .max(14)
+                .error(() => new Error('movil')),
+            bio: Joi.string().error(() => new Error('bio')),
+        });
+
+        await schema.validateAsync(data);
+
+        const user = await usersRepository.updateProfile(data, id_user, ModDate);
 
         res.status(201);
 
-        res.send(`Datos del usuario: ${user.id_user} cambiados`);
+        res.send(user);
     } catch (error) {
         next(error);
     }
 }
 
 //TODO FOTO AVATAR --> multer uuid??
-
+//TODO Comprobar que nueva y vieja no son iguales
 async function updatePassword(req, res, next) {
     try {
         const { id_user } = req.params;
         const data = req.body;
 
         const schema = Joi.object({
-            password: Joi.string().min(6).max(12).required(),
-            newPassword: Joi.string().min(6).max(12).required(),
-            repeatedNewPassword: Joi.string().min(6).max(12).required(),
+            password: Joi.string()
+                .min(6)
+                .max(12)
+                .required()
+                .error(() => new Error('passac')),
+            newPassword: Joi.string()
+                .min(6)
+                .max(12)
+                .required()
+                .error(() => new Error('new1')),
+            repeatedNewPassword: Joi.string()
+                .min(6)
+                .max(12)
+                .required()
+                .error(() => new Error('new2')),
         });
         await schema.validateAsync(data);
         //let por que luego volvemos a utilizar user para devolver la confirmacion
@@ -141,13 +211,17 @@ async function updatePassword(req, res, next) {
             err.httpCode = 400;
             throw err;
         }
+        if (data.newPassword === data.password) {
+            const err = new Error('no debe de ser igual');
+            err.httpCode = 400;
+            throw err;
+        }
 
         const passwordHash = await bcrypt.hash(data.newPassword, 10);
         user = await usersRepository.updatePassword(passwordHash, id_user);
 
         res.status(201);
-        //TODO respuestas json
-        res.send(`user ${user.id_user} ha cambiado la contraseña`);
+        res.send(user);
     } catch (error) {
         next(error);
     }
@@ -157,7 +231,7 @@ async function deleteUser(req, res, next) {
     try {
         const { id_user } = req.params;
         const user = await usersRepository.findUserById(id_user);
-        if (user.pending_payment === 0) {
+        if (user.pending_payment === 1) {
             const err = new Error('No puedes borrar tu usuario hasta que no se realicen los pagos pendientes');
             err.httpCode = 403;
             throw err;
@@ -165,7 +239,7 @@ async function deleteUser(req, res, next) {
         await usersRepository.deleteUser(id_user);
 
         res.status(201);
-        res.send('Usuario borrado');
+        res.send({ Message: 'Usuario borrado' });
     } catch (error) {
         next(error);
     }
@@ -200,6 +274,7 @@ module.exports = {
     deleteUser,
     viewProfileUser,
     getUsers,
+    logout,
     //updateAvatar,
     //deleteAvatar,
 };

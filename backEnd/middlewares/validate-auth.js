@@ -6,20 +6,25 @@ const { spacesRepository } = require('../repositories');
 const { roomsRepository } = require('../repositories');
 const { extrasRepository } = require('../repositories');
 const { bookingsRepository } = require('../repositories');
+const { reviewsRepository } = require('../repositories');
 
 //VALIDADORES DE AUTORIZACION PARA USUARIOS /ADMIN
 async function validateAuthorization(req, res, next) {
     try {
         const { authorization } = req.headers;
-
-        if (!authorization || !authorization.startsWith('Bearer ')) {
+        const token = authorization.slice(7, authorization.length);
+        if (token === 'null') {
             const error = new Error('Authorization header required');
             error.code = 401;
             throw error;
         }
-
-        const token = authorization.slice(7, authorization.length);
         const decodedToken = jwt.verify(token, process.env.SECRET);
+
+        if (!authorization || !decodedToken.id || !authorization.startsWith('Bearer ')) {
+            const error = new Error('Authorization header required');
+            error.code = 401;
+            throw error;
+        }
 
         const query = 'SELECT * FROM users WHERE id_user= ?';
         const [users] = await database.pool.query(query, decodedToken.id);
@@ -51,10 +56,11 @@ async function validateAdmin(req, res, next) {
     }
 }
 
+//Gestion de usuarios
 async function validateUser(req, res, next) {
     try {
         const { id_user } = req.params;
-        const { id } = req.auth;
+        const { id, role } = req.auth;
         const user = await usersRepository.findUserById(id);
         if (!user) {
             const err = new Error('No existe usuario con ese email');
@@ -77,7 +83,10 @@ async function validateUser(req, res, next) {
 
 async function validateSpace(req, res, next) {
     try {
-        const { id_space } = req.params;
+        let { id_space } = req.params;
+        if (!id_space) {
+            id_space = req.body.id_space;
+        }
         const space = await spacesRepository.getSpaceById(id_space);
         if (!space) {
             const err = new Error('No existe este espacio');
@@ -93,7 +102,11 @@ async function validateSpace(req, res, next) {
 }
 async function validateRoom(req, res, next) {
     try {
-        const { id_room } = req.params;
+        let { id_room } = req.params;
+        if (!id_room) {
+            id_room = req.body.id_room;
+        }
+
         const room = await roomsRepository.getRoomById(id_room);
         if (!room) {
             const err = new Error('No existe sala con ese código');
@@ -110,7 +123,10 @@ async function validateRoom(req, res, next) {
 
 async function validateExtra(req, res, next) {
     try {
-        const { id_extra } = req.params;
+        let { id_extra } = req.params;
+        if (!id_extra) {
+            id_extra = req.body.id_extra;
+        }
         const extra = await extrasRepository.getExtraById(id_extra);
         if (!extra) {
             const err = new Error('No existe extra con ese código');
@@ -145,9 +161,26 @@ async function validateBooking(req, res, next) {
 async function validateReview(req, res, next) {
     try {
         const { id_review } = req.params;
-        const review = await bookingsRepository.getReviewById(id_review);
+        const review = await reviewsRepository.getReviewById(id_review);
         if (!review) {
             const err = new Error('No existe review con ese código');
+            err.httpCode = 401;
+            throw err;
+        }
+
+        next();
+    } catch (err) {
+        res.status(err.status || 500);
+        res.send({ error: err.message });
+    }
+}
+
+async function validateIncident(req, res, next) {
+    try {
+        const { id_incident } = req.params;
+        const incident = await incidentsRepository.getIncidentById(id_incident);
+        if (!incident) {
+            const err = new Error('La incidencia no existe');
             err.httpCode = 401;
             throw err;
         }
@@ -169,4 +202,5 @@ module.exports = {
     validateExtra,
     validateBooking,
     validateReview,
+    validateIncident,
 };

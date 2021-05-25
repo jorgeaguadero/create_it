@@ -3,7 +3,15 @@ const { database } = require('../infrastructure');
 async function getReviewsByUserId(userId) {
     const query = 'SELECT * FROM reviews WHERE id_user = ?';
 
-    const [reviews] = await database.pool.query(query, userId);
+    const reviews = await database.pool.query(query, userId);
+
+    return reviews;
+}
+
+async function getReviewsBySpace(spaceId) {
+    const query = 'SELECT * FROM reviews WHERE id_space = ?';
+
+    const [reviews] = await database.pool.query(query, spaceId);
 
     return reviews;
 }
@@ -16,16 +24,17 @@ async function getAllReviews() {
 }
 
 async function getReviewById(id) {
-    const query = 'SELECT * FROM reviews WHERE id_user = ?';
+    const query = 'SELECT * FROM reviews WHERE id_review = ?';
     const [review] = await database.pool.query(query, id);
 
-    return review;
+    return review[0];
 }
 
-async function createReview(id_booking, review_date, rating, text, id_user) {
-    const query = 'INSERT INTO reviews (id_user,id_booking ,review_date, rating, text) VALUES (?, ?, ?, ?,?)';
+async function createReview(space, id_booking, review_date, rating, text, id_user) {
+    const query =
+        'INSERT INTO reviews (id_space,id_user,id_booking ,review_date, rating, text) VALUES (?,?, ?, ?, ?,?)';
 
-    const [result] = await database.pool.query(query, [id_user, id_booking, review_date, rating, text]);
+    const [result] = await database.pool.query(query, [space, id_user, id_booking, review_date, rating, text]);
 
     return getReviewById(result.insertId);
 }
@@ -42,4 +51,5 @@ module.exports = {
     createReview,
     getReviewById,
     deleteReviewById,
+    getReviewsBySpace,
 };

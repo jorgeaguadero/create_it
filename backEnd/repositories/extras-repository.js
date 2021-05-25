@@ -14,8 +14,8 @@ async function getExtraByCode(code) {
 }
 
 async function createExtra(data) {
-    const query = 'INSERT INTO extras (id_space,extra_code,description,stock,price) VALUES (?,?,?,?,?)';
-    await database.pool.query(query, [data.id_space, data.extra_code, data.description, data.stock, data.price]);
+    const query = 'INSERT INTO extras (id_space,extra_code,description,price) VALUES (?,?,?,?)';
+    await database.pool.query(query, [data.id_space, data.extra_code, data.description, data.price]);
 
     return getExtraByCode(data.extra_code);
 }
