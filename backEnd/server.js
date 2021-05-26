@@ -33,7 +33,7 @@ const { validateAuth } = require('./middlewares');
 const { PORT } = process.env;
 
 const staticPath = path.resolve(__dirname, 'static');
-//TODO extraer??
+//TODO extraer??--> avatar --> fileupload+ sharp
 const userAvatar = multer({
     storage: multer.diskStorage({
         destination: function (req, file, cb) {
