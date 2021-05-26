@@ -116,9 +116,12 @@ CREATE TABLE reviews (
     CONSTRAINT fk_review_booking FOREIGN KEY (id_booking) REFERENCES bookings (id_booking) 
 );
 
-insert into users (first_name,last_name, email, passwordHash,phone ) values ('Jorge', 'Aguadero', 'jorgeaguadero@createit.com','$2a$10$uNY2e/48xjzjnZR9Vs5k6erkdOU9O9P0VrCSsYfglPdASCDwd46pa',666152053);
-UPDATE users SET role = 'admin' WHERE id_user = 1;
+insert into users (first_name,last_name, email, passwordHash,phone,role ) values ('Jorge', 'Aguadero', 'jorgeaguadero@createit.com','$2a$10$uNY2e/48xjzjnZR9Vs5k6erkdOU9O9P0VrCSsYfglPdASCDwd46pa',666152053,'admin');
+insert into users (first_name,last_name, email, passwordHash ) values ('Prueba1', 'Probando', 'prueba1@createit.com','$2a$10$uNY2e/48xjzjnZR9Vs5k6erkdOU9O9P0VrCSsYfglPdASCDwd46pa');
+
 insert into spaces (id_user,space_name, description, location,address,email,phone ) values (1, "El Bunker", 'Locales y sala de conciertos en leon','León','Calle tiriri','elbunker@createit.com',123456789 );
 insert into rooms (id_space,room_code,description,price,capacity) values (1, "BUNGRU01", 'Sala grupal 1',20,5 );
 insert into extras (id_space,extra_code,description,price) values (1, "PACK001", 'backline1',5 );
+insert into bookings (id_user,id_space,id_room,start_date,price) values(2,1,1,current_timestamp(),20);
+insert into bookings (id_user,id_space,id_room,start_date,price) values(2,1,1,'2021-01-01',20);
 
