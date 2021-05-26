@@ -199,6 +199,7 @@ async function validateIncident(req, res, next) {
 }
 
 ////Creamos la ruta al directorio de uploads
+//TODO personalizar para cada usuario--> asi solo puede ver cada uno su foto
 const uploadsDir = path.join(__dirname, process.env.UPLOADS_DIRECTORY);
 async function saveAvatar({ file }) {
     try {
