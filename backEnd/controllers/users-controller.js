@@ -8,6 +8,8 @@ const { v4: uuidv4 } = require('uuid');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const { usersRepository } = require('../repositories');
+const { saveAvatar, deleteAvatar } = require('../middlewares/validate-auth');
+const fileUpload = require('express-fileupload');
 
 //Todo Añadir envio de mail para confirmaciones  --> token de validacion ?? --> sendgrid +nanoid
 async function registrer(req, res, next) {
@@ -205,6 +207,32 @@ async function updateAvatar(req, res, next) {
         next(err);
     }
 }
+//Avatar  con sharp y express-fileupload -->> tutoria en videoshackaboss
+
+async function addAvatar(req, res, next) {
+    try {
+        if (!req.files || !req.files.avatar) {
+            const error = new Error('Es necesario subir un fichero');
+            error.httpCode = 400;
+            throw error;
+        }
+        const { avatar } = req.files;
+        const { id_user } = req.params;
+
+        const user = await usersRepository.findUserById(id_user);
+        if (user.avatar) {
+            await deleteAvatar({ file: user.avatar });
+        }
+        const fileName = await saveAvatar({ file: avatar });
+
+        const updateUser = await usersRepository.updateAvatar(fileName, id_user);
+
+        res.status(201);
+        res.send({ user: updateUser });
+    } catch (err) {
+        next(err);
+    }
+}
 
 //TODO Comprobar que nueva y vieja no son iguales
 async function updatePassword(req, res, next) {
@@ -310,4 +338,5 @@ module.exports = {
     logout,
     updateAvatar,
     //deleteAvatar,
+    addAvatar,
 };

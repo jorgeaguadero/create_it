@@ -1,9 +1,10 @@
 require('dotenv').config();
+const fileUpload = require('express-fileupload');
 const path = require('path');
 const fs = require('fs');
 const express = require('express');
 const multer = require('multer');
-const { v4: uuidv4 } = require('uuid');
+const { v4: uuidv4, validate } = require('uuid');
 
 const cors = require('cors');
 
@@ -29,11 +30,10 @@ const {
     validateIncident,
 } = require('./middlewares/validate-auth');
 
-const { validateAuth } = require('./middlewares');
 const { PORT } = process.env;
 
 const staticPath = path.resolve(__dirname, 'static');
-//TODO extraer??--> avatar --> fileupload+ sharp
+//TODO extraer??--> avatar --> fileupload+ sharp-->
 const userAvatar = multer({
     storage: multer.diskStorage({
         destination: function (req, file, cb) {
@@ -91,7 +91,8 @@ const roomPĥotos = multer({
 const app = express();
 //app.use(cors());
 app.use(express.json());
-
+app.use(fileUpload());
+app.use('/uploads', express.static('static'));
 app.use(express.static(staticPath));
 
 //users -->>ok
@@ -111,17 +112,16 @@ app.delete('/api/users/:id_user', validateAuthorization, validateUser, usersCont
 app.get('/api/users/:id_user', validateAuthorization, validateUser, usersController.viewProfileUser);
 //ver perfiles (solo admin)
 app.get('/api/users', validateAuthorization, validateAdmin, usersController.getUsers);
-//logout
-app.post('/api/users/logout', usersController.logout);
 
 //Actualizar avatar de usuario, POST en vez de PATCH/PUT porque borro el avatar de antes
-app.post(
+app.post('/api/users/:id_user/avatar', validateAuthorization, validateUser, usersController.addAvatar);
+/*app.post(
     '/api/users/:id_user/avatar',
     validateAuthorization,
     validateUser,
     userAvatar.single('avatar'),
     usersController.updateAvatar
-);
+);*/
 
 //TODO --> Admin borrar todo // Listar usuarios pendientes de pago??
 

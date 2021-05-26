@@ -1,6 +1,12 @@
 const jwt = require('jsonwebtoken');
 const { database } = require('../infrastructure');
 
+//TODO pasar a helper--> organizar validadores y helper
+const path = require('path');
+const fs = require('fs').promises;
+const sharp = require('sharp');
+const { nanoid } = require('nanoid');
+
 const { usersRepository } = require('../repositories');
 const { spacesRepository } = require('../repositories');
 const { roomsRepository } = require('../repositories');
@@ -192,6 +198,36 @@ async function validateIncident(req, res, next) {
     }
 }
 
+////Creamos la ruta al directorio de uploads
+const uploadsDir = path.join(__dirname, process.env.UPLOADS_DIRECTORY);
+async function saveAvatar({ file }) {
+    try {
+        ////Nos aseguramos de que el directorio existe
+        await fs.mkdir(uploadsDir, { recursive: true });
+
+        ////Cargamos la imagen en sharp --> https://github.com/lovell/sharp
+        const image = sharp(file.data);
+
+        //TODOModificamos el tamaño de la imagen a un estandar--> ver en webs fotos de avatar
+        image.resize(500);
+
+        //TODO webp
+        const fileName = `${nanoid(20)}.jpg`;
+
+        //Guardamos la imagen en el directorio de uploadas
+        await image.toFile(path.join(uploadsDir, fileName));
+
+        //devolvemos el nombre del fichero
+        return fileName;
+    } catch (error) {
+        throw new Error('Error subiendo imagen');
+    }
+}
+
+async function deleteAvatar({ file }) {
+    const avatarPath = path.join(uploadsDir, file);
+    await fs.unlink(avatarPath);
+}
 //Comentario de prueba para rama
 module.exports = {
     validateAuthorization,
@@ -203,4 +239,6 @@ module.exports = {
     validateBooking,
     validateReview,
     validateIncident,
+    saveAvatar,
+    deleteAvatar,
 };
