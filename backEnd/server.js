@@ -28,6 +28,7 @@ const {
     validateBooking,
     validateReview,
     validateIncident,
+    validateEmail,
 } = require('./middlewares/validate-auth');
 
 const { PORT } = process.env;
@@ -95,25 +96,20 @@ app.use(fileUpload());
 app.use('/uploads', express.static('static'));
 app.use(express.static(staticPath));
 
-//users -->>ok
-//registro
+//USERS
+//1.1.1-->REGISTRO SE PASA COMPOBACIÓN DE REPETIDAS EN FRONT
 app.post('/api/users', usersController.registrer);
-//login
-app.post('/api/users/login', usersController.login);
-// logout
-app.post('/api/users/:id_user/logout', validateAuthorization, validateUser, usersController.logout);
-//TODO actualizar datos de perfil (foto/bio)--> en update dividir entre avatar y datos
-app.patch('/api/users/:id_user', validateAuthorization, validateUser, usersController.updateProfile);
-//actualizar contraseña -->
-app.patch('/api/users/:id_user/updatePassword', validateAuthorization, validateUser, usersController.updatePassword);
-// borrarme como usuario
-app.delete('/api/users/:id_user', validateAuthorization, validateUser, usersController.deleteUser);
-//ver mi perfil
-app.get('/api/users/:id_user', validateAuthorization, validateUser, usersController.viewProfileUser);
-//ver perfiles (solo admin)
-app.get('/api/users', validateAuthorization, validateAdmin, usersController.getUsers);
+//1.1.2-->CONFIRMACION DE USUARIO
+app.get('/api/verify/:id_user/:activationCode', usersController.confirmationUser);
 
-//Actualizar avatar de usuario, POST en vez de PATCH/PUT porque borro el avatar de antes
+//1.2.1-->LOGIN DE USUARIO
+app.post('/api/users/login', usersController.login);
+//1.2.2-->LOGOUT DE USUARIO
+app.post('/api/users/:id_user/logout', validateAuthorization, validateUser, usersController.logout);
+
+//1.3.1-ACTUALIZACIÓN DE DATOS DE PERFIL
+app.patch('/api/users/:id_user', validateAuthorization, validateUser, usersController.updateProfile);
+//1.3.2-ACTUALIZACIÓN DE AVATAR DEL PERFIL -->POST en vez de PATCH/PUT porque borro el avatar de antes
 app.post('/api/users/:id_user/avatar', validateAuthorization, validateUser, usersController.addAvatar);
 /*app.post(
     '/api/users/:id_user/avatar',
@@ -122,34 +118,50 @@ app.post('/api/users/:id_user/avatar', validateAuthorization, validateUser, user
     userAvatar.single('avatar'),
     usersController.updateAvatar
 );*/
+//1.3.4-ACTUALIZACIÓN DE CONTRASEÑA --> SE PASA COMPOBACIÓN DE REPETIDAS EN FRONT
+app.patch('/api/users/:id_user/updatePassword', validateAuthorization, validateUser, usersController.updatePassword);
+//TODO check mail exist--> 1.3.5.1-->RECUPERAR CONTRASEÑA PARTE 1 POST--> cambio el codigo auth user aunque sea indirectamente
+app.post('/api/recoverPassword', validateEmail, usersController.recoverPassword);
+//1.3.5.2-->RECUPERAR CONTRASEÑA PARTE 2
+app.patch('/api/recoverPassword/:id_user/:activationCode', usersController.newPassword);
+//1.4--> BORRARME COMO USUARIO
+app.delete('/api/users/:id_user', validateAuthorization, validateUser, usersController.deleteUser);
+//1.5.1--> VER MI PERFIL
+app.get('/api/users/:id_user', validateAuthorization, validateUser, usersController.viewProfileUser);
+//1.5.2--> VER TODOS LOS PERFILES
+app.get('/api/users', validateAuthorization, validateAdmin, usersController.getUsers);
 
 //TODO --> Admin borrar todo // Listar usuarios pendientes de pago??
 
 //ESPACIOS
-//Admin crear espacio (Similar a registro de user pero siendo admin)
+//2.1-->Admin-->crear espacio (Similar a registro de user pero siendo admin)
 app.post('/api/spaces', validateAuthorization, validateAdmin, spacesController.createSpaces);
-//Subir Fotos
-app.post(
+//2.2.1-->ADMIN-->modificar espacio
+app.patch('/api/spaces/:id_space', validateAuthorization, validateAdmin, validateSpace, spacesController.updateSpace);
+//2.2.2-->ADMIN Subir Fotos
+/*app.post(
     '/api/spaces/:id_space/photos',
     validateAuthorization,
     validateAdmin,
     validateSpace,
     spacePhotos.array('photos'),
     spacesController.setSpacesPhotos
-);
-//modificar espacio
-app.patch('/api/spaces/:id_space', validateAuthorization, validateAdmin, validateSpace, spacesController.updateSpace);
-//Listar Espacios
+);*/
+
+//2.3.1-->Listar Espacios
 app.get('/api/spaces', spacesController.getSpaces);
-//Listar Espacios individuales
+//2.3.2-->Listar Espacios individuales
 app.get('/api/spaces/:id_space', validateSpace, spacesController.viewSpace);
-// borrar espacio
+//3-->ADMIN--> borrar espacio
 app.delete('/api/spaces/:id_space', validateAuthorization, validateAdmin, validateSpace, spacesController.deleteSpace);
+
 //ROOMS
 //TODO pagos pendientes
-//crear room
+//3.1-->ADMIN-->crear room
 app.post('/api/rooms', validateAuthorization, validateAdmin, roomsController.createRooms);
-//subir fotos
+//3.2.1-->ADMIN-->modificar room
+app.patch('/api/rooms/:id_room', validateAuthorization, validateAdmin, validateRoom, roomsController.updateRoom);
+//3.2.2-->ADMIN-->subir fotos
 app.post(
     '/api/rooms/:id_room/photos',
     validateAuthorization,
@@ -158,58 +170,57 @@ app.post(
     roomPĥotos.array('photos'),
     roomsController.setRoomsPhotos
 );
-//modificar room
-app.patch('/api/rooms/:id_room', validateAuthorization, validateAdmin, validateRoom, roomsController.updateRoom);
-//Listar rooms de un espacio
+
+//3.3.1-->Listar rooms de un espacio
 app.get('/api/spaces/:id_space/rooms', validateSpace, roomsController.getRoomsBySpace);
-//Listar room individual
+//3.3.2-->Listar room individual
 app.get('/api/rooms/:id_room', validateRoom, roomsController.viewRoom);
-//Listar room por query params
+//3.3.3-->Listar room por query params
 app.get('/api/prueba/', roomsController.querySeeker);
-// borrar room
+//3.4-->ADMIN--> borrar room
 app.delete('/api/rooms/:id_room', validateAuthorization, validateAdmin, validateRoom, roomsController.deleteRoom);
 
 //--> EXTRAS
-//crear extra
+//4.1-->ADMIN--> CREAR EXTRA
 app.post('/api/extras', validateAuthorization, validateAdmin, extrasController.createExtras);
-//modificar extra
+//4.2->ADMIN--> MODIFICAR EXTRA
 app.patch('/api/extras/:id_extra', validateAuthorization, validateAdmin, validateExtra, extrasController.updateExtra);
-// borrar extra
-app.delete('/api/extras/:id_extra', validateAuthorization, validateAdmin, validateExtra, extrasController.deleteExtra);
-//Listar extras de un espacio
+//4.3.1 -->VER EXTRAS POR ESPACIO
 app.get('/api/spaces/:id_space/extras', validateSpace, extrasController.getExtrasBySpace);
-//Listar extras individuales
+//4.3.2-->LVER EXTRAS POR ID EXTRA
 app.get('/api/extras/:id_extra', validateExtra, extrasController.viewExtra);
+//4.4-->ADMIN--> BORRAR EXTRA
+app.delete('/api/extras/:id_extra', validateAuthorization, validateAdmin, validateExtra, extrasController.deleteExtra);
 
 //RESERVAS
-//crear reserva --> Falta validar bien fechas de devolución
+//5.1--> CREAR RESERVA Falta validar bien fechas de devolución
 app.post('/api/bookings', validateAuthorization, validateRoom, validateExtra, bookingsController.createBooking);
-////Pagar reserva
+//5.5->PAGAR RESERVA
 app.post('/api/bookings/:id_booking', validateAuthorization, validateBooking, bookingsController.payBooking);
-////--> borrar reserva +Borrar reserva(admin)
-app.delete('/api/bookings/:id_booking', validateAuthorization, validateBooking, bookingsController.deleteBooking);
-//// --> Ver mis reservas // Admin -->reservas por usuario --> //TODOañadimos query params?
+//5.3.1--> VER MIS RESERVAS // ADMIN -->reservas por usuario --> //TODOañadimos query params?
 app.get('/api/users/:id_user/bookings', validateAuthorization, bookingsController.getBookingsByUser);
-////--> Ver Todas por espacio //TODOañadimos query params?
-app.get('/api/users/:id_user/bookings', validateAuthorization, validateAdmin, bookingsController.getBookingsBySpace);
-////--> Ver Todas por sala //TODOañadimos query params?
-app.get('/api/users/:id_user/bookings', validateAuthorization, validateAdmin, bookingsController.getBookingsByRoom);
+//5.3.2--> VER RESERVAS POR ESPACIO //TODOañadimos query params?
+app.get('/api/bookings/spaces/:id_space', validateAuthorization, validateAdmin, bookingsController.getBookingsBySpace);
+//5.3.3-->VER RESERVAS POR SALA //TODOañadimos query params?
+app.get('/api/bookings/rooms/:id_room', validateAuthorization, validateAdmin, bookingsController.getBookingsByRoom);
+//5.4--> BORRAR RESERVASER O ADMIN
+app.delete('/api/bookings/:id_booking', validateAuthorization, validateBooking, bookingsController.deleteBooking);
 
 // --> RESEÑAS
-////--> Crear reseña (user) una vez ha finalizado la reserva
+//6.1--> CREAR RESERÑA
 app.post(
     '/api/users/:id_user/bookings/:id_booking/reviews',
     validateAuthorization,
     validateBooking,
     reviewsController.createReview
 );
-////--> ver reseñas creadas por usuario (admin & user)
+//6.2.1--> VER RESEÑAS POR USUARIO (admin & user)
 app.get('/api/users/:id_user/reviews', validateAuthorization, reviewsController.getReviewsByUserId);
-//// --> ver todas las reseñas
+//6.2.2 --> VER TODAS LAS RESEÑAS
 app.get('/api/reviews', validateAuthorization, validateAdmin, reviewsController.getAllReviews);
-//// -> ver reseñas por espacio
+//6.2.3 -> VER RESEÑAS POR ESPACIO
 app.get('/api/spaces/:id_space/reviews', validateAuthorization, validateSpace, reviewsController.getReviewsBySpace);
-//// --> Borrar reseña user y/o Admin
+//6.3 --> BORRAR RESEÑA USER Y/O ADMIN
 app.delete(
     '/api/users/:id_user/reviews/:id_review',
     validateAuthorization,
@@ -218,14 +229,14 @@ app.delete(
 );
 
 //--> INCIDENCIAS
-////--> Crear incidencia (user) verificar como en las reseñas que user es propietario de booking
+//7.1--> CREAR INCIDENCIA (user) verificar como en las reseñas que user es propietario de booking
 app.post(
     '/api/bookings/:id_booking/incident',
     validateAuthorization,
     validateBooking,
     incidentsController.createIncident
 );
-////--> Gestionar incidencias (admin)
+//7.2--> ADMIN-->GESTIONAR INCIDENCIAS (admin)
 app.patch(
     '/api/incidents/:id_incident',
     validateAuthorization,
@@ -234,9 +245,9 @@ app.patch(
     incidentsController.closeIncident
 );
 
-////--> Ver incidencias (user || admin--> todas)
+//7.3.1-> VER INCIDENCIAS POR USUARIO (user || admin--> todas)
 app.get('/api/users/:id_user/incidents', validateAuthorization, incidentsController.getIncidentsByUserId);
-////--> Ver incidencias (user || admin--> todas)
+//7.3.2-->ADMIN--> VER INCIDENCIAS POR ESPACIO
 app.get(
     '/api/spaces/:id_space/incidents',
     validateAuthorization,

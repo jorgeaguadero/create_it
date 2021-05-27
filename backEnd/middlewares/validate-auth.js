@@ -7,13 +7,16 @@ const fs = require('fs').promises;
 const sharp = require('sharp');
 const { nanoid } = require('nanoid');
 
-const { usersRepository } = require('../repositories');
-const { spacesRepository } = require('../repositories');
-const { roomsRepository } = require('../repositories');
-const { extrasRepository } = require('../repositories');
-const { bookingsRepository } = require('../repositories');
-const { reviewsRepository } = require('../repositories');
-const { incidentsRepository } = require('../repositories');
+const {
+    usersRepository,
+    spacesRepository,
+    roomsRepository,
+    extrasRepository,
+    bookingsRepository,
+    reviewsRepository,
+    incidentsRepository,
+} = require('../repositories');
+
 //VALIDADORES DE AUTORIZACION PARA USUARIOS /ADMIN
 async function validateAuthorization(req, res, next) {
     try {
@@ -67,7 +70,7 @@ async function validateUser(req, res, next) {
     try {
         const { id_user } = req.params;
         const { id, role } = req.auth;
-        const user = await usersRepository.findUserById(id);
+        const user = await usersRepository.getUserById(id);
         if (!user) {
             const err = new Error('No existe usuario con ese email');
             err.httpCode = 401;
@@ -80,6 +83,7 @@ async function validateUser(req, res, next) {
             err.httpCode = 403;
             throw err;
         }
+
         next();
     } catch (err) {
         res.status(err.status || 500);
@@ -96,6 +100,26 @@ async function validateSpace(req, res, next) {
         const space = await spacesRepository.getSpaceById(id_space);
         if (!space) {
             const err = new Error('No existe este espacio');
+            err.httpCode = 401;
+            throw err;
+        }
+
+        next();
+    } catch (err) {
+        res.status(err.status || 500);
+        res.send({ error: err.message });
+    }
+}
+
+async function validateEmail(req, res, next) {
+    try {
+        let { email } = req.params;
+        if (!email) {
+            email = req.body.email;
+        }
+        const user = await usersRepository.getUserByEmail(email);
+        if (!user) {
+            const err = new Error('usuario con este mail');
             err.httpCode = 401;
             throw err;
         }
@@ -198,40 +222,9 @@ async function validateIncident(req, res, next) {
     }
 }
 
-////Creamos la ruta al directorio de uploads
-//TODO personalizar para cada usuario--> asi solo puede ver cada uno su foto
-const uploadsDir = path.join(__dirname, process.env.UPLOADS_DIRECTORY);
-async function saveAvatar({ file }) {
-    try {
-        ////Nos aseguramos de que el directorio existe
-        await fs.mkdir(uploadsDir, { recursive: true });
-
-        ////Cargamos la imagen en sharp --> https://github.com/lovell/sharp
-        const image = sharp(file.data);
-
-        //TODOModificamos el tamaño de la imagen a un estandar--> ver en webs fotos de avatar
-        image.resize(500);
-
-        //TODO webp
-        const fileName = `${nanoid(20)}.jpg`;
-
-        //Guardamos la imagen en el directorio de uploadas
-        await image.toFile(path.join(uploadsDir, fileName));
-
-        //devolvemos el nombre del fichero
-        return fileName;
-    } catch (error) {
-        throw new Error('Error subiendo imagen');
-    }
-}
-
-async function deleteAvatar({ file }) {
-    const avatarPath = path.join(uploadsDir, file);
-    await fs.unlink(avatarPath);
-}
-//Comentario de prueba para rama
 module.exports = {
     validateAuthorization,
+    validateEmail,
     validateUser,
     validateAdmin,
     validateSpace,
@@ -240,6 +233,34 @@ module.exports = {
     validateBooking,
     validateReview,
     validateIncident,
-    saveAvatar,
-    deleteAvatar,
 };
+
+//TODO logica para validador general
+/*async function validateExists(req, res, next) {
+    try {
+        const identifiers = req.params;
+        const ifItemExist = async (id) => {
+
+              const item_table = {
+                  id_space: 'spaces',
+                  id_room: 'rooms',
+                  id_extra: 'extras',
+                  id_booking: 'bookings',
+                  id_indicent: 'incidents',
+                  id_review: 'reviews',
+              };
+
+        if (value !== undefined && row !== 'role') {
+            const query = `UPDATE users SET ${row} = '${value}' WHERE id_user = '${id_user}'`;
+            await database.pool.query(query);
+        }
+    };
+
+    for (const id in idenfifiers) await ifItemExist(id, identifiers[id]);
+
+        next();
+    } catch (err) {
+        res.status(err.status || 500);
+        res.send({ error: err.message });
+    }
+}*/

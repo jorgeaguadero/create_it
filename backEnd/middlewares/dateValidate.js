@@ -6,29 +6,31 @@ const timeZone = 'Europe/Berlin';
 //CONTROLES DE FECHAS PARA RESERVAS Y MODIFICACIONES
 function isBeforeDate(start_date) {
     const eventDate = new Date();
-    const date = parseISO(start_date);
-    const result = isBefore(eventDate, date);
+    if (typeof start_date === 'string') {
+        start_date = parseISO(start_date);
+    }
+    const result = isBefore(eventDate, start_date);
     return result;
 }
-
+//TODO corregir para que compare solo la fecha sin horas
 function isAfterDate(start_date) {
-    const eventDate = new Date();
-    const result = isAfter(eventDate, start_date);
+    const evenDate = new Date();
+    const result = isAfter(evenDate, start_date);
     if (!result) {
         const error = new Error('la fecha tiene que ser posterior a la reserva');
         throw error;
     }
-    return (dateFormated = utcToZonedTime(evendate, timeZone));
+    return evenDate;
 }
 
 function isEqualDate(start_date) {
-    const eventDate = new Date();
-    const result = isEqual(eventDate, start_date);
+    const evenDate = new Date();
+    const result = isEqual(evenDate, start_date);
     if (!result) {
         const error = new Error('La incidencia tiene que ser el dia de tu reserva');
         throw error;
     }
-    return eventDate;
+    return evenDate;
 }
 
 function formatDate(date) {

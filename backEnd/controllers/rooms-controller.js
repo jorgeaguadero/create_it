@@ -6,8 +6,9 @@ const jwt = require('jsonwebtoken');
 
 //TODO pendiente gestión de fotos
 
-const { roomsRepository, spacesRepository, usersRepository } = require('../repositories');
+const { roomsRepository, spacesRepository, bookingsRepository } = require('../repositories');
 
+//3.1-->CREAR SALAS
 async function createRooms(req, res, next) {
     try {
         const { id_space, room_code, description, price, capacity } = req.body;
@@ -56,23 +57,7 @@ async function createRooms(req, res, next) {
     }
 }
 
-async function setRoomsPhotos(req, res, next) {
-    try {
-        const { files } = req;
-        const { id_room } = req.params;
-        //const { description } = req.body;
-        files.forEach(async (photo) => {
-            const url = `static/spaces/${id_room}/${photo.filename}`;
-            await roomsRepository.setRoomsPhotos(id_room, url);
-        });
-
-        res.status(201);
-        res.send({ Message: `Fotos subidas correctamente` });
-    } catch (err) {
-        next(err);
-    }
-}
-//// jois para actualizar
+//3.2.1-->ACTUALIZAR ESPACIOS
 async function updateRoom(req, res, next) {
     try {
         const { id_room } = req.params;
@@ -99,26 +84,25 @@ async function updateRoom(req, res, next) {
     }
 }
 
-async function deleteRoom(req, res, next) {
+//3.2.2-->ACTUALIZAR FOTOS ESPACIOS
+async function setRoomsPhotos(req, res, next) {
     try {
+        const { files } = req;
         const { id_room } = req.params;
-        let room = await roomsRepository.getRoomById(id_room);
-
-        //TODO
-        /*LÓGICA PARA VER SI TIENE RESERVAS PENDIENTES if (user.pending_payment === 0) {
-            const err = new Error('No puedes borrar tu usuario hasta que no se realicen los pagos pendientes');
-            err.httpCode = 403;
-            throw err;
-        }*/
-        room = await roomsRepository.deleteRoom(id_room);
+        //const { description } = req.body;
+        files.forEach(async (photo) => {
+            const url = `static/spaces/${id_room}/${photo.filename}`;
+            await roomsRepository.setRoomsPhotos(id_room, url);
+        });
 
         res.status(201);
-        res.send({ Message: `Espacio ${room} borrado` });
-    } catch (error) {
-        next(error);
+        res.send({ Message: `Fotos subidas correctamente` });
+    } catch (err) {
+        next(err);
     }
 }
 
+//3.3.1-->VER SALAS POR ID ESPACIO
 async function getRoomsBySpace(req, res, next) {
     try {
         const { id_space } = req.params;
@@ -129,6 +113,7 @@ async function getRoomsBySpace(req, res, next) {
     }
 }
 
+//3.3.1-->VER SALAS POR ID SALA
 async function viewRoom(req, res, next) {
     try {
         const { id_room } = req.params;
@@ -142,6 +127,7 @@ async function viewRoom(req, res, next) {
     }
 }
 
+//3.3.1-->VER SALAS POR BUSCADOR PERSONALIZADO
 async function querySeeker(req, res, next) {
     try {
         const data = req.query;
@@ -157,6 +143,28 @@ async function querySeeker(req, res, next) {
         const queryRooms = await roomsRepository.getRoomsByQuery(data);
         res.status(201);
         res.send(queryRooms);
+    } catch (error) {
+        next(error);
+    }
+}
+
+//3.4-->BORRAR SALA
+
+async function deleteRoom(req, res, next) {
+    try {
+        const { id_room } = req.params;
+        let room = await roomsRepository.getRoomById(id_room);
+
+        //TODO
+        /*LÓGICA PARA VER SI TIENE RESERVAS PENDIENTES if (user.pending_payment === 0) {
+            const err = new Error('No puedes borrar tu usuario hasta que no se realicen los pagos pendientes');
+            err.httpCode = 403;
+            throw err;
+        }*/
+        room = await roomsRepository.deleteRoom(id_room);
+
+        res.status(201);
+        res.send({ Message: `Espacio ${room} borrado` });
     } catch (error) {
         next(error);
     }

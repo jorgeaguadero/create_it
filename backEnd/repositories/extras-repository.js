@@ -1,17 +1,32 @@
 const { database } = require('../infrastructure');
 
+//////////////////////////////////////
+//       GETTERS
+//////////////////////////////////////
+
 async function getExtraById(id) {
     const query = 'SELECT * FROM extras WHERE id_extra= ?';
     const [extras] = await database.pool.query(query, id);
 
     return extras[0];
 }
+
 async function getExtraByCode(code) {
     const query = 'SELECT * FROM extras WHERE extra_code = ?';
     const [extras] = await database.pool.query(query, code);
 
     return extras[0];
 }
+
+async function getExtrasBySpace(id_space) {
+    const [extras] = await database.pool.query(`SELECT * FROM extras WHERE id_space=${id_space}`);
+
+    return extras;
+}
+
+//////////////////////////////////////
+//        GESTIÓN DE EXTRAS
+//////////////////////////////////////
 
 async function createExtra(data) {
     const query = 'INSERT INTO extras (id_space,extra_code,description,price) VALUES (?,?,?,?)';
@@ -31,12 +46,6 @@ async function updateExtra(data, id) {
     for (const row in data) await replaceNotNull(row, data[row]);
 
     return getExtraById(id);
-}
-
-async function getExtrasBySpace(id_space) {
-    const [extras] = await database.pool.query(`SELECT * FROM extras WHERE id_space=${id_space}`);
-
-    return extras;
 }
 
 async function deleteExtra(id_extra) {

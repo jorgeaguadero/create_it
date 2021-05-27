@@ -1,11 +1,30 @@
 const { database } = require('../infrastructure');
 
+//////////////////////////////////////
+//         GETTERS
+//////////////////////////////////////
+async function getIncidentById(id) {
+    const query = 'SELECT * FROM incidents WHERE id_incident = ?';
+    const [incident] = await database.pool.query(query, id);
+
+    //TODO ver datos de devolucion
+    return incident[0];
+}
+
 async function getIncidentsByUserId(userId) {
     const query = 'SELECT * FROM incidents WHERE id_user = ?';
     //TODO try/catch gestion de errores-->si no hay nada
     const [reviews] = await database.pool.query(query, userId);
 
     return reviews;
+}
+
+async function getIncidentsOpenBySpace(id) {
+    const query = 'SELECT * FROM incidents WHERE id_space = ? AND state=0';
+    const incidents = await database.pool.query(query, id);
+
+    //TODO ver datos de devolucion
+    return incidents[0];
 }
 
 async function getAllIncidents() {
@@ -15,13 +34,9 @@ async function getAllIncidents() {
     return reviews;
 }
 
-async function getIncidentById(id) {
-    const query = 'SELECT * FROM incidents WHERE id_incident = ?';
-    const [incident] = await database.pool.query(query, id);
-
-    //TODO ver datos de devolucion
-    return incident[0];
-}
+//////////////////////////////////////
+//         GESTIÓN DE INCIDENCIAS
+//////////////////////////////////////
 
 async function createIncident(bookingId, spaceId, incidentDate, type, description, userId) {
     const query =
@@ -38,14 +53,6 @@ async function closeIncident(id_incident, closed_date, state) {
     await database.pool.query(query, [closed_date, state, id_incident]);
 
     return getIncidentById(id_incident);
-}
-
-async function getIncidentsOpenBySpace(id) {
-    const query = 'SELECT * FROM incidents WHERE id_space = ? AND state=0';
-    const incidents = await database.pool.query(query, id);
-
-    //TODO ver datos de devolucion
-    return incidents[0];
 }
 
 module.exports = {

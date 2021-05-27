@@ -2,16 +2,14 @@ const Joi = require('joi');
 const sgMail = require('@sendgrid/mail');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const multer = require('multer');
-const { v4: uuidv4 } = require('uuid');
+const { nanoid } = require('nanoid');
+
+const { usersRepository } = require('../repositories');
+const { helpers } = require('../middlewares');
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-const { usersRepository } = require('../repositories');
-const { saveAvatar, deleteAvatar } = require('../middlewares/validate-auth');
-const fileUpload = require('express-fileupload');
-
-//Todo Añadir envio de mail para confirmaciones  --> token de validacion ?? --> sendgrid +nanoid
+//1.1-->REGISTRO SE PASA COMPOBACIÓN DE REPETIDAS EN FRONT
 async function registrer(req, res, next) {
     try {
         const { name, last_name, email, password, repeatedPassword } = req.body;
@@ -61,6 +59,7 @@ async function registrer(req, res, next) {
         }
 
         const passwordHash = await bcrypt.hash(password, 10);
+        const activationCode = nanoid(20);
 
         const createdUser = await usersRepository.createUser({
             name,
@@ -68,34 +67,59 @@ async function registrer(req, res, next) {
             email,
             passwordHash,
         });
+        await usersRepository.InsertUserCodes({ id_user: createdUser.id_user, activationCode });
         res.status(201);
         const msg = {
             to: 'jorgeaguadero@gmail.com', // Change to your recipient
             from: 'jorgeaguadero91@outlook.es', // Change to your verified sender
             subject: 'Sending with SendGrid is Fun',
-            text: 'and easy to do anywhere, even with Node.js',
-            html: '<strong>and easy to do anywhere, even with Node.js</strong>',
+            Message: `Te has registrado en Create It, por favor confirma tu registro:
+            http://localhost:${process.env.PORT}/api/verify/${createdUser.id_user}/${activationCode}`,
         };
-        sgMail
-            .send(msg)
-            .then(() => {
-                console.log('Email sent');
-            })
-            .catch((error) => {
-                console.error(error);
-            });
 
         res.send({
             id: createdUser.id_user,
             name: createdUser.first_name,
             email: createdUser.email,
             role: createdUser.role,
+            activationCode,
         });
     } catch (err) {
         next(err);
     }
 }
+
+//1.2-->CONFIRMACION DE USUARIO
+async function confirmationUser(req, res, next) {
+    try {
+        const { activationCode, id_user } = req.params;
+
+        const user = await usersRepository.getUserById(id_user);
+        if (!user) {
+            const error = new Error('no existe usuario');
+            throw error;
+        }
+        if (user.activate) {
+            const error = new Error('usuario ya activado');
+            throw error;
+        }
+
+        const code = await usersRepository.getUserCodes(user.id_user);
+        if (activationCode !== code.code) {
+            const error = new Error('código incorrecto');
+            throw error;
+        }
+
+        const activateUser = await usersRepository.updateProfile({ activate: 1 }, user.id_user);
+        res.send({ Message: 'Usuario activado', activateUser });
+    } catch (error) {
+        next(error);
+    }
+}
+
 //TODO comprobar si ya está logado o no --> front
+
+//2.1-->LOGIN DE USUARIO
 async function login(req, res, next) {
     try {
         const { email, password } = req.body;
@@ -143,6 +167,7 @@ async function login(req, res, next) {
     }
 }
 
+//2.2-->LOGOUT DE USUARIO
 async function logout(req, res, next) {
     try {
         const { id_user } = req.params;
@@ -165,12 +190,12 @@ async function logout(req, res, next) {
     }
 }
 
-//TODO corregir fecha actualizacion --> formato
+//3.1-ACTUALIZACIÓN DE DATOS DE PERFIL
 async function updateProfile(req, res, next) {
     try {
         const { id_user } = req.params;
         const data = req.body;
-        const ModDate = new Date();
+
         const schema = Joi.object({
             phone: Joi.string()
                 .min(9) //numeros int
@@ -178,10 +203,9 @@ async function updateProfile(req, res, next) {
                 .error(() => new Error('movil')),
             bio: Joi.string().error(() => new Error('bio')),
         });
-
         await schema.validateAsync(data);
 
-        const user = await usersRepository.updateProfile(data, id_user, ModDate);
+        const user = await usersRepository.updateProfile(data, id_user);
 
         res.status(201);
         //TODO envio Mail
@@ -192,7 +216,7 @@ async function updateProfile(req, res, next) {
 }
 
 //TODO FOTO AVATAR -
-
+//3.2-ACTUALIZACIÓN DE AVATAR DEL PERFIL
 async function updateAvatar(req, res, next) {
     try {
         const { file } = req;
@@ -219,11 +243,11 @@ async function addAvatar(req, res, next) {
         const { avatar } = req.files;
         const { id_user } = req.params;
 
-        const user = await usersRepository.findUserById(id_user);
+        const user = await usersRepository.getUserById(id_user);
         if (user.avatar) {
-            await deleteAvatar({ file: user.avatar });
+            await helpers.deleteAvatar({ file: user.avatar });
         }
-        const fileName = await saveAvatar({ file: avatar });
+        const fileName = await helpers.saveAvatar({ file: avatar });
 
         const updateUser = await usersRepository.updateAvatar(fileName, id_user);
 
@@ -234,7 +258,7 @@ async function addAvatar(req, res, next) {
     }
 }
 
-//TODO Comprobar que nueva y vieja no son iguales
+//3.4-ACTUALIZACIÓN DE CONTRASEÑA --> SE PASA COMPOBACIÓN DE REPETIDAS EN FRONT
 async function updatePassword(req, res, next) {
     try {
         const { id_user } = req.params;
@@ -259,7 +283,7 @@ async function updatePassword(req, res, next) {
         });
         await schema.validateAsync(data);
         //let por que luego volvemos a utilizar user para devolver la confirmacion
-        let user = await usersRepository.findUserById(id_user);
+        let user = await usersRepository.getUserById(id_user);
         const isValidPassword = await bcrypt.compare(data.password, user.passwordHash);
         if (!isValidPassword) {
             const err = new Error('La contraseña actual es incorrecta');
@@ -282,16 +306,77 @@ async function updatePassword(req, res, next) {
         user = await usersRepository.updatePassword(passwordHash, id_user);
         //TODO envio Mail
         res.status(201);
-        res.send(user);
+        res.send({ message: `password cambiado` });
     } catch (error) {
         next(error);
     }
 }
 
+//3.5.1-->RECUPERAR CONTRASEÑA PARTE 1
+async function recoverPassword(req, res, next) {
+    try {
+        const { email } = req.body;
+        const activationCode = nanoid(20);
+
+        const user = await usersRepository.getUserByEmail(email);
+        await usersRepository.updateUserCodes({ id_user: user.id_user, activationCode });
+
+        //Enviar al mail un link que vaya a la api
+        res.send({
+            id_user: user.id_user,
+            email,
+            activationCode,
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+//3.5.2-->RECUPERAR CONTRASEÑA PARTE 2
+async function newPassword(req, res, next) {
+    try {
+        const { activationCode, id_user } = req.params;
+        const data = req.body;
+
+        const user = await usersRepository.getUserById(id_user);
+        if (!user) {
+            const error = new Error('no existe usuario');
+            throw error;
+        }
+
+        const code = await usersRepository.getUserCodes(user.id_user);
+        if (activationCode !== code.code) {
+            const error = new Error('código incorrecto');
+            throw error;
+        }
+
+        const schema = Joi.object({
+            newPassword: Joi.string()
+                .min(6)
+                .max(12)
+                .required()
+                .error(() => new Error('new1')),
+            repeatedNewPassword: Joi.string()
+                .min(6)
+                .max(12)
+                .required()
+                .error(() => new Error('new2')),
+        });
+        await schema.validateAsync(data);
+
+        const passwordHash = await bcrypt.hash(data.newPassword, 10);
+        await usersRepository.updatePassword(passwordHash, id_user);
+
+        res.send({ Message: 'Contraseña actualizada' });
+    } catch (error) {
+        next(error);
+    }
+}
+
+//1.4--> BORRARME COMO USUARIO
 async function deleteUser(req, res, next) {
     try {
         const { id_user } = req.params;
-        const user = await usersRepository.findUserById(id_user);
+        const user = await usersRepository.getUserById(id_user);
         if (user.pending_payment === 1) {
             const err = new Error('No puedes borrar tu usuario hasta que no se realicen los pagos pendientes');
             err.httpCode = 403;
@@ -305,11 +390,12 @@ async function deleteUser(req, res, next) {
         next(error);
     }
 }
+//1.5.1--> VER MI PERFIL
 async function viewProfileUser(req, res, next) {
     try {
         const { id_user } = req.params;
 
-        user = await usersRepository.findUserById(id_user);
+        user = await usersRepository.getUserById(id_user);
 
         res.status(201);
         res.send(user);
@@ -317,7 +403,7 @@ async function viewProfileUser(req, res, next) {
         next(error);
     }
 }
-
+//1.5.2--> VER TODOS LOS PERFILES
 async function getUsers(req, res, next) {
     try {
         const users = await usersRepository.getUsers();
@@ -339,4 +425,7 @@ module.exports = {
     updateAvatar,
     //deleteAvatar,
     addAvatar,
+    confirmationUser,
+    recoverPassword,
+    newPassword,
 };

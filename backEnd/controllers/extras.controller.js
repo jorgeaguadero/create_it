@@ -3,6 +3,7 @@ const Joi = require('joi');
 const { spacesRepository } = require('../repositories');
 const { extrasRepository } = require('../repositories');
 
+//4.1-->CREAR EXTRA
 async function createExtras(req, res, next) {
     try {
         const { id_space, extra_code, description, price } = req.body;
@@ -48,6 +49,7 @@ async function createExtras(req, res, next) {
     }
 }
 
+//4.2-->ACTUALIZAR EXTRA
 async function updateExtra(req, res, next) {
     try {
         const { id_extra } = req.params;
@@ -57,12 +59,38 @@ async function updateExtra(req, res, next) {
 
         res.status(201);
 
-        res.send({ extra, Message: `Datos de: ${extra.extra_code} cambiados` });
+        res.send({ extraMessage: `Datos de: ${extra.extra_code} cambiados` });
     } catch (error) {
         next(error);
     }
 }
 
+//4.3.1-->VER EXTRA POR ESPACIO
+async function getExtrasBySpace(req, res, next) {
+    try {
+        const { id_space } = req.params;
+        const extras = await extrasRepository.getExtrasBySpace(id_space);
+        res.send(extras);
+    } catch (err) {
+        next(err);
+    }
+}
+
+//4.3.2-->VER EXTRA POR ID EXTRA
+async function viewExtra(req, res, next) {
+    try {
+        const { id_extra } = req.params;
+
+        extra = await extrasRepository.getExtraById(id_extra);
+
+        res.status(201);
+        res.send(extra);
+    } catch (error) {
+        next(error);
+    }
+}
+
+//4.4-->BORRAR
 async function deleteExtra(req, res, next) {
     try {
         const { id_extra } = req.params;
@@ -75,30 +103,7 @@ async function deleteExtra(req, res, next) {
         extra = await extrasRepository.deleteExtra(id_extra);
 
         res.status(201);
-        res.send({ extra, Message: `Extra ${extra} borrado` });
-    } catch (error) {
-        next(error);
-    }
-}
-
-async function getExtrasBySpace(req, res, next) {
-    try {
-        const { id_space } = req.params;
-        const extras = await extrasRepository.getExtrasBySpace(id_space);
-        res.send(extras);
-    } catch (err) {
-        next(err);
-    }
-}
-
-async function viewExtra(req, res, next) {
-    try {
-        const { id_extra } = req.params;
-
-        extra = await extrasRepository.getExtraById(id_extra);
-
-        res.status(201);
-        res.send(extra);
+        res.send({ Message: `Extra ${extra} borrado`, extra });
     } catch (error) {
         next(error);
     }

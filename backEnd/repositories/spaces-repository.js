@@ -1,5 +1,9 @@
 const { database } = require('../infrastructure');
 
+//////////////////////////////////////
+//         GETTERS
+//////////////////////////////////////
+
 async function getSpaceByEmail(email) {
     const query = 'SELECT * FROM spaces WHERE email = ?';
     const [spaces] = await database.pool.query(query, email);
@@ -13,6 +17,16 @@ async function getSpaceById(id) {
 
     return spaces[0];
 }
+
+async function getSpaces() {
+    const [spaces] = await database.pool.query('SELECT * FROM spaces');
+
+    return spaces;
+}
+
+//////////////////////////////////////
+//        GESTIÓN DE ESPACIOS
+//////////////////////////////////////
 
 async function createSpace(data) {
     const query =
@@ -30,12 +44,6 @@ async function createSpace(data) {
     return getSpaceByEmail(data.email);
 }
 
-async function setSpacesPhotos(id, url, description = 'prueba') {
-    const query = 'INSERT INTO spaces_photo (id_space,description, url) VALUES (?,?,?)';
-    photo = await database.pool.query(query, [id, description, url]);
-    return { Message: `foto subida` };
-}
-
 async function updateSpace(data, id) {
     const replaceNotNull = async (row, value, id_space = id) => {
         if (value !== undefined && row !== 'role') {
@@ -49,10 +57,10 @@ async function updateSpace(data, id) {
     return getSpaceById(id);
 }
 
-async function getSpaces() {
-    const [spaces] = await database.pool.query('SELECT * FROM spaces');
-
-    return spaces;
+async function setSpacesPhotos(id, url, description = 'prueba') {
+    const query = 'INSERT INTO spaces_photo (id_space,description, url) VALUES (?,?,?)';
+    photo = await database.pool.query(query, [id, description, url]);
+    return { Message: `foto subida` };
 }
 
 async function deleteSpace(id_space) {

@@ -6,7 +6,9 @@ const jwt = require('jsonwebtoken');
 
 const { spacesRepository } = require('../repositories');
 const { usersRepository } = require('../repositories');
+
 //TODO AÑADIR MEDIA DE RATING DE REVIEWS POR ESPACIO+ NUM REVIEWS??-> SINO SERIA 0 al inicio sin más info
+//2.1-->CREAR ESPACIOS
 async function createSpaces(req, res, next) {
     try {
         const { id_user, space_name, description, location, address, email, phone } = req.body;
@@ -46,18 +48,7 @@ async function createSpaces(req, res, next) {
             err.httpCode = 409;
             throw err;
         }
-        const user = await usersRepository.findUserById(id_user);
-        if (!user) {
-            const err = new Error(`no existe ese usuario administrador`);
-            err.httpCode = 409;
-            throw err;
-        }
-        //comprobar que el administrador de la sala tiene rol de admin
-        if (user.role !== 'admin') {
-            const err = new Error('solo debe de administrar el administrador');
-            err.httpCode = 403;
-            throw err;
-        }
+
         const createdSpace = await spacesRepository.createSpace({
             id_user,
             space_name,
@@ -82,6 +73,7 @@ async function createSpaces(req, res, next) {
     }
 }
 
+//2.2-->ACTUALIZAR DATOS DEL ESPACIO
 async function updateSpace(req, res, next) {
     try {
         const { id_space } = req.params;
@@ -97,7 +89,8 @@ async function updateSpace(req, res, next) {
     }
 }
 
-async function setSpacesPhotos(req, res, next) {
+//pasar por helper
+/*async function setSpacesPhotos(req, res, next) {
     try {
         const { files } = req;
         const { id_space } = req.params;
@@ -112,17 +105,9 @@ async function setSpacesPhotos(req, res, next) {
     } catch (err) {
         next(err);
     }
-}
+}*/
 
-async function getSpaces(req, res, next) {
-    try {
-        const spaces = await spacesRepository.getSpaces();
-        res.send(spaces);
-    } catch (err) {
-        next(err);
-    }
-}
-
+//2.3.1-->VER ESPACIO POR ID
 async function viewSpace(req, res, next) {
     try {
         const { id_space } = req.params;
@@ -136,6 +121,17 @@ async function viewSpace(req, res, next) {
     }
 }
 
+//2.3.2-->VER TODOS LOS ESPACIOS
+async function getSpaces(req, res, next) {
+    try {
+        const spaces = await spacesRepository.getSpaces();
+        res.send(spaces);
+    } catch (err) {
+        next(err);
+    }
+}
+
+//2.4-->BORRAR ESPACIOS
 async function deleteSpace(req, res, next) {
     try {
         const { id_space } = req.params;
@@ -160,5 +156,5 @@ module.exports = {
     viewSpace,
     getSpaces,
     deleteSpace,
-    setSpacesPhotos,
+    //setSpacesPhotos,
 };

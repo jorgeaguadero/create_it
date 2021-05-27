@@ -1,10 +1,10 @@
 const Joi = require('joi');
 
 const { bookingsRepository, incidentsRepository } = require('../repositories');
-const { isBeforeDate, isEqualDate, formatDate } = require('../middlewares/dateValidate');
+const { isEqualDate } = require('../middlewares/dateValidate');
 const { validateProperty } = require('../utils/users-auth');
 
-//-->crear Incidencia (user)
+//7.1--> CREAR INCIDENCIA (user)
 async function createIncident(req, res, next) {
     try {
         const { id_booking } = req.params;
@@ -19,11 +19,8 @@ async function createIncident(req, res, next) {
         });
         await schema.validateAsync({ type, description });
 
-        //comprobar que el incidente es el dia de la reserva por variar
-        //const incident_date = isEqualDate(booking.start_date);
-        //Para pruebas compruebo asi y meto la fecha desde aqui
-        isBeforeDate(booking.start_date);
-        const incident_date = new Date();
+        const incident_date = isEqualDate(booking.start_date);
+
         let createdIncident = await incidentsRepository.createIncident(
             id_booking,
             booking.id_space,
@@ -46,6 +43,7 @@ async function createIncident(req, res, next) {
     }
 }
 
+//7.2-->ADMIN--> CERRAR INCIDENCIA
 async function closeIncident(req, res, next) {
     try {
         const { id_incident } = req.params;
@@ -76,7 +74,7 @@ async function closeIncident(req, res, next) {
     }
 }
 
-//Ver incidencias por usuario
+//7.3.1 VER INCIDENCIAS POR USUARIO
 async function getIncidentsByUserId(req, res, next) {
     try {
         const { id_user } = req.params;
@@ -89,22 +87,23 @@ async function getIncidentsByUserId(req, res, next) {
         next(err);
     }
 }
-
-async function getAllIncidents(req, res, next) {
-    try {
-        const incidents = await incidentsRepository.getAllIncidents();
-        res.send(incidents);
-    } catch (err) {
-        next(err);
-    }
-}
-
+//7.3.2 VER INCIDENCIAS ABIERTAS POR ESPACIO
 async function getIncidentsOpenBySpace(req, res, next) {
     try {
         const { id_space } = req.params;
 
         const incidents = await incidentsRepository.getIncidentsOpenBySpace(id_space);
 
+        res.send(incidents);
+    } catch (err) {
+        next(err);
+    }
+}
+
+//7.3.3 VER TODAS LAS INCIDENCIAS
+async function getAllIncidents(req, res, next) {
+    try {
+        const incidents = await incidentsRepository.getAllIncidents();
         res.send(incidents);
     } catch (err) {
         next(err);

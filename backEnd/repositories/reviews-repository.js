@@ -1,11 +1,14 @@
 const { database } = require('../infrastructure');
 
+//////////////////////////////////////
+//       GETTERS
+//////////////////////////////////////
 async function getReviewsByUserId(userId) {
     const query = 'SELECT * FROM reviews WHERE id_user = ?';
 
     const reviews = await database.pool.query(query, userId);
 
-    return reviews;
+    return reviews[0];
 }
 
 async function getReviewsBySpace(spaceId) {
@@ -30,6 +33,9 @@ async function getReviewById(id) {
     return review[0];
 }
 
+//////////////////////////////////////
+//       GESTIÓN DE REVIEWS
+//////////////////////////////////////
 async function createReview(space, id_booking, review_date, rating, text, id_user) {
     const query =
         'INSERT INTO reviews (id_space,id_user,id_booking ,review_date, rating, text) VALUES (?,?, ?, ?, ?,?)';

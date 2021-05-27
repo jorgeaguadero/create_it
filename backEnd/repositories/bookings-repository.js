@@ -1,7 +1,8 @@
 const { database } = require('../infrastructure');
 
-//const { format } = require('date-fns');
-
+//////////////////////////////////////
+//       GETTERS
+//////////////////////////////////////
 async function getBookingById(id) {
     const query = 'SELECT * FROM bookings WHERE id_booking = ?';
     const [booking] = await database.pool.query(query, id);
@@ -16,9 +17,8 @@ async function getBookingsByUser(id_user) {
     return booking;
 }
 
-//TODO ajustar query para obtener bookings por el id_space--> modificar DB
 async function getBookingsBySpace(id_space) {
-    const query = 'SELECT * FROM bookings WHERE id_room = ?';
+    const query = 'SELECT * FROM bookings WHERE id_space = ?';
     const [booking] = await database.pool.query(query, id_space);
 
     return booking;
@@ -43,21 +43,22 @@ async function getRoomInfo(start, room) {
         return roomInfo[0][0];
     }
 }
-async function getExtraInfo(startDate, extra, idSpace) {
-    let query = `SELECT * FROM bookings WHERE start_date= '${startDate}'AND id_extra=${extra} AND id_space=${idSpace}`;
+async function getExtraInfo(startDate, extra, id_space) {
+    let query = `SELECT * FROM bookings WHERE start_date= '${startDate}'AND id_extra=${extra}`;
     const [extras] = await database.pool.query(query);
     if (extras[0]) {
         const error = new Error('El extra No está disponible');
         throw error;
     } else {
-        query = `SELECT extras.price FROM extras WHERE  id_extra=${extra}`;
+        query = `SELECT extras.price FROM extras WHERE  id_extra=${extra} AND id_space=${id_space}`;
         const extraInfo = await database.pool.query(query);
         return extraInfo[0][0];
     }
 }
 
-//TODO INSERTAR PENDIENTE DE PAGO EN USUARIO Y BOOKINGS --> comprobar
-//Crear
+//////////////////////////////////////
+//       gestion de reservas
+//////////////////////////////////////
 async function createBooking(id_user, id_space, id_room, start_date, price) {
     let query = 'INSERT INTO bookings (id_user,id_space,id_room, start_date,price) VALUES (?,?,?,?,?)';
     const [result] = await database.pool.query(query, [id_user, id_space, id_room, start_date, price]);
@@ -80,9 +81,9 @@ async function payBooking(id_booking, id_user) {
     query = `SELECT * FROM bookings WHERE id_user=${id_user} AND pending_payment=1`;
     const pendingUser = await database.pool.query(query, id_user);
 
-    if (!pendingUser[0]) {
-        query = `UPDATE users SET pending_payment =  WHERE id_user = '${id_user}`;
-        await database.pool.query(query, id_user);
+    if (pendingUser[0].length === 0) {
+        query = `UPDATE users SET pending_payment =0 WHERE id_user =${id_user}`;
+        await database.pool.query(query);
         return { Message: `Pago de ${id_booking}correcto`, Message: `${id_user} no tiene pagos pendientes` };
     } else {
         return { Message: `pago de ${id_booking} correcto` };

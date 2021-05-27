@@ -6,6 +6,7 @@ const { bookingsRepository, extrasRepository } = require('../repositories');
 const { isBeforeDate } = require('../middlewares/dateValidate');
 const { validateProperty } = require('../utils/users-auth');
 
+//5.1-->CREAR RESERVA
 async function createBooking(req, res, next) {
     try {
         const { id } = req.auth;
@@ -60,16 +61,17 @@ async function createBooking(req, res, next) {
                 start_date,
                 totalPrice
             );
-            const fechaBien = formatISO(booking.start_date, { representation: 'date' });
+            //const fechaBien = formatISO(booking.start_date, { representation: 'date' });
             res.status(201);
             //TODO envio Mail
-            res.send({ fecha: fechaBien, booking });
+            res.send({ booking });
         }
     } catch (err) {
         next(err);
     }
 }
 
+//5.2-->PAGAR RESERVA
 async function payBooking(req, res, next) {
     try {
         const { id_booking } = req.params;
@@ -94,34 +96,14 @@ async function payBooking(req, res, next) {
     }
 }
 
-async function deleteBooking(req, res, next) {
-    try {
-        const { id_booking } = req.params;
-        let booking = await bookingsRepository.getBookingById(id_booking);
-
-        validateProperty(req, booking);
-        const start_date = booking.start_date;
-
-        if (isBeforeDate(start_date)) {
-            const error = new Error('Minimo tiene que haber un dia de antelacion');
-            throw error;
-        }
-        //TODO envio Mail
-        booking = await bookingsRepository.deleteBooking(id_booking, booking.id_user);
-
-        res.status(201);
-        res.send({ Message: `Reserva ${id_booking} cancelada` });
-    } catch (error) {
-        next(error);
-    }
-}
-
+//5.3.1-->VER RESERVA POR USUARIO
 async function getBookingsByUser(req, res, next) {
     try {
-        const { id } = req.auth;
+        const{id_user}=req.params;
         validateProperty(req, req.params);
 
-        const bookings = await bookingsRepository.getBookingsByUser(id);
+
+        const bookings = await bookingsRepository.getBookingsByUser(id_user);
 
         res.send(bookings);
     } catch (err) {
@@ -129,6 +111,19 @@ async function getBookingsByUser(req, res, next) {
     }
 }
 
+//5.3.2-->VER RESERVA POR ESPACIO
+async function getBookingsBySpace(req, res, next) {
+    try {
+        const { id_space } = req.params;
+        const bookings = await bookingsRepository.getBookingsBySpace(id_space);
+
+        res.send(bookings);
+    } catch (err) {
+        next(err);
+    }
+}
+
+//5.3.3-->VER RESERVA POR SALA
 async function getBookingsByRoom(req, res, next) {
     try {
         const { id_room } = req.params;
@@ -140,14 +135,28 @@ async function getBookingsByRoom(req, res, next) {
     }
 }
 
-async function getBookingsBySpace(req, res, next) {
-    try {
-        const { id_space } = req.params;
-        const bookings = await bookingsRepository.getBookingsBySpace(id_space);
 
-        res.send(bookings);
-    } catch (err) {
-        next(err);
+
+//5.4-->BORRAR RESERVA
+async function deleteBooking(req, res, next) {
+    try {
+        const { id_booking } = req.params;
+        let booking = await bookingsRepository.getBookingById(id_booking);
+
+        validateProperty(req, booking);
+        const start_date = booking.start_date;
+
+        if (!isBeforeDate(start_date)) {
+            const error = new Error('Minimo tiene que haber un dia de antelacion');
+            throw error;
+        }
+        //TODO envio Mail
+        booking = await bookingsRepository.deleteBooking(id_booking, booking.id_user);
+
+        res.status(201);
+        res.send({ Message: `Reserva ${id_booking} cancelada` });
+    } catch (error) {
+        next(error);
     }
 }
 

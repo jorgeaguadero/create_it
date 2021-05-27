@@ -1,5 +1,9 @@
 const { database } = require('../infrastructure');
 
+//////////////////////////////////////
+//        GETTERS
+//////////////////////////////////////
+
 async function getRoomById(id) {
     const query = 'SELECT * FROM rooms WHERE id_room= ?';
     const [rooms] = await database.pool.query(query, id);
@@ -11,6 +15,12 @@ async function getRoomByCode(code) {
     const [rooms] = await database.pool.query(query, code);
 
     return rooms[0];
+}
+
+async function getRoomsBySpace(id_space) {
+    const [spaces] = await database.pool.query(`SELECT * FROM rooms WHERE id_space=${id_space}`);
+
+    return spaces;
 }
 
 async function getRoomsByQuery(data) {
@@ -67,6 +77,9 @@ async function getRoomsByQuery(data) {
     return finishResults;
 }
 
+//////////////////////////////////////
+//        GESTIÓN DE SALAS
+//////////////////////////////////////
 async function createRoom(data) {
     const query = 'INSERT INTO rooms (id_space,room_code, description,price,capacity) VALUES (?,?,?,?,?)';
     await database.pool.query(query, [data.id_space, data.room_code, data.description, data.price, data.capacity]);
@@ -74,11 +87,6 @@ async function createRoom(data) {
     return getRoomByCode(data.room_code);
 }
 
-async function setRoomsPhotos(id, url, description = 'prueba') {
-    const query = 'INSERT INTO rooms_photo (id_room,description, url) VALUES (?,?,?)';
-    photo = await database.pool.query(query, [id, description, url]);
-    return { Message: `foto subida` };
-}
 async function updateRoom(data, id) {
     const replaceNotNull = async (row, value, id_room = id) => {
         if (value !== undefined) {
@@ -92,10 +100,10 @@ async function updateRoom(data, id) {
     return getRoomById(id);
 }
 
-async function getRoomsBySpace(id_space) {
-    const [spaces] = await database.pool.query(`SELECT * FROM rooms WHERE id_space=${id_space}`);
-
-    return spaces;
+async function setRoomsPhotos(id, url, description = 'prueba') {
+    const query = 'INSERT INTO rooms_photo (id_room,description, url) VALUES (?,?,?)';
+    photo = await database.pool.query(query, [id, description, url]);
+    return { Message: `foto subida` };
 }
 
 async function deleteRoom(id_room) {

@@ -1,10 +1,10 @@
 const Joi = require('joi');
 
 const { bookingsRepository, reviewsRepository } = require('../repositories');
-const { isAfterDate, isBeforeDate } = require('../middlewares/dateValidate');
+const { isAfterDate } = require('../middlewares/dateValidate');
 const { validateProperty } = require('../utils/users-auth');
 
-//-->Crear review (user)
+//6.1--> CREAR RESERÑA
 async function createReview(req, res, next) {
     try {
         const { id_user, id_booking } = req.params;
@@ -23,9 +23,8 @@ async function createReview(req, res, next) {
 
         const booking = await bookingsRepository.getBookingById(id_booking);
         validateProperty(req, booking);
-        const review_date = new Date();
-        //cambio a before para pruebas y añado fechade hor
-        /*const review_date = isBeforeDate(booking.start_date);*/
+
+        const review_date = isAfterDate(booking.start_date);
 
         reviews = await reviewsRepository.getReviewsByUserId(id);
         const reviewCheck = reviews.some((r) => r.id_booking === Number(id_booking));
@@ -53,7 +52,7 @@ async function createReview(req, res, next) {
     }
 }
 
-//Ver reviews por usuario
+//6.2.1--> VER RESEÑAS POR USUARIO (admin & user)
 async function getReviewsByUserId(req, res, next) {
     try {
         const { id_user } = req.params;
@@ -66,6 +65,7 @@ async function getReviewsByUserId(req, res, next) {
     }
 }
 
+//6.2.2 --> VER TODAS LAS RESEÑAS
 async function getAllReviews(req, res, next) {
     try {
         const reviews = await reviewsRepository.getAllReviews();
@@ -74,7 +74,7 @@ async function getAllReviews(req, res, next) {
         next(err);
     }
 }
-
+//6.2.3 -> VER RESEÑAS POR ESPACIO
 async function getReviewsBySpace(req, res, next) {
     try {
         const { id_space } = req.params;
@@ -85,7 +85,7 @@ async function getReviewsBySpace(req, res, next) {
         next(err);
     }
 }
-
+//6.3 --> BORRAR RESEÑA USER Y/O ADMIN
 async function deleteReviewById(req, res, next) {
     try {
         const { id_review } = req.params;

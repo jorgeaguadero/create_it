@@ -1,7 +1,9 @@
 const validateAuth = require('./validate-auth');
-const userAvatar = require('./userAvatar');
+const helpers = require('./helpers');
+const dateValidate = require('./dateValidate');
 
 module.exports = {
     validateAuth,
-    userAvatar,
+    helpers,
+    dateValidate,
 };
