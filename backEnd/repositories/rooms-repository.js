@@ -49,7 +49,7 @@ async function getRoomsByQuery(data) {
         }
 
         query = `${query} ${conditions.join(' AND ')}`;
-        firstResults = await database.pool.query(query, params);
+        const firstResults = await database.pool.query(query, params);
         //TODO si no hay --> error?
     }
     if (!start_date) {
@@ -59,12 +59,13 @@ async function getRoomsByQuery(data) {
     //Declaro fuera para que pueda acceder a ella desde dentro de la funcion
     //Y después devolver el resultado con todo pusheado
     const finishResults = [];
+
     //TODO COrregir
     const findByDate = async (room, start = start_date) => {
-        let query = `SELECT * FROM bookings WHERE start_date= '${start}'AND id_room=${room}`;
+        let query = `SELECT * FROM bookings WHERE start_date= '${start}'AND id_room=${room.id_room}`;
         const [bookings] = await database.pool.query(query);
         if (!bookings[0]) {
-            query = `SELECT * FROM rooms WHERE  id_room=${room}`;
+            query = `SELECT * FROM rooms WHERE  id_room=${room.id_room}`;
 
             //TODO tengo que hacer push de resultados[0]
             let result = await database.pool.query(query);
@@ -72,7 +73,7 @@ async function getRoomsByQuery(data) {
         }
     };
 
-    for (const room in firstResults[0]) await findByDate(room);
+    for (const room of firstResults[0]) await findByDate(room);
 
     return finishResults;
 }
@@ -102,7 +103,7 @@ async function updateRoom(data, id) {
 
 async function setRoomsPhotos(id, url, description = 'prueba') {
     const query = 'INSERT INTO rooms_photo (id_room,description, url) VALUES (?,?,?)';
-    photo = await database.pool.query(query, [id, description, url]);
+   await database.pool.query(query, [id, description, url]);
     return { Message: `foto subida` };
 }
 

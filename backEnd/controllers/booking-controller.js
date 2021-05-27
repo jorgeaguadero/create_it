@@ -1,8 +1,7 @@
 const Joi = require('joi');
-const { formatISO } = require('date-fns');
 
 //TODO VALIDATE USER PASARLO A MIDDLEWARE Y ASI ADMIN PUEDE TENER PERMISOS EXTRA
-const { bookingsRepository, extrasRepository } = require('../repositories');
+const { bookingsRepository } = require('../repositories');
 const { isBeforeDate } = require('../middlewares/dateValidate');
 const { validateProperty } = require('../utils/users-auth');
 
@@ -86,7 +85,7 @@ async function payBooking(req, res, next) {
             throw error;
         }
 
-        result = await bookingsRepository.payBooking(id_booking, id);
+        const result = await bookingsRepository.payBooking(id_booking, id);
         //TODO envio Mail
         res.status(201);
 
@@ -99,9 +98,8 @@ async function payBooking(req, res, next) {
 //5.3.1-->VER RESERVA POR USUARIO
 async function getBookingsByUser(req, res, next) {
     try {
-        const{id_user}=req.params;
+        const { id_user } = req.params;
         validateProperty(req, req.params);
-
 
         const bookings = await bookingsRepository.getBookingsByUser(id_user);
 
@@ -134,8 +132,6 @@ async function getBookingsByRoom(req, res, next) {
         next(err);
     }
 }
-
-
 
 //5.4-->BORRAR RESERVA
 async function deleteBooking(req, res, next) {

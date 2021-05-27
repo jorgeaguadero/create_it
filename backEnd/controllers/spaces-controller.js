@@ -1,11 +1,8 @@
 const Joi = require('joi');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 //const multer = require('multer');
 //const { v4: uuidv4 } = require('uuid');
 
 const { spacesRepository } = require('../repositories');
-const { usersRepository } = require('../repositories');
 
 //TODO AÑADIR MEDIA DE RATING DE REVIEWS POR ESPACIO+ NUM REVIEWS??-> SINO SERIA 0 al inicio sin más info
 //2.1-->CREAR ESPACIOS
@@ -112,7 +109,7 @@ async function viewSpace(req, res, next) {
     try {
         const { id_space } = req.params;
 
-        space = await spacesRepository.getSpaceById(id_space);
+        const space = await spacesRepository.getSpaceById(id_space);
 
         res.status(201);
         res.send(space);

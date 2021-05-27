@@ -66,17 +66,12 @@ async function registrer(req, res, next) {
             last_name,
             email,
             passwordHash,
+            activationCode,
         });
-        await usersRepository.InsertUserCodes({ id_user: createdUser.id_user, activationCode });
-        res.status(201);
-        const msg = {
-            to: 'jorgeaguadero@gmail.com', // Change to your recipient
-            from: 'jorgeaguadero91@outlook.es', // Change to your verified sender
-            subject: 'Sending with SendGrid is Fun',
-            Message: `Te has registrado en Create It, por favor confirma tu registro:
-            http://localhost:${process.env.PORT}/api/verify/${createdUser.id_user}/${activationCode}`,
-        };
 
+        res.status(201);
+
+        //TODO MAIL
         res.send({
             id: createdUser.id_user,
             name: createdUser.first_name,
@@ -344,7 +339,7 @@ async function newPassword(req, res, next) {
         }
 
         const code = await usersRepository.getUserCodes(user.id_user);
-        if (activationCode !== code.code) {
+        if (activationCode !== code.activation_code) {
             const error = new Error('código incorrecto');
             throw error;
         }
@@ -395,7 +390,7 @@ async function viewProfileUser(req, res, next) {
     try {
         const { id_user } = req.params;
 
-        user = await usersRepository.getUserById(id_user);
+        const user = await usersRepository.getUserById(id_user);
 
         res.status(201);
         res.send(user);

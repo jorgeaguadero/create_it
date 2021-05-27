@@ -24,14 +24,10 @@ CREATE TABLE users (
     registration_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     modification_date TIMESTAMP,
     activate boolean not null default 0,
+    activation_code VARCHAR(50) NOT NULL,
     pending_payment boolean not null default 0
 );
-CREATE TABLE auth_codes (
-	id_code INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    id_user INT NOT NULL,
-    code VARCHAR(50) NOT NULL,
-    CONSTRAINT fk_user_code FOREIGN KEY (id_user) REFERENCES users (id_user)
-);
+
 CREATE TABLE spaces (
     id_space INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     id_user INT NOT NULL,
@@ -123,9 +119,9 @@ CREATE TABLE reviews (
     CONSTRAINT fk_review_booking FOREIGN KEY (id_booking) REFERENCES bookings (id_booking) 
 );
 
-insert into users (first_name,last_name, email, passwordHash,phone,role,activate ) values ('Jorge', 'Aguadero', 'jorgeaguadero@createit.com','$2a$10$uNY2e/48xjzjnZR9Vs5k6erkdOU9O9P0VrCSsYfglPdASCDwd46pa',666152053,'admin',1);
-insert into users (first_name,last_name, email, passwordHash,activate ) values ('Prueba1', 'Probando', 'prueba1@createit.com','$2a$10$uNY2e/48xjzjnZR9Vs5k6erkdOU9O9P0VrCSsYfglPdASCDwd46pa',1);
-insert into users (first_name,last_name, email, passwordHash,activate,pending_payment ) values ('Prueba2', 'pendientePago', 'prueba2@createit.com','$2a$10$uNY2e/48xjzjnZR9Vs5k6erkdOU9O9P0VrCSsYfglPdASCDwd46pa',1,1);
+insert into users (first_name,last_name, email, passwordHash,phone,role,activate,activation_code) values ('Jorge', 'Aguadero', 'jorgeaguadero@createit.com','$2a$10$uNY2e/48xjzjnZR9Vs5k6erkdOU9O9P0VrCSsYfglPdASCDwd46pa',666152053,'admin',1,'asdfafwefawef');
+insert into users (first_name,last_name, email, passwordHash,activate,activation_code ) values ('Prueba1', 'Probando', 'prueba1@createit.com','$2a$10$uNY2e/48xjzjnZR9Vs5k6erkdOU9O9P0VrCSsYfglPdASCDwd46pa',1,'asdfafwefawef');
+insert into users (first_name,last_name, email, passwordHash,activate,activation_code,pending_payment ) values ('Prueba2', 'pendientePago', 'prueba2@createit.com','$2a$10$uNY2e/48xjzjnZR9Vs5k6erkdOU9O9P0VrCSsYfglPdASCDwd46pa',1,'asdfafwefawef',1);
 
 insert into spaces (id_user,space_name, description, location,address,email,phone ) values (1, "El Bunker", 'Locales y sala de conciertos en leon','León','Calle tiriri','elbunker@createit.com',123456789 );
 

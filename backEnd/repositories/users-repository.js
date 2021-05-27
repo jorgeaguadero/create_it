@@ -24,20 +24,14 @@ async function getUsers() {
 //////////////////////////////////////
 //         CODES
 //////////////////////////////////////
-async function InsertUserCodes(data) {
-    const query = 'INSERT INTO auth_codes (id_user,code) VALUES (?,?)';
-    await database.pool.query(query, [data.id_user, data.activationCode]);
-
-    return { Message: 'OK' };
-}
 async function getUserCodes(id_user) {
-    const query = `SELECT auth_codes.code FROM auth_codes WHERE id_user = ${id_user}`;
-    code = await database.pool.query(query);
+    const query = `SELECT users.activation_code FROM users WHERE id_user = ${id_user}`;
+    const code = await database.pool.query(query);
 
     return code[0][0];
 }
 async function updateUserCodes(data) {
-    const query = 'UPDATE auth_codes SET code=? WHERE id_user = ?';
+    const query = 'UPDATE users SET activation_code=? WHERE id_user = ?';
     await database.pool.query(query, [data.activationCode, data.id_user]);
 
     return { Message: 'OK' };
@@ -48,8 +42,8 @@ async function updateUserCodes(data) {
 //////////////////////////////////////
 
 async function createUser(data) {
-    const query = 'INSERT INTO users (first_name,last_name,email, passwordHash) VALUES (?,?,?,?)';
-    await database.pool.query(query, [data.name, data.last_name, data.email, data.passwordHash]);
+    const query = 'INSERT INTO users (first_name,last_name,email, passwordHash,activation_code) VALUES (?,?,?,?,?)';
+    await database.pool.query(query, [data.name, data.last_name, data.email, data.passwordHash, data.activationCode]);
 
     return getUserByEmail(data.email);
 }
@@ -96,7 +90,6 @@ module.exports = {
     deleteUser,
     getUsers,
     updateAvatar,
-    InsertUserCodes,
     getUserCodes,
     updateUserCodes,
 };

@@ -26,7 +26,7 @@ async function createReview(req, res, next) {
 
         const review_date = isAfterDate(booking.start_date);
 
-        reviews = await reviewsRepository.getReviewsByUserId(id);
+        const reviews = await reviewsRepository.getReviewsByUserId(id);
         const reviewCheck = reviews.some((r) => r.id_booking === Number(id_booking));
 
         if (reviewCheck) {

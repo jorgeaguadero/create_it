@@ -62,7 +62,7 @@ async function getExtraInfo(startDate, extra, id_space) {
 async function createBooking(id_user, id_space, id_room, start_date, price) {
     let query = 'INSERT INTO bookings (id_user,id_space,id_room, start_date,price) VALUES (?,?,?,?,?)';
     const [result] = await database.pool.query(query, [id_user, id_space, id_room, start_date, price]);
-    query = `UPDATE users SET pending_payment = 1 WHERE id_user = '${id_user}'`;
+    query = `UPDATE users SET pending_payment = 1 WHERE id_user = ${id_user}`;
     await database.pool.query(query, [id_user]);
     return getBookingById(result.insertId);
 }
@@ -84,7 +84,7 @@ async function payBooking(id_booking, id_user) {
     if (pendingUser[0].length === 0) {
         query = `UPDATE users SET pending_payment =0 WHERE id_user =${id_user}`;
         await database.pool.query(query);
-        return { Message: `Pago de ${id_booking}correcto`, Message: `${id_user} no tiene pagos pendientes` };
+        return { Message: `Pago de ${id_booking}correcto. Usuario: ${id_user} no tiene pagos pendientes` };
     } else {
         return { Message: `pago de ${id_booking} correcto` };
     }

@@ -81,7 +81,7 @@ async function viewExtra(req, res, next) {
     try {
         const { id_extra } = req.params;
 
-        extra = await extrasRepository.getExtraById(id_extra);
+        const extra = await extrasRepository.getExtraById(id_extra);
 
         res.status(201);
         res.send(extra);

@@ -59,7 +59,7 @@ async function updateSpace(data, id) {
 
 async function setSpacesPhotos(id, url, description = 'prueba') {
     const query = 'INSERT INTO spaces_photo (id_space,description, url) VALUES (?,?,?)';
-    photo = await database.pool.query(query, [id, description, url]);
+    await database.pool.query(query, [id, description, url]);
     return { Message: `foto subida` };
 }
 

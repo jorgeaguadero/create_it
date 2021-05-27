@@ -84,15 +84,12 @@ const roomPĥotos = multer({
             cb(null, uuidv4() + path.extname(file.originalname));
         },
     }),
-    limits: {
-        fileSize: 1024 * 1024, // 1 MB
-    },
 });
 
 const app = express();
-//app.use(cors());
+app.use(cors());
 app.use(express.json());
-app.use(fileUpload());
+//app.use(fileUpload());
 app.use('/uploads', express.static('static'));
 app.use(express.static(staticPath));
 
@@ -110,7 +107,7 @@ app.post('/api/users/:id_user/logout', validateAuthorization, validateUser, user
 //1.3.1-ACTUALIZACIÓN DE DATOS DE PERFIL
 app.patch('/api/users/:id_user', validateAuthorization, validateUser, usersController.updateProfile);
 //1.3.2-ACTUALIZACIÓN DE AVATAR DEL PERFIL -->POST en vez de PATCH/PUT porque borro el avatar de antes
-app.post('/api/users/:id_user/avatar', validateAuthorization, validateUser, usersController.addAvatar);
+app.post('/api/users/:id_user/avatar', validateAuthorization, validateUser, fileUpload(), usersController.addAvatar);
 /*app.post(
     '/api/users/:id_user/avatar',
     validateAuthorization,
@@ -164,10 +161,11 @@ app.patch('/api/rooms/:id_room', validateAuthorization, validateAdmin, validateR
 //3.2.2-->ADMIN-->subir fotos
 app.post(
     '/api/rooms/:id_room/photos',
+    roomPĥotos.array('photos'),
     validateAuthorization,
     validateAdmin,
     validateRoom,
-    roomPĥotos.array('photos'),
+
     roomsController.setRoomsPhotos
 );
 
@@ -194,7 +192,7 @@ app.delete('/api/extras/:id_extra', validateAuthorization, validateAdmin, valida
 
 //RESERVAS
 //5.1--> CREAR RESERVA Falta validar bien fechas de devolución
-app.post('/api/bookings', validateAuthorization, validateRoom, validateExtra, bookingsController.createBooking);
+app.post('/api/bookings', validateAuthorization, validateRoom, bookingsController.createBooking);
 //5.5->PAGAR RESERVA
 app.post('/api/bookings/:id_booking', validateAuthorization, validateBooking, bookingsController.payBooking);
 //5.3.1--> VER MIS RESERVAS // ADMIN -->reservas por usuario --> //TODOañadimos query params?
@@ -257,6 +255,7 @@ app.get(
 );
 
 app.use((err, req, res, next) => {
+    console.log(err);
     const status = err.isJoi ? 400 : err.httpCode || 500;
     res.status(status);
     res.send({ error: err.message });

@@ -2,11 +2,6 @@ const jwt = require('jsonwebtoken');
 const { database } = require('../infrastructure');
 
 //TODO pasar a helper--> organizar validadores y helper
-const path = require('path');
-const fs = require('fs').promises;
-const sharp = require('sharp');
-const { nanoid } = require('nanoid');
-
 const {
     usersRepository,
     spacesRepository,

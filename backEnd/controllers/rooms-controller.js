@@ -1,12 +1,11 @@
 const Joi = require('joi');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+
 //const multer = require('multer');
 //const { v4: uuidv4 } = require('uuid');
 
 //TODO pendiente gestión de fotos
 
-const { roomsRepository, spacesRepository, bookingsRepository } = require('../repositories');
+const { roomsRepository, spacesRepository } = require('../repositories');
 
 //3.1-->CREAR SALAS
 async function createRooms(req, res, next) {
@@ -91,7 +90,7 @@ async function setRoomsPhotos(req, res, next) {
         const { id_room } = req.params;
         //const { description } = req.body;
         files.forEach(async (photo) => {
-            const url = `static/spaces/${id_room}/${photo.filename}`;
+            const url = `/spaces/${id_room}/${photo.filename}`;
             await roomsRepository.setRoomsPhotos(id_room, url);
         });
 
@@ -118,7 +117,7 @@ async function viewRoom(req, res, next) {
     try {
         const { id_room } = req.params;
 
-        room = await roomsRepository.getRoomById(id_room);
+        const room = await roomsRepository.getRoomById(id_room);
 
         res.status(201);
         res.send(room);
