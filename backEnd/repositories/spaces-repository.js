@@ -18,8 +18,22 @@ async function getSpaceById(id) {
     return spaces[0];
 }
 
+async function getRatingSpace(id_space) {
+    const query = 'SELECT AVG(rating) from reviews WHERE id_space=?';
+    const rating = await database.pool.query(query, id_space);
+
+    return rating[0];
+}
+
+async function getAllRatingSpace() {
+    const query = 'SELECT id_space, AVG(rating) from reviews GROUP BY id_space';
+    const rating = await database.pool.query(query);
+
+    return rating[0];
+}
+
 async function getSpaces() {
-    const [spaces] = await database.pool.query('SELECT * FROM spaces');
+    const [spaces] = await database.pool.query('SELECT * FROM spaces id_space');
 
     return spaces;
 }
@@ -28,7 +42,7 @@ async function getSpaces() {
 //        GESTIÓN DE ESPACIOS
 //////////////////////////////////////
 
-async function createSpace(data) {
+/*async function createSpace(data) {
     const query =
         'INSERT INTO spaces (id_user,space_name, description,location,address,email,phone) VALUES (?,?,?,?,?,?,?)';
     await database.pool.query(query, [
@@ -42,7 +56,7 @@ async function createSpace(data) {
     ]);
 
     return getSpaceByEmail(data.email);
-}
+}*/
 
 async function updateSpace(data, id) {
     const replaceNotNull = async (row, value, id_space = id) => {
@@ -53,29 +67,35 @@ async function updateSpace(data, id) {
     };
 
     for (const row in data) await replaceNotNull(row, data[row]);
+    const queryDate = `UPDATE spaces SET modification_date = current_timestamp() WHERE id_space = '${id}'`;
+    await database.pool.query(queryDate);
 
     return getSpaceById(id);
 }
 
-async function setSpacesPhotos(id, url, description = 'prueba') {
+/*async function setSpacesPhotos(id, url, description = 'prueba') {
     const query = 'INSERT INTO spaces_photo (id_space,description, url) VALUES (?,?,?)';
     await database.pool.query(query, [id, description, url]);
     return { Message: `foto subida` };
-}
+}*/
 
 async function deleteSpace(id_space) {
-    const query = 'DELETE FROM spaces WHERE id_space = ?';
-    await database.pool.query(query, [id_space]);
+    let query = 'SELECT spaces.email FROM spaces WHERE id_space= ?';
+    const email = await database.pool.query(query, id_space);
+    query = 'DELETE FROM spaces WHERE id_space = ?';
+    await database.pool.query(query, id_space);
 
-    return id_space;
+    return email[0][0];
 }
 
 module.exports = {
     getSpaceByEmail,
-    createSpace,
+    //createSpace,
     updateSpace,
     getSpaceById,
     getSpaces,
     deleteSpace,
-    setSpacesPhotos,
+    getRatingSpace,
+    //setSpacesPhotos,
+    getAllRatingSpace,
 };

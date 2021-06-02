@@ -16,30 +16,40 @@ const {
 async function validateAuthorization(req, res, next) {
     try {
         const { authorization } = req.headers;
+        const { id_user } = req.params;
+
         const token = authorization.slice(7, authorization.length);
         if (token === 'null') {
-            const error = new Error('Authorization header required');
+            const error = new Error('Es necesario estar logueado');
             error.code = 401;
             throw error;
         }
         const decodedToken = jwt.verify(token, process.env.SECRET);
 
         if (!authorization || !decodedToken.id || !authorization.startsWith('Bearer ')) {
-            const error = new Error('Authorization header required');
+            const error = new Error('Es necesario estar logueado');
             error.code = 401;
             throw error;
         }
 
-        const query = 'SELECT * FROM users WHERE id_user= ?';
-        const [users] = await database.pool.query(query, decodedToken.id);
+        const query = `SELECT * FROM users WHERE id_user=${decodedToken.id} `;
+        const [users] = await database.pool.query(query);
 
+        //caso muy remoto en el que el id del token ya no esté en base de datos
         if (!users || !users.length) {
-            const error = new Error('El usuario no existe');
+            const error = new Error('El usuario logueado ya no se encuentra en nuestra base de datos');
             error.code = 401;
             throw error;
         }
-
         req.auth = decodedToken;
+        if (id_user) {
+            if (req.auth.role === 'user' && Number(id_user) !== req.auth.id) {
+                const err = new Error('No tienes permisos para acceder');
+                err.httpCode = 403;
+                throw err;
+            }
+        }
+
         next();
     } catch (err) {
         next(err);
@@ -63,26 +73,21 @@ async function validateAdmin(req, res, next) {
 //Gestion de usuarios
 async function validateUser(req, res, next) {
     try {
-        const { id_user } = req.params;
-        const { id, role } = req.auth;
-        const user = await usersRepository.getUserById(id);
+        let { id_user } = req.params;
+        if (!id_user) {
+            id_user = req.body.id_user;
+        }
+        const user = await usersRepository.getUserById(id_user);
         if (!user) {
-            const err = new Error('No existe usuario con ese email');
+            const err = new Error('No existe este usuario');
             err.httpCode = 401;
             throw err;
         }
 
-        // Comprobar que el id del parametro y el del usuario que intenta acceder son el mismo
-        if (role === 'user' && Number(id_user) !== id) {
-            const err = new Error('No tienes permisos para acceder');
-            err.httpCode = 403;
-            throw err;
-        }
-
+        //se podria meter user en res??
         next();
     } catch (err) {
-        res.status(err.status || 500);
-        res.send({ error: err.message });
+        next(err);
     }
 }
 
@@ -114,7 +119,7 @@ async function validateEmail(req, res, next) {
         }
         const user = await usersRepository.getUserByEmail(email);
         if (!user) {
-            const err = new Error('usuario con este mail');
+            const err = new Error('No existe usuario con este mail');
             err.httpCode = 401;
             throw err;
         }

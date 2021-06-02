@@ -4,8 +4,11 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { nanoid } = require('nanoid');
 
+const path = require('path');
+
 const { usersRepository } = require('../repositories');
 const { helpers } = require('../middlewares');
+const { sendMail } = require('../utils/mailConfirmation');
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
@@ -69,6 +72,11 @@ async function registrer(req, res, next) {
             activationCode,
         });
 
+        await sendMail({
+            to: email,
+            subject: 'Gracias por reg',
+            body: ' falta confirmación',
+        });
         res.status(201);
 
         //TODO MAIL
@@ -100,7 +108,7 @@ async function confirmationUser(req, res, next) {
         }
 
         const code = await usersRepository.getUserCodes(user.id_user);
-        if (activationCode !== code.code) {
+        if (activationCode !== code.activation_code) {
             const error = new Error('código incorrecto');
             throw error;
         }
@@ -165,15 +173,7 @@ async function login(req, res, next) {
 //2.2-->LOGOUT DE USUARIO
 async function logout(req, res, next) {
     try {
-        const { id_user } = req.params;
-        const { id } = req.auth;
-        if (Number(id_user) !== id) {
-            const err = new Error('No eres el usuario ');
-            err.httpCode = 403;
-            throw err;
-        }
         const tokenPayload = {};
-
         const token = jwt.sign(tokenPayload, process.env.SECRET);
 
         res.send({
@@ -199,7 +199,6 @@ async function updateProfile(req, res, next) {
             bio: Joi.string().error(() => new Error('bio')),
         });
         await schema.validateAsync(data);
-
         const user = await usersRepository.updateProfile(data, id_user);
 
         res.status(201);
@@ -212,39 +211,26 @@ async function updateProfile(req, res, next) {
 
 //TODO FOTO AVATAR -
 //3.2-ACTUALIZACIÓN DE AVATAR DEL PERFIL
-async function updateAvatar(req, res, next) {
-    try {
-        const { file } = req;
-        const { id_user } = req.params;
 
-        const url = `static/users/${id_user}/${file.filename}`;
-        const image = await usersRepository.updateAvatar(url, id_user);
-
-        res.status(201);
-        res.send(image);
-    } catch (err) {
-        next(err);
-    }
-}
 //Avatar  con sharp y express-fileupload -->> tutoria en videoshackaboss
 
 async function addAvatar(req, res, next) {
     try {
-        if (!req.files || !req.files.avatar) {
+        const { file } = req;
+        if (!file) {
             const error = new Error('Es necesario subir un fichero');
             error.httpCode = 400;
             throw error;
         }
-        const { avatar } = req.files;
+
         const { id_user } = req.params;
 
         const user = await usersRepository.getUserById(id_user);
         if (user.avatar) {
-            await helpers.deleteAvatar({ file: user.avatar });
+            await helpers.deleteImage(user.avatar);
         }
-        const fileName = await helpers.saveAvatar({ file: avatar });
-
-        const updateUser = await usersRepository.updateAvatar(fileName, id_user);
+        const url = path.join(`static/users/${id_user}/${file.filename}`);
+        const updateUser = await usersRepository.updateAvatar(url, id_user);
 
         res.status(201);
         res.send({ user: updateUser });
@@ -340,7 +326,7 @@ async function newPassword(req, res, next) {
 
         const code = await usersRepository.getUserCodes(user.id_user);
         if (activationCode !== code.activation_code) {
-            const error = new Error('código incorrecto');
+            const error = new Error('código y/o usuario incorrecto');
             throw error;
         }
 
@@ -377,10 +363,10 @@ async function deleteUser(req, res, next) {
             err.httpCode = 403;
             throw err;
         }
-        await usersRepository.deleteUser(id_user);
+        const email = await usersRepository.deleteUser(id_user);
 
         res.status(201);
-        res.send({ Message: 'Usuario borrado' });
+        res.send({ Message: `Usuario ${email.email} borrado` });
     } catch (error) {
         next(error);
     }
@@ -389,9 +375,7 @@ async function deleteUser(req, res, next) {
 async function viewProfileUser(req, res, next) {
     try {
         const { id_user } = req.params;
-
         const user = await usersRepository.getUserById(id_user);
-
         res.status(201);
         res.send(user);
     } catch (error) {
@@ -417,7 +401,7 @@ module.exports = {
     viewProfileUser,
     getUsers,
     logout,
-    updateAvatar,
+
     //deleteAvatar,
     addAvatar,
     confirmationUser,

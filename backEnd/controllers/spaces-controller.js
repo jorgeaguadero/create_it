@@ -1,11 +1,10 @@
 const Joi = require('joi');
-//const multer = require('multer');
-//const { v4: uuidv4 } = require('uuid');
 
-const { spacesRepository } = require('../repositories');
+const { spacesRepository, bookingsRepository } = require('../repositories');
 
 //TODO AÑADIR MEDIA DE RATING DE REVIEWS POR ESPACIO+ NUM REVIEWS??-> SINO SERIA 0 al inicio sin más info
-//2.1-->CREAR ESPACIOS
+
+/*2.1-->CREAR ESPACIOS
 async function createSpaces(req, res, next) {
     try {
         const { id_user, space_name, description, location, address, email, phone } = req.body;
@@ -68,13 +67,26 @@ async function createSpaces(req, res, next) {
     } catch (err) {
         next(err);
     }
-}
+}*/
 
 //2.2-->ACTUALIZAR DATOS DEL ESPACIO
 async function updateSpace(req, res, next) {
     try {
         const { id_space } = req.params;
         const data = req.body;
+        const schema = Joi.object({
+            description: Joi.string(),
+            location: Joi.string(),
+            address: Joi.string(),
+            email: Joi.string()
+                .email()
+                .error(() => new Error('mail')),
+            phone: Joi.string()
+                .min(9)
+                .max(14)
+                .error(() => new Error('phone')),
+        });
+        await schema.validateAsync(data);
 
         const space = await spacesRepository.updateSpace(data, id_space);
 
@@ -86,7 +98,7 @@ async function updateSpace(req, res, next) {
     }
 }
 
-//pasar por helper
+//TODO EXTRA
 /*async function setSpacesPhotos(req, res, next) {
     try {
         const { files } = req;
@@ -110,9 +122,10 @@ async function viewSpace(req, res, next) {
         const { id_space } = req.params;
 
         const space = await spacesRepository.getSpaceById(id_space);
+        const rating = await spacesRepository.getRatingSpace(id_space);
 
         res.status(201);
-        res.send(space);
+        res.send({ space, rating });
     } catch (error) {
         next(error);
     }
@@ -122,33 +135,37 @@ async function viewSpace(req, res, next) {
 async function getSpaces(req, res, next) {
     try {
         const spaces = await spacesRepository.getSpaces();
-        res.send(spaces);
+        const ratings = await spacesRepository.getAllRatingSpace();
+        res.send({ spaces, ratings });
     } catch (err) {
         next(err);
     }
 }
 
+
+
 //2.4-->BORRAR ESPACIOS
 async function deleteSpace(req, res, next) {
     try {
         const { id_space } = req.params;
-        let space = await spacesRepository.getSpaceById(id_space);
+
         //TODO
-        /*LÓGICA PARA VER SI TIENE RESERVAS PENDIENTES if (user.pending_payment === 0) {
-            const err = new Error('No puedes borrar tu usuario hasta que no se realicen los pagos pendientes');
+        const pending = await bookingsRepository.getPendingBySpace(id_space);
+        if (pending[0] !== 0) {
+            const err = new Error('No se puede borrar porque hay reservas pendientes');
             err.httpCode = 403;
             throw err;
-        }*/
-        space = await spacesRepository.deleteSpace(id_space);
+        }
+        const email = await spacesRepository.deleteSpace(id_space);
 
         res.status(201);
-        res.send({ Message: `Espacio ${space} borrado` });
+        res.send({ Message: `Espacio ${email.email} borrado` });
     } catch (error) {
         next(error);
     }
 }
 module.exports = {
-    createSpaces,
+    //createSpaces,
     updateSpace,
     viewSpace,
     getSpaces,

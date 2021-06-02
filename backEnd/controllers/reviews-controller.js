@@ -18,8 +18,7 @@ async function createReview(req, res, next) {
 
         await schema.validateAsync({ rating, text });
 
-        //TODO extraer como función ??
-        validateProperty(req, req.params);
+       
 
         const booking = await bookingsRepository.getBookingById(id_booking);
         validateProperty(req, booking);

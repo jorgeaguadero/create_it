@@ -51,6 +51,10 @@ async function createBooking(req, res, next) {
         } else {
             const infoExtra = await bookingsRepository.getExtraInfo(start_date, id_extra, infoRoom.id_space);
             //me devuelve la fecha con una hora menos-->un dia menos formateo a ISO
+            if (infoRoom.type !== infoExtra.type) {
+                const error = new Error('no puedes coger este extra');
+                throw error;
+            }
             const totalPrice = infoRoom.price + infoExtra.price;
             const booking = await bookingsRepository.createBookingWithExtra(
                 id,

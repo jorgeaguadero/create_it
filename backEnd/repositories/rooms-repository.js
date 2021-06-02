@@ -26,10 +26,11 @@ async function getRoomsBySpace(id_space) {
 async function getRoomsByQuery(data) {
     let query = 'SELECT id_room from rooms';
     const params = [];
+    let firstResults = '';
 
-    const { id_space, price, capacity, start_date } = data;
+    const { id_space,type, price, capacity, start_date } = data;
 
-    if (id_space || price || capacity) {
+    if (id_space ||type|| price || capacity) {
         query = `${query} WHERE `;
         const conditions = [];
 
@@ -38,6 +39,10 @@ async function getRoomsByQuery(data) {
             params.push(id_space);
         }
 
+        if (type) {
+            conditions.push('type=?');
+            params.push(type);
+        }
         if (price) {
             conditions.push('price<=?');
             params.push(price);
@@ -49,7 +54,7 @@ async function getRoomsByQuery(data) {
         }
 
         query = `${query} ${conditions.join(' AND ')}`;
-        const firstResults = await database.pool.query(query, params);
+        firstResults = await database.pool.query(query, params);
         //TODO si no hay --> error?
     }
     if (!start_date) {
@@ -60,7 +65,6 @@ async function getRoomsByQuery(data) {
     //Y después devolver el resultado con todo pusheado
     const finishResults = [];
 
-    //TODO COrregir
     const findByDate = async (room, start = start_date) => {
         let query = `SELECT * FROM bookings WHERE start_date= '${start}'AND id_room=${room.id_room}`;
         const [bookings] = await database.pool.query(query);
@@ -81,12 +85,12 @@ async function getRoomsByQuery(data) {
 //////////////////////////////////////
 //        GESTIÓN DE SALAS
 //////////////////////////////////////
-async function createRoom(data) {
+/*async function createRoom(data) {
     const query = 'INSERT INTO rooms (id_space,room_code, description,price,capacity) VALUES (?,?,?,?,?)';
     await database.pool.query(query, [data.id_space, data.room_code, data.description, data.price, data.capacity]);
 
     return getRoomByCode(data.room_code);
-}
+}*/
 
 async function updateRoom(data, id) {
     const replaceNotNull = async (row, value, id_room = id) => {
@@ -101,26 +105,28 @@ async function updateRoom(data, id) {
     return getRoomById(id);
 }
 
-async function setRoomsPhotos(id, url, description = 'prueba') {
+/*async function setRoomsPhotos(id, url, description = 'prueba') {
     const query = 'INSERT INTO rooms_photo (id_room,description, url) VALUES (?,?,?)';
-   await database.pool.query(query, [id, description, url]);
+    await database.pool.query(query, [id, description, url]);
     return { Message: `foto subida` };
-}
+}*/
 
 async function deleteRoom(id_room) {
-    const query = 'DELETE FROM rooms WHERE id_room = ?';
-    await database.pool.query(query, [id_room]);
+    let query = 'SELECT rooms.room_code FROM rooms WHERE id_room ?';
+    const room = await database.pool.query(query, id_room);
+    query = 'DELETE FROM rooms WHERE id_room = ?';
+    await database.pool.query(query, id_room);
 
-    return id_room;
+    return room[0][0];
 }
 
 module.exports = {
-    createRoom,
+    //createRoom,
     updateRoom,
     getRoomById,
     getRoomsBySpace,
     deleteRoom,
     getRoomByCode,
     getRoomsByQuery,
-    setRoomsPhotos,
+    //setRoomsPhotos,
 };

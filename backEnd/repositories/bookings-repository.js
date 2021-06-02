@@ -24,6 +24,20 @@ async function getBookingsBySpace(id_space) {
     return booking;
 }
 
+async function getPendingBySpace(id_space) {
+    const query = 'SELECT * FROM bookings WHERE id_space = ? AND booking_date >=current_timestamp()';
+    const [booking] = await database.pool.query(query, id_space);
+
+    return booking;
+}
+
+async function getPendingByRoom(id_room) {
+    const query = 'SELECT * FROM bookings WHERE id_room = ? AND booking_date <=current_timestamp()';
+    const [booking] = await database.pool.query(query, id_room);
+
+    return booking;
+}
+
 async function getBookingsByRoom(id_room) {
     const query = 'SELECT * FROM bookings WHERE id_room = ?';
     const [booking] = await database.pool.query(query, id_room);
@@ -38,7 +52,7 @@ async function getRoomInfo(start, room) {
         const error = new Error('Está ocupado ese dia');
         throw error;
     } else {
-        query = `SELECT rooms.price, rooms.id_space FROM rooms WHERE  id_room=${room}`;
+        query = `SELECT rooms.price, rooms.id_space, rooms.type FROM rooms WHERE  id_room=${room}`;
         const roomInfo = await database.pool.query(query);
         return roomInfo[0][0];
     }
@@ -50,7 +64,7 @@ async function getExtraInfo(startDate, extra, id_space) {
         const error = new Error('El extra No está disponible');
         throw error;
     } else {
-        query = `SELECT extras.price FROM extras WHERE  id_extra=${extra} AND id_space=${id_space}`;
+        query = `SELECT extras.price, extras.type FROM extras WHERE  id_extra=${extra} AND id_space=${id_space}`;
         const extraInfo = await database.pool.query(query);
         return extraInfo[0][0];
     }
@@ -120,5 +134,7 @@ module.exports = {
     getBookingsByUser,
     getBookingsByRoom,
     getBookingsBySpace,
+    getPendingBySpace,
     //payBooking,
+    getPendingByRoom,
 };

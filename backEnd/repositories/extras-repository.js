@@ -19,7 +19,15 @@ async function getExtraByCode(code) {
 }
 
 async function getExtrasBySpace(id_space) {
-    const [extras] = await database.pool.query(`SELECT * FROM extras WHERE id_space=${id_space}`);
+    const query = 'SELECT * FROM extras WHERE id_space = ?';
+    const [extras] = await database.pool.query(query, id_space);
+
+    return extras[0];
+}
+
+async function getExtrasBytype(id_space, type) {
+    const query = 'SELECT * FROM extras WHERE id_space=? AND type=?';
+    const [extras] = await database.pool.query(query, [id_space, type]);
 
     return extras;
 }
@@ -29,8 +37,8 @@ async function getExtrasBySpace(id_space) {
 //////////////////////////////////////
 
 async function createExtra(data) {
-    const query = 'INSERT INTO extras (id_space,extra_code,description,price) VALUES (?,?,?,?)';
-    await database.pool.query(query, [data.id_space, data.extra_code, data.description, data.price]);
+    const query = 'INSERT INTO extras (id_space,extra_code,type,description,price) VALUES (?,?,?,?,?)';
+    await database.pool.query(query, [data.id_space, data.extra_code, data.type, data.description, data.price]);
 
     return getExtraByCode(data.extra_code);
 }
@@ -62,4 +70,5 @@ module.exports = {
     getExtrasBySpace,
     deleteExtra,
     getExtraByCode,
+    getExtrasBytype,
 };

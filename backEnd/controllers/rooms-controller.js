@@ -1,14 +1,15 @@
 const Joi = require('joi');
+//const path = require('path');
 
 //const multer = require('multer');
 //const { v4: uuidv4 } = require('uuid');
 
 //TODO pendiente gestión de fotos
 
-const { roomsRepository, spacesRepository } = require('../repositories');
+const { roomsRepository, extrasRepository, bookingsRepository } = require('../repositories');
 
 //3.1-->CREAR SALAS
-async function createRooms(req, res, next) {
+/*async function createRooms(req, res, next) {
     try {
         const { id_space, room_code, description, price, capacity } = req.body;
 
@@ -54,7 +55,7 @@ async function createRooms(req, res, next) {
     } catch (err) {
         next(err);
     }
-}
+}*/
 
 //3.2.1-->ACTUALIZAR ESPACIOS
 async function updateRoom(req, res, next) {
@@ -84,13 +85,13 @@ async function updateRoom(req, res, next) {
 }
 
 //3.2.2-->ACTUALIZAR FOTOS ESPACIOS
-async function setRoomsPhotos(req, res, next) {
+/*async function setRoomsPhotos(req, res, next) {
     try {
         const { files } = req;
         const { id_room } = req.params;
         //const { description } = req.body;
         files.forEach(async (photo) => {
-            const url = `/spaces/${id_room}/${photo.filename}`;
+            const url = path.join(`static/rooms/${id_room}/${photo.filename}`);
             await roomsRepository.setRoomsPhotos(id_room, url);
         });
 
@@ -99,7 +100,7 @@ async function setRoomsPhotos(req, res, next) {
     } catch (err) {
         next(err);
     }
-}
+}*/
 
 //3.3.1-->VER SALAS POR ID ESPACIO
 async function getRoomsBySpace(req, res, next) {
@@ -131,17 +132,20 @@ async function querySeeker(req, res, next) {
     try {
         const data = req.query;
 
-        /*const schema = Joi.object({
+        const schema = Joi.object({
             id_space: Joi.number(),
+            type: Joi.number(),
             price: Joi.number(),
             capacity: Joi.number(),
             start_date: Joi.date(),
         });
-        await schema.validateAsync(data);*/
+        await schema.validateAsync(data);
         //primero filtramos los parametros y después vemos si esta disponible
         const queryRooms = await roomsRepository.getRoomsByQuery(data);
+
+        const extras = await extrasRepository.getExtrasBytype(data.id_space, data.type);
         res.status(201);
-        res.send(queryRooms);
+        res.send({ queryRooms, extras });
     } catch (error) {
         next(error);
     }
@@ -154,27 +158,27 @@ async function deleteRoom(req, res, next) {
         const { id_room } = req.params;
         let room = await roomsRepository.getRoomById(id_room);
 
-        //TODO
-        /*LÓGICA PARA VER SI TIENE RESERVAS PENDIENTES if (user.pending_payment === 0) {
-            const err = new Error('No puedes borrar tu usuario hasta que no se realicen los pagos pendientes');
+        const pending = await bookingsRepository.getPendingByRoom(id_room);
+        if (pending.length !== 0) {
+            const err = new Error('No se puede borrar porque hay reservas pendientes');
             err.httpCode = 403;
             throw err;
-        }*/
+        }
         room = await roomsRepository.deleteRoom(id_room);
 
         res.status(201);
-        res.send({ Message: `Espacio ${room} borrado` });
+        res.send({ Message: `Espacio ${room.room_code} borrado` });
     } catch (error) {
         next(error);
     }
 }
 
 module.exports = {
-    createRooms,
+    //createRooms,
     updateRoom,
     viewRoom,
     getRoomsBySpace,
     deleteRoom,
     querySeeker,
-    setRoomsPhotos,
+    //setRoomsPhotos,
 };

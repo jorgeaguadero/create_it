@@ -71,14 +71,19 @@ async function updateAvatar(url, id) {
 async function updatePassword(passwordHash, id_user) {
     const query = 'UPDATE users SET passwordHash = ? WHERE id_user = ?';
     await database.pool.query(query, [passwordHash, id_user]);
+    const queryDate = `UPDATE users SET modification_date = current_timestamp() WHERE id_user = '${id_user}'`;
+    await database.pool.query(queryDate);
 
     return getUserById(id_user);
 }
 async function deleteUser(id_user) {
-    const query = 'DELETE FROM users WHERE id_user = ?';
+    let query = 'SELECT users.email FROM users WHERE id_user= ?';
+    const email = await database.pool.query(query, id_user);
+
+    query = 'DELETE FROM users WHERE id_user = ?';
     await database.pool.query(query, [id_user]);
 
-    return id_user;
+    return email[0][0];
 }
 
 module.exports = {

@@ -6,20 +6,24 @@ const { extrasRepository } = require('../repositories');
 //4.1-->CREAR EXTRA
 async function createExtras(req, res, next) {
     try {
-        const { id_space, extra_code, description, price } = req.body;
+        const { id_space, extra_code, type, description, price, photo } = req.body;
 
         const schema = Joi.object({
             id_space: Joi.number().required(),
             extra_code: Joi.string().required(),
+            type: Joi.number().min(1).max(3).required(),
             description: Joi.string().required(),
             price: Joi.number().required(),
+            photo: Joi.string(),
         });
 
         await schema.validateAsync({
             id_space,
             extra_code,
+            type,
             description,
             price,
+            photo,
         });
 
         const extra = await extrasRepository.getExtraByCode(extra_code);
@@ -38,8 +42,10 @@ async function createExtras(req, res, next) {
         const createdExtra = await extrasRepository.createExtra({
             id_space,
             extra_code,
+            type,
             description,
             price,
+            photo,
         });
         res.status(201);
 
@@ -54,6 +60,14 @@ async function updateExtra(req, res, next) {
     try {
         const { id_extra } = req.params;
         const data = req.body;
+
+        const schema = Joi.object({
+            description: Joi.string(),
+            price: Joi.number(),
+            photo: Joi.string(),
+        });
+
+        await schema.validateAsync(data);
 
         const extra = await extrasRepository.updateExtra(data, id_extra);
 
@@ -76,7 +90,18 @@ async function getExtrasBySpace(req, res, next) {
     }
 }
 
-//4.3.2-->VER EXTRA POR ID EXTRA
+//4.3.2--> VER EXTRA POR TIPO + ESPACIO
+async function getExtrasByType(req, res, next) {
+    try {
+        const { id_space, type } = req.params;
+        const extras = await extrasRepository.getExtrasBytype(id_space, type);
+        res.send(extras);
+    } catch (err) {
+        next(err);
+    }
+}
+
+//4.3.3-->VER EXTRA POR ID EXTRA
 async function viewExtra(req, res, next) {
     try {
         const { id_extra } = req.params;
@@ -115,4 +140,5 @@ module.exports = {
     viewExtra,
     getExtrasBySpace,
     deleteExtra,
+    getExtrasByType,
 };
