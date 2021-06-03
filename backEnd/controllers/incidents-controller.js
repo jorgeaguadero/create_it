@@ -1,7 +1,8 @@
 const Joi = require('joi');
 
 const { bookingsRepository, incidentsRepository } = require('../repositories');
-const { dateValidate, validateAuth } = require('../middlewares');
+const { validateAuth } = require('../middlewares');
+const { dateValidate } = require('../utils');
 //const { sendMails } = require('../utils');
 
 //7.1--> CREAR INCIDENCIA (user)

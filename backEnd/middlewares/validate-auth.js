@@ -81,20 +81,37 @@ async function validateUser(req, res, next) {
     }
 }
 
-function validateProperty(req, element) {
+function validateProperty(req, element, next) {
     if (req.auth.role === 'user' && Number(req.auth.id) !== Number(element.id_user)) {
         const error = new Error('Permiso denegado');
         throw error;
+    } else {
+        next();
     }
 }
 
+async function validateUserActivate(req, res, next) {
+    try {
+        const { id } = req.auth;
 
+        const user = await usersRepository.getUserById(id);
+        if (!user.activate) {
+            const err = new Error('El usuario debe de estar activado');
+            err.httpCode = 401;
+            throw err;
+        }
+
+        next();
+    } catch (err) {
+        res.status(err.status || 500);
+        res.send({ error: err.message });
+    }
+}
 
 module.exports = {
     validateAuthorization,
     validateUser,
     validateAdmin,
     validateProperty,
+    validateUserActivate,
 };
-
-

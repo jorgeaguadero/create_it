@@ -1,6 +1,6 @@
 const validateAuth = require('./validate-auth');
 const generalValidators = require('./general-validators');
-const dateValidate = require('./validate-date');
+const dateValidate = require('../utils/validate-date');
 
 module.exports = {
     validateAuth,

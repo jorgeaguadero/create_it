@@ -13,8 +13,8 @@ const {
     incidentsController,
 } = require('./controllers');
 
-const { validateAuth, helpers } = require('./middlewares/');
-const { validateSpace } = require('./middlewares/validate-auth');
+const { validateAuth, generalValidators } = require('./middlewares/');
+const { images } = require('./utils');
 
 const { PORT } = process.env;
 
@@ -29,7 +29,6 @@ app.use('/uploads', express.static('static'));
 app.post('/api/users', usersController.registrer);
 //1.1.2-->CONFIRMACION DE USUARIO
 app.get('/api/verify/:id_user/:activationCode', usersController.confirmationUser);
-
 //1.2.1-->LOGIN DE USUARIO
 app.post('/api/users/login', usersController.login);
 //1.2.2-->LOGOUT DE USUARIO
@@ -43,12 +42,11 @@ app.patch(
     usersController.updateProfile
 );
 //1.3.2-ACTUALIZACIÓN DE AVATAR DEL PERFIL -->POST en vez de PATCH/PUT porque borro el avatar de antes
-
 app.post(
     '/api/users/:id_user/avatar',
     validateAuth.validateAuthorization,
     validateAuth.validateUser,
-    helpers.userAvatar.single('foto'),
+    images.userAvatar.single('foto'),
     usersController.addAvatar
 );
 //1.3.4-ACTUALIZACIÓN DE CONTRASEÑA --> SE PASA COMPOBACIÓN DE REPETIDAS EN FRONT
@@ -89,7 +87,7 @@ app.patch(
     '/api/spaces/:id_space',
     validateAuth.validateAuthorization,
     validateAuth.validateAdmin,
-    validateAuth.validateSpace,
+    generalValidators.validateSpace,
     spacesController.updateSpace
 );
 //2.2.2-->ADMIN Subir Fotos
@@ -105,13 +103,13 @@ app.patch(
 //2.3.1-->Listar Espacios
 app.get('/api/spaces', spacesController.getSpaces);
 //2.3.2-->Listar Espacios individuales
-app.get('/api/spaces/:id_space', validateAuth.validateSpace, spacesController.viewSpace);
+app.get('/api/spaces/:id_space', generalValidators.validateSpace, spacesController.viewSpace);
 //3-->ADMIN--> borrar espacio
 app.delete(
     '/api/spaces/:id_space',
     validateAuth.validateAuthorization,
     validateAuth.validateAdmin,
-    validateAuth.validateSpace,
+    generalValidators.validateSpace,
     spacesController.deleteSpace
 );
 
@@ -123,7 +121,7 @@ app.patch(
     '/api/rooms/:id_room',
     validateAuth.validateAuthorization,
     validateAuth.validateAdmin,
-    validateAuth.validateRoom,
+    generalValidators.validateRoom,
     roomsController.updateRoom
 );
 //3.2.2-->ADMIN-->subir fotos
@@ -138,9 +136,9 @@ app.patch(
 );*/
 
 //3.3.1-->Listar rooms de un espacio
-app.get('/api/spaces/:id_space/rooms', validateAuth.validateSpace, roomsController.getRoomsBySpace);
+app.get('/api/spaces/:id_space/rooms', generalValidators.validateSpace, roomsController.getRoomsBySpace);
 //3.3.2-->Listar room individual
-app.get('/api/rooms/:id_room', validateAuth.validateRoom, roomsController.viewRoom);
+app.get('/api/rooms/:id_room', generalValidators.validateRoom, roomsController.viewRoom);
 //3.3.3-->Listar room por query params
 app.get('/api/prueba/', roomsController.querySeeker);
 //3.4-->ADMIN--> borrar room
@@ -148,7 +146,7 @@ app.delete(
     '/api/rooms/:id_room',
     validateAuth.validateAuthorization,
     validateAuth.validateAdmin,
-    validateAuth.validateRoom,
+    generalValidators.validateRoom,
     roomsController.deleteRoom
 );
 
@@ -160,21 +158,21 @@ app.patch(
     '/api/extras/:id_extra',
     validateAuth.validateAuthorization,
     validateAuth.validateAdmin,
-    validateAuth.validateExtra,
+    generalValidators.validateExtra,
     extrasController.updateExtra
 );
 //4.3.1 --> VER EXTRAS POR ESPACIO
-app.get('/api/spaces/:id_space/extras', validateAuth.validateSpace, extrasController.getExtrasBySpace);
+app.get('/api/spaces/:id_space/extras', generalValidators.validateSpace, extrasController.getExtrasBySpace);
 //4.3.2--> VER EXTRAS POR TIPO Y ESPACIO
-app.get('/api/spaces/:id_space/extras/:type', validateSpace, extrasController.getExtrasByType);
+app.get('/api/spaces/:id_space/extras/:type', generalValidators.validateSpace, extrasController.getExtrasByType);
 //4.3.3-->LVER EXTRAS POR ID EXTRA
-app.get('/api/extras/:id_extra', validateAuth.validateExtra, extrasController.viewExtra);
+app.get('/api/extras/:id_extra', generalValidators.validateExtra, extrasController.viewExtra);
 //4.4-->ADMIN--> BORRAR EXTRA
 app.delete(
     '/api/extras/:id_extra',
     validateAuth.validateAuthorization,
     validateAuth.validateAdmin,
-    validateAuth.validateExtra,
+    generalValidators.validateExtra,
     extrasController.deleteExtra
 );
 
@@ -183,18 +181,25 @@ app.delete(
 app.post(
     '/api/bookings',
     validateAuth.validateAuthorization,
-    validateAuth.validateRoom,
+    validateAuth.validateUserActivate,
+    generalValidators.validateRoom,
     bookingsController.createBooking
 );
 //5.5->PAGAR RESERVA
 app.post(
     '/api/bookings/:id_booking',
     validateAuth.validateAuthorization,
-    validateAuth.validateBooking,
+    validateAuth.validateUserActivate,
+    generalValidators.validateBooking,
     bookingsController.payBooking
 );
 //5.3.1--> VER MIS RESERVAS // ADMIN -->reservas por usuario --> //TODOañadimos query params?
-app.get('/api/users/:id_user/bookings', validateAuth.validateAuthorization, bookingsController.getBookingsByUser);
+app.get(
+    '/api/users/:id_user/bookings',
+    validateAuth.validateAuthorization,
+    validateAuth.validateUserActivate,
+    bookingsController.getBookingsByUser
+);
 //5.3.2--> VER RESERVAS POR ESPACIO //TODOañadimos query params?
 app.get(
     '/api/bookings/spaces/:id_space',
@@ -207,13 +212,15 @@ app.get(
     '/api/bookings/rooms/:id_room',
     validateAuth.validateAuthorization,
     validateAuth.validateAdmin,
+    generalValidators.validateRoom,
     bookingsController.getBookingsByRoom
 );
 //5.4--> BORRAR RESERVASER O ADMIN
 app.delete(
     '/api/bookings/:id_booking',
     validateAuth.validateAuthorization,
-    validateAuth.validateBooking,
+    validateAuth.validateUserActivate,
+    generalValidators.validateBooking,
     bookingsController.deleteBooking
 );
 
@@ -222,11 +229,17 @@ app.delete(
 app.post(
     '/api/users/:id_user/bookings/:id_booking/reviews',
     validateAuth.validateAuthorization,
-    validateAuth.validateBooking,
+    validateAuth.validateUserActivate,
+    generalValidators.validateBooking,
     reviewsController.createReview
 );
 //6.2.1--> VER RESEÑAS POR USUARIO (admin & user)
-app.get('/api/users/:id_user/reviews', validateAuth.validateAuthorization, reviewsController.getReviewsByUserId);
+app.get(
+    '/api/users/:id_user/reviews',
+    validateAuth.validateAuthorization,
+    validateAuth.validateUserActivate,
+    reviewsController.getReviewsByUserId
+);
 //6.2.2 --> VER TODAS LAS RESEÑAS
 app.get(
     '/api/reviews',
@@ -235,17 +248,12 @@ app.get(
     reviewsController.getAllReviews
 );
 //6.2.3 -> VER RESEÑAS POR ESPACIO
-app.get(
-    '/api/spaces/:id_space/reviews',
-    validateAuth.validateAuthorization,
-    validateAuth.validateSpace,
-    reviewsController.getReviewsBySpace
-);
+app.get('/api/spaces/:id_space/reviews', generalValidators.validateSpace, reviewsController.getReviewsBySpace);
 //6.3 --> BORRAR RESEÑA USER Y/O ADMIN
 app.delete(
     '/api/users/:id_user/reviews/:id_review',
     validateAuth.validateAuthorization,
-    validateAuth.validateReview,
+    generalValidators.validateReview,
     reviewsController.deleteReviewById
 );
 
@@ -254,7 +262,8 @@ app.delete(
 app.post(
     '/api/bookings/:id_booking/incident',
     validateAuth.validateAuthorization,
-    validateAuth.validateBooking,
+    validateAuth.validateUserActivate,
+    generalValidators.validateBooking,
     incidentsController.createIncident
 );
 //7.2--> ADMIN-->GESTIONAR INCIDENCIAS (admin)
@@ -262,7 +271,7 @@ app.patch(
     '/api/incidents/:id_incident',
     validateAuth.validateAuthorization,
     validateAuth.validateAdmin,
-    validateAuth.validateIncident,
+    generalValidators.validateIncident,
     incidentsController.closeIncident
 );
 
@@ -273,7 +282,7 @@ app.get(
     '/api/spaces/:id_space/incidents',
     validateAuth.validateAuthorization,
     validateAuth.validateAdmin,
-    validateAuth.validateSpace,
+    generalValidators.validateSpace,
     incidentsController.getIncidentsOpenBySpace
 );
 

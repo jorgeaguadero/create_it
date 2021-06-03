@@ -2,7 +2,8 @@ const Joi = require('joi');
 
 //TODO VALIDATE USER PASARLO A MIDDLEWARE Y ASI ADMIN PUEDE TENER PERMISOS EXTRA
 const { bookingsRepository } = require('../repositories');
-const { dateValidate, validateAuth } = require('../middlewares');
+const { validateAuth } = require('../middlewares');
+const { dateValidate } = require('../utils');
 //const { sendMails } = require('../utils');
 
 //5.1-->CREAR RESERVA
