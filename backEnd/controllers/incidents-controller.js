@@ -1,8 +1,8 @@
 const Joi = require('joi');
 
 const { bookingsRepository, incidentsRepository } = require('../repositories');
-const { isEqualDate } = require('../middlewares/dateValidate');
-const { validateProperty } = require('../utils/users-auth');
+const { dateValidate, validateAuth } = require('../middlewares');
+//const { sendMails } = require('../utils');
 
 //7.1--> CREAR INCIDENCIA (user)
 async function createIncident(req, res, next) {
@@ -11,7 +11,7 @@ async function createIncident(req, res, next) {
         const { type, description } = req.body;
         const { id } = req.auth;
         const booking = await bookingsRepository.getBookingById(id_booking);
-        validateProperty(req, booking);
+        validateAuth.validateProperty(req, booking);
 
         const schema = Joi.object({
             type: Joi.string().min(1).max(500).required(),
@@ -19,7 +19,7 @@ async function createIncident(req, res, next) {
         });
         await schema.validateAsync({ type, description });
 
-        const incident_date = isEqualDate(booking.start_date);
+        const incident_date = dateValidate.isEqualDate(booking.start_date);
 
         let createdIncident = await incidentsRepository.createIncident(
             id_booking,
@@ -79,7 +79,7 @@ async function getIncidentsByUserId(req, res, next) {
     try {
         const { id_user } = req.params;
 
-        validateProperty(req, req.params);
+        validateAuth.validateProperty(req, req.params);
         const incidents = await incidentsRepository.getIncidentsByUserId(id_user);
 
         res.send(incidents);

@@ -7,8 +7,7 @@ const { nanoid } = require('nanoid');
 const path = require('path');
 
 const { usersRepository } = require('../repositories');
-const { helpers } = require('../middlewares');
-const { sendMail } = require('../utils/mailConfirmation');
+const { sendMails, images } = require('../utils/');
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
@@ -72,7 +71,7 @@ async function registrer(req, res, next) {
             activationCode,
         });
 
-        await sendMail({
+        await sendMails.sendMail({
             to: email,
             subject: 'Gracias por reg',
             body: ' falta confirmación',
@@ -227,7 +226,7 @@ async function addAvatar(req, res, next) {
 
         const user = await usersRepository.getUserById(id_user);
         if (user.avatar) {
-            await helpers.deleteImage(user.avatar);
+            await images.deleteImage(user.avatar);
         }
         const url = path.join(`static/users/${id_user}/${file.filename}`);
         const updateUser = await usersRepository.updateAvatar(url, id_user);

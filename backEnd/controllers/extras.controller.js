@@ -1,7 +1,7 @@
 const Joi = require('joi');
 
-const { spacesRepository } = require('../repositories');
-const { extrasRepository } = require('../repositories');
+const { spacesRepository, extrasRepository } = require('../repositories');
+
 
 //4.1-->CREAR EXTRA
 async function createExtras(req, res, next) {

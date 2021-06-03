@@ -1,8 +1,8 @@
 const Joi = require('joi');
 
 const { bookingsRepository, reviewsRepository } = require('../repositories');
-const { isAfterDate } = require('../middlewares/dateValidate');
-const { validateProperty } = require('../utils/users-auth');
+const { dateValidate, validateAuth } = require('../middlewares/');
+//const { sendMails } = require('../utils');
 
 //6.1--> CREAR RESERÑA
 async function createReview(req, res, next) {
@@ -18,12 +18,10 @@ async function createReview(req, res, next) {
 
         await schema.validateAsync({ rating, text });
 
-       
-
         const booking = await bookingsRepository.getBookingById(id_booking);
-        validateProperty(req, booking);
+        validateAuth.validateProperty(req, booking);
 
-        const review_date = isAfterDate(booking.start_date);
+        const review_date = dateValidate.isAfterDate(booking.start_date);
 
         const reviews = await reviewsRepository.getReviewsByUserId(id);
         const reviewCheck = reviews.some((r) => r.id_booking === Number(id_booking));
@@ -57,7 +55,7 @@ async function getReviewsByUserId(req, res, next) {
         const { id_user } = req.params;
 
         const reviews = await reviewsRepository.getReviewsByUserId(id_user);
-        validateProperty(req, req.params);
+        validateAuth.validateProperty(req, req.params);
         res.send({ reviews });
     } catch (err) {
         next(err);
@@ -89,7 +87,7 @@ async function deleteReviewById(req, res, next) {
     try {
         const { id_review } = req.params;
 
-        validateProperty(req, req.params);
+        validateAuth.validateProperty(req, req.params);
 
         await reviewsRepository.deleteReviewById(id_review);
 

@@ -2,8 +2,8 @@ const Joi = require('joi');
 
 //TODO VALIDATE USER PASARLO A MIDDLEWARE Y ASI ADMIN PUEDE TENER PERMISOS EXTRA
 const { bookingsRepository } = require('../repositories');
-const { isBeforeDate } = require('../middlewares/dateValidate');
-const { validateProperty } = require('../utils/users-auth');
+const { dateValidate, validateAuth } = require('../middlewares');
+//const { sendMails } = require('../utils');
 
 //5.1-->CREAR RESERVA
 async function createBooking(req, res, next) {
@@ -23,7 +23,7 @@ async function createBooking(req, res, next) {
             start_date,
         });
 
-        if (!isBeforeDate(start_date)) {
+        if (!dateValidate.isBeforeDate(start_date)) {
             const error = new Error('la fecha tiene que ser posterior a hoy');
             throw error;
         }
@@ -82,7 +82,7 @@ async function payBooking(req, res, next) {
 
         let booking = await bookingsRepository.getBookingById(id_booking);
         //TODO utils
-        validateProperty(req, booking);
+        validateAuth.validateProperty(req, booking);
 
         if (booking.pending_payment === 0) {
             const error = new Error('ya está pagado');
@@ -103,7 +103,7 @@ async function payBooking(req, res, next) {
 async function getBookingsByUser(req, res, next) {
     try {
         const { id_user } = req.params;
-        validateProperty(req, req.params);
+        validateAuth.validateProperty(req, req.params);
 
         const bookings = await bookingsRepository.getBookingsByUser(id_user);
 
@@ -143,10 +143,10 @@ async function deleteBooking(req, res, next) {
         const { id_booking } = req.params;
         let booking = await bookingsRepository.getBookingById(id_booking);
 
-        validateProperty(req, booking);
+        validateAuth.validateProperty(req, booking);
         const start_date = booking.start_date;
 
-        if (!isBeforeDate(start_date)) {
+        if (!dateValidate.isBeforeDate(start_date)) {
             const error = new Error('Minimo tiene que haber un dia de antelacion');
             throw error;
         }
