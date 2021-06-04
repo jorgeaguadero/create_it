@@ -1,4 +1,5 @@
 require('dotenv').config();
+const path = require('path');
 const express = require('express');
 
 const cors = require('cors');
@@ -12,17 +13,19 @@ const {
     reviewsController,
     incidentsController,
 } = require('./controllers');
-
 const { validateAuth, generalValidators } = require('./middlewares/');
 const { images } = require('./utils');
 
 const { PORT } = process.env;
 
+const staticPath = path.resolve(__dirname, process.env.UPLOADS_DIRECTORY);
+
 const app = express();
 app.use(cors());
 app.use(express.json());
-//app.use(fileUpload());
-app.use('/uploads', express.static('static'));
+
+//TODO los avatares los quiero en static y que sean públicos??
+app.use(express.static(staticPath));
 
 //USERS
 //1.1.1-->REGISTRO SE PASA COMPOBACIÓN DE REPETIDAS EN FRONT
@@ -32,7 +35,6 @@ app.get('/api/verify/:id_user/:activationCode', usersController.confirmationUser
 //1.2.1-->LOGIN DE USUARIO
 app.post('/api/users/login', usersController.login);
 //1.2.2-->LOGOUT DE USUARIO
-//TODO cambiar api a logout-->
 app.post('/api/users/logout', validateAuth.validateAuthorization, usersController.logout);
 //1.3.1-ACTUALIZACIÓN DE DATOS DE PERFIL
 app.patch(
@@ -57,7 +59,7 @@ app.patch(
     usersController.updatePassword
 );
 //TODO check mail exist--> 1.3.5.1-->RECUPERAR CONTRASEÑA PARTE 1 POST--> cambio el codigo auth user aunque sea indirectamente
-app.post('/api/recoverPassword', validateAuth.validateEmail, usersController.recoverPassword);
+app.post('/api/recoverPassword', generalValidators.validateEmail, usersController.recoverPassword);
 //1.3.5.2-->RECUPERAR CONTRASEÑA PARTE 2
 app.patch('/api/recoverPassword/:id_user/:activationCode', usersController.newPassword);
 //1.4--> BORRARME COMO USUARIO

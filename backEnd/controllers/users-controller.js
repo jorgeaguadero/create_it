@@ -216,19 +216,18 @@ async function updateProfile(req, res, next) {
 async function addAvatar(req, res, next) {
     try {
         const { file } = req;
+        const { id_user } = req.params;
         if (!file) {
             const error = new Error('Es necesario subir un fichero');
             error.httpCode = 400;
             throw error;
         }
 
-        const { id_user } = req.params;
-
         const user = await usersRepository.getUserById(id_user);
         if (user.avatar) {
             await images.deleteImage(user.avatar);
         }
-        const url = path.join(`static/users/${id_user}/${file.filename}`);
+        const url = path.join(__dirname, `../static/users/${id_user}/${file.filename}`);
         const updateUser = await usersRepository.updateAvatar(url, id_user);
 
         res.status(201);

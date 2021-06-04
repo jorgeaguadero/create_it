@@ -26,7 +26,7 @@ async function validateAuthorization(req, res, next) {
         const users = await usersRepository.getUserById(decodedToken.id);
 
         //caso muy remoto en el que el id del token ya no esté en base de datos
-        if (!users || !users.length) {
+        if (!users) {
             const error = new Error('El usuario logueado ya no se encuentra en nuestra base de datos');
             error.code = 401;
             throw error;
