@@ -12,7 +12,7 @@ function isBeforeDate(start_date) {
     const result = isBefore(evenDate, start_date);
     return result;
 }
-//TODO corregir para que compare solo la fecha sin horas
+
 function isAfterDate(start_date) {
     const result = isAfter(evenDate, start_date);
     if (!result) {

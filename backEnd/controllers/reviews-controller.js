@@ -2,7 +2,7 @@ const Joi = require('joi');
 
 const { bookingsRepository, reviewsRepository } = require('../repositories');
 const { validateAuth } = require('../middlewares/');
-const { dateValidate } = require('../utils');
+const { ValidateDate } = require('../utils');
 //const { sendMails } = require('../utils');
 
 //6.1--> CREAR RESERÑA
@@ -22,7 +22,7 @@ async function createReview(req, res, next) {
         const booking = await bookingsRepository.getBookingById(id_booking);
         validateAuth.validateProperty(req, booking);
 
-        const review_date = dateValidate.isAfterDate(booking.start_date);
+        const review_date = ValidateDate.isAfterDate(booking.start_date);
 
         const reviews = await reviewsRepository.getReviewsByUserId(id);
         const reviewCheck = reviews.some((r) => r.id_booking === Number(id_booking));

@@ -33,7 +33,9 @@ async function getAllRatingSpace() {
 }
 
 async function getSpaces() {
-    const [spaces] = await database.pool.query('SELECT * FROM spaces id_space');
+    const [spaces] = await database.pool.query(
+        'SELECT spaces.*, AVG(reviews.rating) AS rating FROM spaces LEFT JOIN reviews ON spaces.id_space= reviews.id_space Group by spaces.id_space'
+    );
 
     return spaces;
 }

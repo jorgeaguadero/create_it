@@ -6,12 +6,12 @@ async function sendMail(data) {
     try {
         const msg = {
             to: data.to,
-            from: process.env.SEndgrid_FROM,
+            from: process.env.SENDGRID_FROM,
             subject: data.subject,
             html: `
         <h1>Mensaje desde CreateIt</h1>
 
-        <p>${data.body}</p>
+        ${data.body}
         `,
         };
         await sendgrid.send(msg);

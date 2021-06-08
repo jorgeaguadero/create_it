@@ -58,7 +58,7 @@ app.patch(
     validateAuth.validateUser,
     usersController.updatePassword
 );
-//TODO check mail exist--> 1.3.5.1-->RECUPERAR CONTRASEÑA PARTE 1 POST--> cambio el codigo auth user aunque sea indirectamente
+
 app.post('/api/recoverPassword', generalValidators.validateEmail, usersController.recoverPassword);
 //1.3.5.2-->RECUPERAR CONTRASEÑA PARTE 2
 app.patch('/api/recoverPassword/:id_user/:activationCode', usersController.newPassword);

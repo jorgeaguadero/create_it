@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
 
-//TODO pasar a helper--> organizar validadores y helper
 const { usersRepository } = require('../repositories');
 
 //VALIDADORES DE AUTORIZACION PARA USUARIOS /ADMIN
@@ -81,12 +80,10 @@ async function validateUser(req, res, next) {
     }
 }
 
-function validateProperty(req, element, next) {
+function validateProperty(req, element) {
     if (req.auth.role === 'user' && Number(req.auth.id) !== Number(element.id_user)) {
         const error = new Error('Permiso denegado');
         throw error;
-    } else {
-        next();
     }
 }
 
