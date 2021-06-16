@@ -14,7 +14,7 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 //1.1-->REGISTRO SE PASA COMPOBACIÓN DE REPETIDAS EN FRONT
 async function registrer(req, res, next) {
     try {
-        const { name, last_name, email, password, repeatedPassword } = req.body;
+        const { name, last_name, email, password } = req.body;
 
         const schema = Joi.object({
             name: Joi.string()
@@ -32,11 +32,6 @@ async function registrer(req, res, next) {
                 .max(12)
                 .required()
                 .error(() => new Error('pass1')),
-            repeatedPassword: Joi.string()
-                .min(6)
-                .max(12)
-                .required()
-                .error(() => new Error('pass2')),
         });
 
         await schema.validateAsync({
@@ -44,14 +39,7 @@ async function registrer(req, res, next) {
             last_name,
             email,
             password,
-            repeatedPassword,
         });
-
-        if (password !== repeatedPassword) {
-            const err = new Error('Las contraseñas no coinciden');
-            err.httpCode = 400;
-            throw err;
-        }
 
         const user = await usersRepository.getUserByEmail(email);
         if (user) {
@@ -162,6 +150,9 @@ async function login(req, res, next) {
 
         res.send({
             userId: user.id_user,
+            name: user.first_name,
+            avatar: user.avatar,
+
             token,
         });
     } catch (err) {
