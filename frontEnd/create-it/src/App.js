@@ -8,8 +8,8 @@ import Footer from './Footer';
 
 import Home from './Home';
 import Login from './Login';
-import Register from './Register';
-import Profile from './Profile';
+import Signup from './Signup';
+import Profile from './Users/Profile';
 import Spaces from './Spaces';
 
 function App() {
@@ -26,17 +26,20 @@ function App() {
                 <Route path="/Login" exact>
                     <Login />
                 </Route>
-                <Route path="/Register" exact>
-                    <Register />
+                <Route path="/Signup" exact>
+                    <Signup />
                 </Route>
-                <Route path="/Profile" exact>
+                <Route path="/Profile" >
                     <Profile />
                 </Route>
                 <Route path="/Spaces" exact>
                     <Spaces />
                 </Route>
+                <Route path="/Buscador" exact>
+                    <Spaces />
+                </Route>
 
-                <Route path="/">Not Found </Route>
+                {<Route path="/">Not Found </Route>}
             </Switch>
             <Footer />
         </div>

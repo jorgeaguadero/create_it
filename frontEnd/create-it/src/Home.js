@@ -1,20 +1,21 @@
-
 import './Home.css';
 
 function Home() {
     return (
         <div className="home">
-            <div className="section">
+            <div
+                id="principal"
+                className="principal"
+            >
                 por hacer --Principal
                 {/*TODO foto de fondo + breve texto*/}
             </div>
 
-            <div className="about">
-
-              somos blablabla
+            <div id="about" className="about">
+                somos blablabla
                 {/*TODO figma--> descripción servicios*/}
             </div>
-            <div className="location">
+            <div id="location" className="location">
                 poner mapa -- API CLASE o API MAPS
             </div>
         </div>

@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 import Helmet from 'react-helmet';
 import './Login.css';
 
 function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-     const [error, setError] = useState(false);
+    const [error, setError] = useState(null);
     const isLoggedIn = useSelector((s) => !!s.user);
     const dispatch = useDispatch();
 
@@ -16,35 +16,49 @@ function Login() {
 
         const res = await fetch('http://localhost:8080/api/users/login', {
             method: 'POST',
-            body: JSON.stringify({ email, password }),
             headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password }),
         });
+        const data = await res.json();
         if (res.ok) {
-            const data = await res.json();
             dispatch({ type: 'LOGIN', user: data });
-        }else{          
-            setError(true)
+        } else {
+            setError(data.error);
         }
     };
     if (isLoggedIn) {
-        return <Redirect to="/" />;
+        return <Redirect to="/Profile" />;
     }
 
     return (
-        <div className="login">
-            <Helmet>login-createIt</Helmet>
-            <form onSubmit={handleSubmit}>
-                <input name="email" placeholder="email..." value={email} onChange={(e) => setEmail(e.target.value)} />
-                <input
-                    name="password"
-                    type="password"
-                    placeholder="Password..."
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-                <button>Log in</button>
-            </form>
-            {error && <div>Usuario o contraseña incorrecto</div>}
+        <div className="page page-login">
+            <Helmet>
+                <title>CreateIt-Login</title>
+            </Helmet>
+            <main className="login dialog">
+                <h1>Iniciar sesión</h1>
+                <form onSubmit={handleSubmit}>
+                    <label>
+                        <span>Usuario:</span>
+                        <input value={email} onChange={(e) => setEmail(e.target.value)} required />
+                    </label>
+                    <label>
+                        <span>Contraseña:</span>
+                        <input
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                    </label>
+                    <button>Iniciar sesión</button>
+                    {error && <div className="error">{error}</div>}
+                </form>
+                <p>
+                    <span>Aún no tienes cuenta?</span>
+                    <Link to="/signup">Regístrate</Link>
+                </p>
+            </main>
         </div>
     );
 }

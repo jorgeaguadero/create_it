@@ -35,3 +35,9 @@ footer {
     padding: 2vw;
     box-sizing: border-box;
 }
+
+.icon {
+    max-width: 2vw;
+    box-sizing: border-box;
+    margin: 5px;
+}

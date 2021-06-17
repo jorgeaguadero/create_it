@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, Link } from 'react-router-dom';
+import { HashLink } from 'react-router-hash-link';
 
 import './Navbar.css';
 import logo from './images/logo.png';
@@ -15,13 +16,13 @@ function Navbar() {
     return (
         <header className="header">
             <div>
-                <NavLink to="/">
+                <HashLink to="/#principal">
                     <img className="logo" src={logo} alt="CreateIt" />
-                </NavLink>
+                </HashLink>
             </div>
             {/*TODO diseño basico, configurar segun figma*/}
             <div className="linksNavbar">
-                <NavLink className="links" to="/#">
+                <NavLink className="links" to="/Buscador">
                     <p>Buscador</p>
                 </NavLink>
                 <NavLink className="links" to="/Spaces">
@@ -44,7 +45,7 @@ function Navbar() {
                         </span>
                     </Link>
                 )}
-                {!user && <Link to="/Register">Registro</Link>}
+                {!user && <Link to="/Signup">Sign up</Link>}
             </div>
         </header>
     );

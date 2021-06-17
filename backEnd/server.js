@@ -142,7 +142,7 @@ app.get('/api/spaces/:id_space/rooms', generalValidators.validateSpace, roomsCon
 //3.3.2-->Listar room individual
 app.get('/api/rooms/:id_room', generalValidators.validateRoom, roomsController.viewRoom);
 //3.3.3-->Listar room por query params
-app.get('/api/prueba/', roomsController.querySeeker);
+app.get('/api/rooms/query', roomsController.querySeeker);
 //3.4-->ADMIN--> borrar room
 app.delete(
     '/api/rooms/:id_room',

@@ -10,18 +10,18 @@ function Spaces() {
     }
 
     return (
-        <div className="character">
+        <div className="spaces">
             <h1>Localizaciones</h1>
             <Helmet>
                 <title>Localizaciones - CreateIt</title>
             </Helmet>
             {spaces &&
-                spaces.map((s) => (
-                    <li key={s.id_space}>
-                        <span>{s.space_name}</span>
-                        <span>{s.description}</span>
-                        <span>{s.rating}</span>
-                    </li>
+                spaces.spaces.map((s) => (
+                    <div key={s.id_space}>
+                        <span>Espacio: {s.space_name} </span>
+                        <span>Descripción {s.description} </span>
+                        <span>Rating {s.rating} </span>
+                    </div>
                 ))}
         </div>
     );

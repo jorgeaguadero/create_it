@@ -149,10 +149,10 @@ async function login(req, res, next) {
         const token = jwt.sign(tokenPayload, process.env.SECRET, { expiresIn: '2d' });
 
         res.send({
-            userId: user.id_user,
+            id_user: user.id_user,
             name: user.first_name,
             avatar: user.avatar,
-
+            role: user.role,
             token,
         });
     } catch (err) {
