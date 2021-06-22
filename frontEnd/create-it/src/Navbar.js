@@ -32,11 +32,17 @@ function Navbar() {
                 </NavLink>
             </div>
             <div className="userSection">
-                <div className="noLogin">
-                  {!user && <Link to="/login">Log in</Link>}
-                {!user && <Link to="/Signup">Sign up</Link>}  
-                </div>
-            
+                    {!user && (
+                        <Link className="links" to="/login">
+                            Log in
+                        </Link>
+                    )}
+                    {!user && (
+                        <Link className="links"  to="/Signup">
+                            Sign up
+                        </Link>
+                    )}
+
                 {user && (
                     <Link className="user-info" to="/profile">
                         <div

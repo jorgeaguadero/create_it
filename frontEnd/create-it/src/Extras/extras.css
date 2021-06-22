@@ -1,0 +1,30 @@
+.spaces {
+    background-color: #EBE26D;
+    box-sizing: border-box;
+    height: 100vh;
+}
+
+.spaces h1 {
+    background-color: #EBE26D;
+    text-align: center;
+    
+}
+
+
+.spaces .spaces-content{
+    background-color: #F7F7F7;
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
+    max-width: auto;
+    width: 95%;
+    height: 95%;
+    margin:  auto;
+    padding:40px;
+    
+}
+
+.spaces .spaces-content div{
+    padding: 1%;
+}
+

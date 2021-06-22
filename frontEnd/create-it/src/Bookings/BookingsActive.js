@@ -34,10 +34,7 @@ function BookingsActive() {
                     <br />
                     <span>Fecha --- {b.start_date}</span>
                     <br />
-                    <Link to>
-                        <Pay booking={b} />
-                        Incidencia
-                    </Link>
+                    <button type="button">Incidencia</button>
                     <button type="button">Pagar</button>
                     <br />
                 </div>

@@ -53,11 +53,12 @@ function Login() {
                     </label>
                     <button>Iniciar sesión</button>
                     {error && <div className="error">{error}</div>}
-                </form>
                 <p>
                     <span>Aún no tienes cuenta?</span>
                     <Link to="/signup">Regístrate</Link>
                 </p>
+                </form>
+                
             </main>
         </div>
     );

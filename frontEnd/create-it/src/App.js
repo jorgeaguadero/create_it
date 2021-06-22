@@ -10,7 +10,8 @@ import Home from './Home';
 import Login from './Login';
 import Signup from './Signup';
 import Profile from './Users/Profile';
-import Spaces from './Spaces';
+import Spaces from './Spaces/Spaces';
+import Rooms from './Rooms/Rooms';
 
 function App() {
     return (
@@ -36,7 +37,7 @@ function App() {
                     <Spaces />
                 </Route>
                 <Route path="/Buscador" exact>
-                    <Spaces />
+                    <Rooms />
                 </Route>
 
                 {<Route path="/">Not Found </Route>}

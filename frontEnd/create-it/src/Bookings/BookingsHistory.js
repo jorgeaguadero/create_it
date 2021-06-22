@@ -33,13 +33,12 @@ function BookingsHistory() {
                     <span>Fecha --- {b.start_date}</span>
                     <br />
                     <button>Review</button>
-                    <button>Pagar</button>
+    
                     <br />
                 </div>
             ))}
             {!bookings && <i>Loading...</i>}
-            {/*bookings && !bookings && <i>No results found!</i>*/}
-            <button>Moficiar usuario</button>
+            {bookings && bookings.length===0 && <i>Aún no tienes reservas finalizadas</i>}
         </div>
     );
 }

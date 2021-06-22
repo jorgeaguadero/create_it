@@ -10,6 +10,14 @@ async function getRoomById(id) {
 
     return rooms[0];
 }
+
+async function getAllRooms() {
+    const query = 'SELECT * FROM rooms';
+    const [rooms] = await database.pool.query(query);
+
+    return rooms;
+}
+
 async function getRoomByCode(code) {
     const query = 'SELECT * FROM rooms WHERE room_code = ?';
     const [rooms] = await database.pool.query(query, code);
@@ -128,5 +136,6 @@ module.exports = {
     deleteRoom,
     getRoomByCode,
     getRoomsByQuery,
+    getAllRooms,
     //setRoomsPhotos,
 };

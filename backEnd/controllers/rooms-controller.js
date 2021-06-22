@@ -173,6 +173,18 @@ async function deleteRoom(req, res, next) {
     }
 }
 
+//3.5-->BORRAR SALA
+async function getAllRooms(req, res, next) {
+    try {
+        const rooms = await roomsRepository.getAllRooms();
+
+        res.status(201);
+        res.send(rooms);
+    } catch (error) {
+        next(error);
+    }
+}
+
 module.exports = {
     //createRooms,
     updateRoom,
@@ -180,5 +192,6 @@ module.exports = {
     getRoomsBySpace,
     deleteRoom,
     querySeeker,
+    getAllRooms,
     //setRoomsPhotos,
 };

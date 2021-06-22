@@ -151,6 +151,8 @@ app.delete(
     generalValidators.validateRoom,
     roomsController.deleteRoom
 );
+//3.5-->Listar todas las rooms
+app.get('/api/rooms', roomsController.getAllRooms);
 
 //--> EXTRAS
 //4.1-->ADMIN--> CREAR EXTRA
@@ -196,6 +198,13 @@ app.post(
     bookingsController.payBooking
 );
 //5.3.1--> VER MIS RESERVAS // ADMIN -->reservas por usuario --> //TODOañadimos query params?
+app.get(
+    '/api/users/:id_user/bookings',
+    validateAuth.validateAuthorization,
+    validateAuth.validateUserActivate,
+    bookingsController.getBookingsByUser
+);
+
 app.get(
     '/api/users/:id_user/bookings',
     validateAuth.validateAuthorization,

@@ -17,7 +17,7 @@ function Footer() {
                 <HashLink className="info" to="/#location">
                     ¿Dónde estamos?
                 </HashLink>
-                <ButtonMailto label="Contacto" mailto="mailto:contact@createit.com" />
+                <ButtonMailto className="info" label="Contacto" mailto="mailto:contact@createit.com" />
             </div>
             <div className="rrss">
                 <a href="https://www.facebook.com/jorgeAguaderoMusic" target="_blank" rel="noreferrer">

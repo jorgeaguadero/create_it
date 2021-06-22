@@ -3,12 +3,16 @@
     margin: 0px;
     box-sizing: border-box;
 }
+.home{
+    background-color: #EBE26D;
 
+}
 .principal {
+     background-color: #F7F7F7;
     height: 100vh;
-    background-color: #b2b2b2;
+    width: 95%;
     border-bottom: 3px;
-    border-color: black;
+    padding:  40px;
     display: grid;
     place-content: center;
     display: flex;
@@ -19,7 +23,8 @@
 
 .about {
     height: 100vh;
-    background-color: #b2b2b2;
+    background-color: #F7F7F7;
+    width: 95%;
     border-bottom-width: 3px;
     border-color: black;
     display: grid;
@@ -32,7 +37,8 @@
 
 .location {
     height: 100vh;
-    background-color: #b2b2b2;
+    background-color: #F7F7F7;
+    width: 95%;
     border-bottom-width: 3px;
     border-color: black;
     display: grid;

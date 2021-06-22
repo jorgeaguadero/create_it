@@ -1,18 +1,28 @@
 .registro {
     background-color: #EBE26D;
     box-sizing: border-box;
+    height: 100vh;
 }
 
 .registro form {
     background-color: #F7F7F7;
-  max-width: auto;
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
+    max-width: auto;
     width: 95%;
+    height: 95%;
     margin:  auto;
     padding:40px;
 }
 
+.registro h1{
+text-align: center;
+padding: 1%;
+}
+
 .registro input {
-    font-size: larger;
+    font-size: large;
     border-radius: 6px;
     padding: 0.2rem;
     margin-top: 2rem;
