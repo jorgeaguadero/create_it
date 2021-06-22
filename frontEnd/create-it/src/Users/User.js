@@ -2,13 +2,14 @@ import './Profile.css';
 import { useParams } from 'react-router-dom';
 import useFetch from '../useFetch';
 import { useSelector } from 'react-redux';
+import { Link} from 'react-router-dom';
 
 function User() {
     const me = useSelector((s) => s.user);
     let id_user = '';
     const { id } = useParams();
 
-    me ? (id_user = me.userId) : (id_user = id);
+    me ? (id_user = me.id_user) : (id_user = id);
 
     const user = useFetch(`http://localhost:8080/api/users/${id_user}
     `);
@@ -26,9 +27,15 @@ function User() {
             <br />
             <span>apellido : {user.last_name} </span>
             <br />
+            <span>bio : {user.bio} </span>
+            <br />
             <span>teléfono : {user.phone} </span>
             <br />
-        <button>Moficiar usuario</button>
+            <button type="button">
+                <Link to={`/profile/${id_user}/update`} activeClassName="active" exact>
+                    Editar
+                </Link>
+            </button>
         </div>
     );
 }

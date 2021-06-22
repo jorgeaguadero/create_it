@@ -3,21 +3,21 @@ import { useParams } from 'react-router-dom';
 import useFetch from '../useFetch';
 import { useSelector } from 'react-redux';
 
-function BookingsActive() {
+function BookingsHistory() {
     const me = useSelector((s) => s.user);
     let id_user = '';
     const { id } = useParams();
 
     me ? (id_user = me.userId) : (id_user = id);
 
-    const bookings = useFetch(`http://localhost:8080/api/users/${id_user}/bookings
+    const bookings = useFetch(`http://localhost:8080/api/users/2/bookings
     `);
 
     if (!bookings) {
         return <div>Loading...</div>;
     }
     return (
-        <div className="user">
+        <div className="bookingsHistory">
             {bookings.map((b) => (
                 <div key={b.id_booking}>
                     <span>id Reserva --- {b.id_booking}</span>
@@ -44,4 +44,4 @@ function BookingsActive() {
     );
 }
 
-export default BookingsActive;
+export default BookingsHistory;

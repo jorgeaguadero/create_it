@@ -1,17 +1,14 @@
 .registro {
-    background-color: #b2b2b2;
-    height: 82vh;
+    background-color: #EBE26D;
+    box-sizing: border-box;
 }
 
 .registro form {
-  margin-top:5px;
-    padding: 1rem;
-    border-radius: 10px;
-    background-color: #e9e9e9;
-
-    width: 30em;
-    text-align: center;
-    margin: 0 auto;
+    background-color: #F7F7F7;
+  max-width: auto;
+    width: 95%;
+    margin:  auto;
+    padding:40px;
 }
 
 .registro input {

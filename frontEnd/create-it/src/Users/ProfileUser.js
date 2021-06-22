@@ -6,6 +6,9 @@ import User from './User';
 import BookingsActive from '../Bookings/BookingsActive';
 import BookingsHistory from '../Bookings/BookingsHistory';
 
+import UpdateUser from './UpdateUser';
+
+
 function ProfileUser() {
     return (
         <div className="profile">
@@ -35,6 +38,9 @@ function ProfileUser() {
                         </Route>
                         <Route path="/profile/history" exact>
                             <BookingsHistory />
+                        </Route>
+                        <Route path="/profile/:id_user/update" exact>
+                            <UpdateUser />
                         </Route>
                         <Route path="/profile/">no existe</Route>
                     </Switch>

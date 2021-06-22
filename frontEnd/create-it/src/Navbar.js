@@ -3,11 +3,13 @@ import { NavLink, Link } from 'react-router-dom';
 import { HashLink } from 'react-router-hash-link';
 
 import './Navbar.css';
+import avatar from './images/avatar.png'
 import logo from './images/logo.png';
 
 function Navbar() {
     const user = useSelector((s) => s.user);
     const dispatch = useDispatch();
+
     const handleLogout = (e) => {
         e.stopPropagation();
         dispatch({ type: 'LOGOUT' });
@@ -30,13 +32,17 @@ function Navbar() {
                 </NavLink>
             </div>
             <div className="userSection">
-                {!user && <Link to="/login">Log in</Link>}
+                <div className="noLogin">
+                  {!user && <Link to="/login">Log in</Link>}
+                {!user && <Link to="/Signup">Sign up</Link>}  
+                </div>
+            
                 {user && (
                     <Link className="user-info" to="/profile">
                         <div
                             className="avatar"
                             style={{
-                                backgroundImage: `url(./images/avatar.png)`,
+                                backgroundImage: `url(${avatar})`,
                             }}
                         />
                         <span>{user.name}</span>
@@ -45,7 +51,6 @@ function Navbar() {
                         </span>
                     </Link>
                 )}
-                {!user && <Link to="/Signup">Sign up</Link>}
             </div>
         </header>
     );

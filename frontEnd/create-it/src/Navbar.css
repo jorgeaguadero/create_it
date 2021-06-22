@@ -1,5 +1,5 @@
 .header {
-    background-color: #56df9e;
+    background-color: #68DF9F;
     position: sticky;
     top: 0;
     width: 100%;
@@ -14,7 +14,7 @@
 .logo {
     text-decoration: none;
     cursor: pointer;
-    width: 5rem;
+    width: 4rem;
 }
 
 .linksNavbar {
@@ -37,7 +37,7 @@
     text-decoration: none;
     margin-left: 1rem;
 }
-header.header .avatar {
+ .avatar {
     width: 32px;
     height: 32px;
     background-size: cover;

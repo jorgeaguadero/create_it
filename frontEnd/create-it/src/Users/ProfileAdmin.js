@@ -5,6 +5,7 @@ import { Helmet } from 'react-helmet';
 import User from './User';
 
 import IncidentsHistory from '../Incidents/IncidentsHistory';
+import BookingsActive from '../Bookings/BookingsActive'
 
 function ProfileAdmin() {
     const isLoggedIn = useSelector((s) => !!s.user);
@@ -38,7 +39,7 @@ function ProfileAdmin() {
                             <User />
                         </Route>
                         <Route path="/profile/bookingsActive" exact>
-                            Reservas ...
+                            <BookingsActive />
                         </Route>
                         <Route path="/profile/bookings" exact>
                             historial...
