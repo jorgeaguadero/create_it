@@ -1,22 +1,21 @@
 .search h1 {
     margin-bottom: 2rem;
-
-    position: relative;
+    text-align: center;
     color: black;
 }
 
 .search form {
+    margin: auto;
     width: 20rem;
-    position: relative;
 }
 
 .search form fieldset {
     margin-bottom: 1rem;
-    border: 1px solid black;
+    
     border-radius: 1rem;
     padding: 0.5rem 1rem 1rem 1rem;
     background-color: rgba(255, 255, 255, 0.6);
-    border: 2px solid white;
+   
 }
 
 .search form label {
@@ -24,7 +23,6 @@
     font-size: 0.85rem;
     margin: 0.5rem 0;
     font-weight: bold;
-    text-transform: uppercase;
 }
 
 .search form input,
@@ -32,17 +30,18 @@
     width: 100%;
     padding: 0.25rem;
     margin-bottom: 0.25rem;
-    border: white;
+    border-radius: 10px;
+    border: 2px solid #56df9e;
 }
 
-.search .form-wrap {
-    display: flex;
-}
+
 
 .search .results-search {
     display: flex;
+    margin: auto;
+    text-align: center;
     flex-direction: column;
-    width: 600px;
+    width: 800px;
 }
 
 .searchButton {
@@ -50,8 +49,9 @@
     height: 8vh;
     border-radius: 30px;
     margin-top: 2vw;
+    margin-bottom: 2vw;
     margin-left: 1vw;
-    border: 2px solid #fff;
+    border: 2px solid #56df9e;
     outline: none;
     text-decoration: none;
     background-color: rgba(255, 255, 255, 0.5);
@@ -61,7 +61,3 @@
     font-size: 1.3rem;
 }
 
-.search form {
-    width: 20rem;
-    position: relative;
-}
