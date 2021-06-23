@@ -2,7 +2,7 @@ import { useState } from 'react';
 import './search.css';
 import SearchCard from './SearchCard';
 
-function Buscador() {
+function Search() {
     const [id_space, setId_Space] = useState('');
     const [type, setType] = useState('');
     const [price, setPrice] = useState('');
@@ -97,13 +97,14 @@ function Buscador() {
                     <button className="searchButton">Buscar espacio</button>
                 </form>
 
+               
                 {results && (
-                    <div className="resultados-buscador">
+                    <div className="results-search">
                         {results.map((r) => (
-                            <SearchCard key={r.id_room} r={r} />
+                            <SearchCard key={r.id_room} r={r} start_date={start_date}/>
                         ))}
 
-                        {!results.length === 0 && (
+                        {results.length === 0 && (
                             <div>
                                 <i>Sin resultados</i>
                             </div>
@@ -115,4 +116,4 @@ function Buscador() {
     );
 }
 
-export default Buscador;
+export default Search;

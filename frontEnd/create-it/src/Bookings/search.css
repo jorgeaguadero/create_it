@@ -1,40 +1,29 @@
 
 
-.buscador:before {
-  position: absolute;
-  content: "";
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(15, 15, 15, 0.288);
-  margin-top: 4.7rem;
-  height: 81.25rem;
-}
 
-.buscador h1 {
+.search h1 {
   margin-bottom: 2rem;
-  z-index: 1;
+
   position: relative;
-  color: white;
+  color: black;
 }
 
-.buscador form {
+.search form {
   width: 20rem;
   position: relative;
 }
 
-.buscador form fieldset {
+.search form fieldset {
   margin-bottom: 1rem;
   border: 1px solid black;
   border-radius: 1rem;
   padding: 0.5rem 1rem 1rem 1rem;
   background-color: rgba(255, 255, 255, 0.6);
   border: 2px solid white;
-  z-index: 1;
+ 
 }
 
-.buscador form label {
+.search form label {
   display: block;
   font-size: 0.85rem;
   margin: 0.5rem 0;
@@ -42,19 +31,19 @@
   text-transform: uppercase;
 }
 
-.buscador form input,
-.buscador form select {
+.search form input,
+.search form select {
   width: 100%;
   padding: 0.25rem;
   margin-bottom: 0.25rem;
   border: white;
 }
 
-.buscador .form-wrap {
+.search .form-wrap {
   display: flex;
 }
 
-.buscador .resultados-buscador {
+.search .results-search{
   display: flex;
   flex-direction: column;
 
@@ -62,7 +51,7 @@
   z-index: 1000;
 }
 
-button.cwkfinder {
+.searchButton{
   width: 20vw;
   height: 8vh;
   border-radius: 30px;
@@ -78,41 +67,8 @@ button.cwkfinder {
   font-size: 1.3rem;
 }
 
-button.cwkfinder:hover {
-  background-color: rgb(215, 187, 81, 0.3);
-  filter: drop-shadow(2px 2px 5px #d7bc52);
-  color: black;
-  font-weight: bolder;
-}
-
-.buscador form {
+.search form {
   width: 20rem;
   position: relative;
 }
 
-@media screen and (max-width: 414px) {
-  button.cwkfinder {
-    width: 50vw;
-    height: 8vh;
-    border-radius: 30px;
-    margin-top: 2vw;
-    margin-left: 15vw;
-    border: 2px solid #fff;
-    outline: none;
-    text-decoration: none;
-    background-color: rgba(255, 255, 255, 0.5);
-    color: black;
-    box-sizing: border-box;
-    text-align: center;
-    font-size: 1rem;
-  }
-  .buscador form {
-    width: 20rem;
-    position: relative;
-  }
-  .buscador form {
-    width: 20rem;
-    position: relative;
-    margin: auto;
-  }
-}
