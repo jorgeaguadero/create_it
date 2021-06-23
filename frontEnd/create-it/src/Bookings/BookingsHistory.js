@@ -5,12 +5,12 @@ import { useSelector } from 'react-redux';
 
 function BookingsHistory() {
     const me = useSelector((s) => s.user);
-    let id_user = '';
+    let idUser='';
     const { id } = useParams();
 
-    me ? (id_user = me.userId) : (id_user = id);
+    me ? (idUser = me.id_user) : (idUser = id);
 
-    const bookings = useFetch(`http://localhost:8080/api/users/2/bookings
+    const bookings = useFetch(`http://localhost:8080/api/users/${idUser}/bookings/completed
     `);
 
     if (!bookings) {
@@ -33,12 +33,12 @@ function BookingsHistory() {
                     <span>Fecha --- {b.start_date}</span>
                     <br />
                     <button>Review</button>
-    
+
                     <br />
                 </div>
             ))}
             {!bookings && <i>Loading...</i>}
-            {bookings && bookings.length===0 && <i>Aún no tienes reservas finalizadas</i>}
+            {bookings && bookings.length === 0 && <i>Aún no tienes reservas finalizadas</i>}
         </div>
     );
 }

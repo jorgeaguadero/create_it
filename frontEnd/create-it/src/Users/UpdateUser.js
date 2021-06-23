@@ -7,11 +7,12 @@ import { Redirect } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 function UpdateUserMain() {
-    let id_user = '';
-    const { id } = useParams();
+     const me = useSelector((s) => s.user);
+     let idUser = '';
+     const { id } = useParams();
 
-    id_user = id;
-    const user = useFetch(`http://localhost:8080/api/users/2`);
+     me ? (idUser = me.id_user) : (idUser = id);
+    const user = useFetch(`http://localhost:8080/api/users/${idUser}`);
 
     if (!user) {
         return <i>Loading...</i>;

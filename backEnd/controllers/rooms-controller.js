@@ -6,7 +6,7 @@ const Joi = require('joi');
 
 //TODO pendiente gestión de fotos
 
-const { roomsRepository, extrasRepository, bookingsRepository } = require('../repositories');
+const { roomsRepository, bookingsRepository } = require('../repositories');
 
 //3.1-->CREAR SALAS
 /*async function createRooms(req, res, next) {
@@ -143,9 +143,9 @@ async function querySeeker(req, res, next) {
         //primero filtramos los parametros y después vemos si esta disponible
         const queryRooms = await roomsRepository.getRoomsByQuery(data);
 
-        const extras = await extrasRepository.getExtrasBytype(data.id_space, data.type);
+
         res.status(201);
-        res.send({ queryRooms, extras });
+        res.send(queryRooms);
     } catch (error) {
         next(error);
     }

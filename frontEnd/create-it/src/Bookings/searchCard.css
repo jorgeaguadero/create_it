@@ -1,0 +1,28 @@
+.card {
+    width: 50%;
+    height: 100px;
+    margin: 5%;
+    padding: 5%;
+    border-radius: 10px;
+    background-color: white;
+    display: flex;
+    justify-content: space-around;
+
+    box-shadow: rgba(0, 0, 0, 0.295) 0px 0px 10px;
+}
+
+.card-content {
+    color: black;
+}
+
+.card-content span {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.card-content h2 {
+    font-weight: bold;
+    font-size: 30px;
+    padding-bottom: 6px;
+}
+

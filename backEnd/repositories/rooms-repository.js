@@ -36,9 +36,9 @@ async function getRoomsByQuery(data) {
     const params = [];
     let firstResults = '';
 
-    const { id_space,type, price, capacity, start_date } = data;
+    const { id_space, type, price, capacity, start_date } = data;
 
-    if (id_space ||type|| price || capacity) {
+    if (id_space || type || price || capacity) {
         query = `${query} WHERE `;
         const conditions = [];
 
@@ -57,7 +57,7 @@ async function getRoomsByQuery(data) {
         }
 
         if (capacity) {
-            conditions.push('capacity<=?');
+            conditions.push('capacity>=?');
             params.push(capacity);
         }
 

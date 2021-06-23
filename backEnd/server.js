@@ -142,7 +142,7 @@ app.get('/api/spaces/:id_space/rooms', generalValidators.validateSpace, roomsCon
 //3.3.2-->Listar room individual
 app.get('/api/rooms/:id_room', generalValidators.validateRoom, roomsController.viewRoom);
 //3.3.3-->Listar room por query params
-app.get('/api/rooms/query', roomsController.querySeeker);
+app.get('/api/search/', roomsController.querySeeker);
 //3.4-->ADMIN--> borrar room
 app.delete(
     '/api/rooms/:id_room',
@@ -204,12 +204,20 @@ app.get(
     validateAuth.validateUserActivate,
     bookingsController.getBookingsByUser
 );
-
+//5.3.1.2--> VER MIS RESERVAS FINALIZADAS // ADMIN -->reservas por usuario --> //TODOañadimos query params?
 app.get(
-    '/api/users/:id_user/bookings',
+    '/api/users/:id_user/bookings/completed',
     validateAuth.validateAuthorization,
     validateAuth.validateUserActivate,
-    bookingsController.getBookingsByUser
+    bookingsController.getBookingsCompletedByUser
+);
+
+//5.3.1.3--> VER MIS RESERVAS ACTIVAS // ADMIN -->reservas por usuario --> //TODOañadimos query params?
+app.get(
+    '/api/users/:id_user/bookings/active',
+    validateAuth.validateAuthorization,
+    validateAuth.validateUserActivate,
+    bookingsController.getActiveBookingsByUser
 );
 //5.3.2--> VER RESERVAS POR ESPACIO //TODOañadimos query params?
 app.get(

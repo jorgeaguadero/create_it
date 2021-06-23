@@ -113,6 +113,32 @@ async function getBookingsByUser(req, res, next) {
         next(err);
     }
 }
+//5.3.1.2-->VER RESERVA POR USUARIO COMPLETA
+async function getBookingsCompletedByUser(req, res, next) {
+    try {
+        const { id_user } = req.params;
+        validateAuth.validateProperty(req, req.params);
+
+        const bookings = await bookingsRepository.getBookingsCompletedByUser(id_user);
+
+        res.send(bookings);
+    } catch (err) {
+        next(err);
+    }
+}
+
+async function getActiveBookingsByUser(req, res, next) {
+    try {
+        const { id_user } = req.params;
+        validateAuth.validateProperty(req, req.params);
+
+        const bookings = await bookingsRepository.getPendingBookingsByUser(id_user);
+
+        res.send(bookings);
+    } catch (err) {
+        next(err);
+    }
+}
 
 //5.3.2-->VER RESERVA POR ESPACIO
 async function getBookingsBySpace(req, res, next) {
@@ -168,4 +194,6 @@ module.exports = {
     getBookingsByRoom,
     getBookingsBySpace,
     payBooking,
+    getBookingsCompletedByUser,
+    getActiveBookingsByUser,
 };

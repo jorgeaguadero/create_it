@@ -1,18 +1,16 @@
 import './Profile.css';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import useFetch from '../useFetch';
 import { useSelector } from 'react-redux';
 
-import Pay from './Pay';
-
 function BookingsActive() {
     const me = useSelector((s) => s.user);
-    let id_user = '';
-    const { id } = useParams();
+    let id = '';
+    const { id_user } = useParams();
 
-    me ? (id_user = me.userId) : (id_user = id);
+    me ? (id = me.id_user) : (id = id_user);
 
-    const bookings = useFetch(`http://localhost:8080/api/users/2/bookings
+    const bookings = useFetch(`http://localhost:8080/api/users/${id}/bookings/active
     `);
 
     if (!bookings) {
@@ -28,7 +26,7 @@ function BookingsActive() {
                     <br />
                     <span>Sala --- {b.id_room}</span>
                     <br />
-                    <span>Pagado? --- { b.pending_payment === 0 ? 'Pagado' : 'Pendiente de pago'}</span>
+                    <span>Pagado? --- {b.pending_payment === 0 ? 'Pagado' : 'Pendiente de pago'}</span>
                     <br />
                     <span>Precio --- {b.price}</span>
                     <br />
@@ -40,7 +38,7 @@ function BookingsActive() {
                 </div>
             ))}
             {!bookings && <i>Loading...</i>}
-            {bookings && !bookings.bookings && <i>No results found!</i>}
+            {bookings && bookings.length === 0 && <i>No hay reservas activas en este momento</i>}
         </div>
     );
 }
