@@ -1,74 +1,67 @@
-
-
-
 .search h1 {
-  margin-bottom: 2rem;
+    margin-bottom: 2rem;
 
-  position: relative;
-  color: black;
+    position: relative;
+    color: black;
 }
 
 .search form {
-  width: 20rem;
-  position: relative;
+    width: 20rem;
+    position: relative;
 }
 
 .search form fieldset {
-  margin-bottom: 1rem;
-  border: 1px solid black;
-  border-radius: 1rem;
-  padding: 0.5rem 1rem 1rem 1rem;
-  background-color: rgba(255, 255, 255, 0.6);
-  border: 2px solid white;
- 
+    margin-bottom: 1rem;
+    border: 1px solid black;
+    border-radius: 1rem;
+    padding: 0.5rem 1rem 1rem 1rem;
+    background-color: rgba(255, 255, 255, 0.6);
+    border: 2px solid white;
 }
 
 .search form label {
-  display: block;
-  font-size: 0.85rem;
-  margin: 0.5rem 0;
-  font-weight: bold;
-  text-transform: uppercase;
+    display: block;
+    font-size: 0.85rem;
+    margin: 0.5rem 0;
+    font-weight: bold;
+    text-transform: uppercase;
 }
 
 .search form input,
 .search form select {
-  width: 100%;
-  padding: 0.25rem;
-  margin-bottom: 0.25rem;
-  border: white;
+    width: 100%;
+    padding: 0.25rem;
+    margin-bottom: 0.25rem;
+    border: white;
 }
 
 .search .form-wrap {
-  display: flex;
+    display: flex;
 }
 
-.search .results-search{
-  display: flex;
-  flex-direction: column;
-
-  width: 600px;
-  z-index: 1000;
+.search .results-search {
+    display: flex;
+    flex-direction: column;
+    width: 600px;
 }
 
-.searchButton{
-  width: 20vw;
-  height: 8vh;
-  border-radius: 30px;
-  margin-top: 2vw;
-  margin-left: 1vw;
-  border: 2px solid #fff;
-  outline: none;
-  text-decoration: none;
-  background-color: rgba(255, 255, 255, 0.5);
-  color: black;
-  box-sizing: border-box;
-  text-align: center;
-  font-size: 1.3rem;
+.searchButton {
+    width: 20vw;
+    height: 8vh;
+    border-radius: 30px;
+    margin-top: 2vw;
+    margin-left: 1vw;
+    border: 2px solid #fff;
+    outline: none;
+    text-decoration: none;
+    background-color: rgba(255, 255, 255, 0.5);
+    color: black;
+    box-sizing: border-box;
+    text-align: center;
+    font-size: 1.3rem;
 }
 
 .search form {
-  width: 20rem;
-  position: relative;
+    width: 20rem;
+    position: relative;
 }
-
