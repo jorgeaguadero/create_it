@@ -3,7 +3,7 @@ const Joi = require('joi');
 //TODO VALIDATE USER PASARLO A MIDDLEWARE Y ASI ADMIN PUEDE TENER PERMISOS EXTRA
 const { bookingsRepository } = require('../repositories');
 const { validateAuth } = require('../middlewares');
-const { dateValidate } = require('../utils');
+const { ValidateDate } = require('../utils');
 //const { sendMails } = require('../utils');
 
 //5.1-->CREAR RESERVA
@@ -24,7 +24,7 @@ async function createBooking(req, res, next) {
             start_date,
         });
 
-        if (!dateValidate.isBeforeDate(start_date)) {
+        if (!ValidateDate.isBeforeDate(start_date)) {
             const error = new Error('la fecha tiene que ser posterior a hoy');
             throw error;
         }
@@ -173,7 +173,7 @@ async function deleteBooking(req, res, next) {
         validateAuth.validateProperty(req, booking);
         const start_date = booking.start_date;
 
-        if (!dateValidate.isBeforeDate(start_date)) {
+        if (!ValidateDate.isBeforeDate(start_date)) {
             const error = new Error('Minimo tiene que haber un dia de antelacion');
             throw error;
         }

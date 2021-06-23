@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom';
 import useFetch from '../useFetch';
 import { useSelector } from 'react-redux';
 
+import { priceFormated } from '../Helpers';
+
 function BookingsHistory() {
     const me = useSelector((s) => s.user);
     let idUser='';
@@ -28,9 +30,9 @@ function BookingsHistory() {
                     <br />
                     <span>Pagado? --- {b.pending_payment}</span>
                     <br />
-                    <span>Precio --- {b.price}</span>
+                    <span>Precio --- {priceFormated.format(b.price)}</span>
                     <br />
-                    <span>Fecha --- {b.start_date}</span>
+                    <span>Fecha --- {new Date(b.start_date).toLocaleDateString()}</span>
                     <br />
                     <button>Review</button>
 
