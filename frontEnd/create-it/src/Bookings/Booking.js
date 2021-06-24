@@ -11,6 +11,12 @@ function Booking() {
     const [type, setType] = useState('');
     const [description, setDescription] = useState('');
 
+    const start = new Date();
+    start.setHours(0, 0, 0, 0);
+
+    const end = new Date();
+    end.setHours(23, 59, 59, 999);
+
     const me = useSelector((s) => s.user);
     const id_user = me.id_user;
     const history = useHistory();
@@ -75,7 +81,11 @@ function Booking() {
                     <button onClick={handlePay}>Confirmar pago</button>
                 </div>
             )}
-            <button onClick={() => setOpenIncident(!openIncident)}>Crear Incidencia</button>
+
+            {new Date(booking.start_date) > start && new Date(booking.start_date) < end && (
+                <button onClick={() => setOpenIncident(!openIncident)}>Crear Incidencia</button>
+            )}
+
             {openIncident && (
                 <form onSubmit={handleIncident}>
                     <div>

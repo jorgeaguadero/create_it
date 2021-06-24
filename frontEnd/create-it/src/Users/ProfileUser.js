@@ -8,7 +8,6 @@ import BookingsHistory from '../Bookings/BookingsHistory';
 import Booking from '../Bookings/Booking';
 import UpdateUser from './UpdateUser';
 
-
 function ProfileUser() {
     return (
         <div className="profile">
@@ -27,6 +26,9 @@ function ProfileUser() {
                     <NavLink to="/profile/history" exact activeClassName="active">
                         historial de reservas
                     </NavLink>
+                    <NavLink to="/profile/incidents" exact activeClassName="active">
+                        historial de incidencias
+                    </NavLink>
                 </div>
                 <div className="content">
                     <Switch>
@@ -40,6 +42,9 @@ function ProfileUser() {
                             <Booking />
                         </Route>
                         <Route path="/profile/history" exact>
+                            <BookingsHistory />
+                        </Route>
+                        <Route path="/profile/incidents" exact>
                             <BookingsHistory />
                         </Route>
                         <Route path="/profile/:id_user/update" exact>

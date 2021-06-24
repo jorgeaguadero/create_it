@@ -1,5 +1,5 @@
 import './Profile.css';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import useFetch from '../useFetch';
 import { useSelector } from 'react-redux';
 
@@ -7,12 +7,12 @@ import { priceFormated } from '../Helpers';
 
 function BookingsHistory() {
     const me = useSelector((s) => s.user);
-    let idUser='';
+    let idUser = '';
     const { id } = useParams();
 
     me ? (idUser = me.id_user) : (idUser = id);
 
-    const bookings = useFetch(`http://localhost:8080/api/users/${idUser}/bookings/completed
+    const bookings = useFetch(`http://localhost:8080/api/users/${idUser}/completed/bookings
     `);
 
     if (!bookings) {
@@ -22,25 +22,19 @@ function BookingsHistory() {
         <div className="bookingsHistory">
             {bookings.map((b) => (
                 <div key={b.id_booking}>
-                    <span>id Reserva --- {b.id_booking}</span>
+                    <Link to={`/profile/bookings/${b.id_booking}`}>id Reserva {b.id_booking}</Link>
                     <br />
-                    <span>Espacio --- {b.id_space}</span>
+                    <span>Estado de pago: {b.pending_payment === 0 ? 'Pagado' : 'Pendiente de pago'}</span>
                     <br />
-                    <span>Sala --- {b.id_room}</span>
+                    <span>Precio: {priceFormated.format(b.price)}</span>
                     <br />
-                    <span>Pagado? --- {b.pending_payment}</span>
-                    <br />
-                    <span>Precio --- {priceFormated.format(b.price)}</span>
-                    <br />
-                    <span>Fecha --- {new Date(b.start_date).toLocaleDateString()}</span>
-                    <br />
-                    <button>Review</button>
+                    <span>Fecha: {new Date(b.start_date).toLocaleDateString()}</span>
 
                     <br />
                 </div>
             ))}
             {!bookings && <i>Loading...</i>}
-            {bookings && bookings.length === 0 && <i>Aún no tienes reservas finalizadas</i>}
+            {bookings && bookings.length === 0 && <i>No hay reservas activas en este momento</i>}
         </div>
     );
 }
