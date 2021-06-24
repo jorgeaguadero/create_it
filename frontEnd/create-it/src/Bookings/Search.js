@@ -53,7 +53,7 @@ function Search() {
                 <form onSubmit={handleSubmit}>
                     <div>
                         <label>¿A que espacio quieres ir?</label>
-                        <select id="space" value={id_space} onChange={(e) => setId_Space(e.target.value)}>
+                        <select id="space" value={id_space} required onChange={(e) => setId_Space(e.target.value)}>
                             <option value="" hidden>
                                 Espacio...
                             </option>
@@ -65,7 +65,7 @@ function Search() {
 
                     <div>
                         <label>Tipo de espacio</label>
-                        <select name="" value={type} onChange={(e) => setType(e.target.value)}>
+                        <select name="" value={type} required onChange={(e) => setType(e.target.value)}>
                             <option value="" hidden>
                                 tipo...
                             </option>
@@ -76,7 +76,7 @@ function Search() {
                     </div>
                     <div>
                         <label>Precio máximo que quieres gastar</label>
-                        <select name="" value={price} onChange={(e) => setPrice(e.target.value)}>
+                        <select name="" value={price} required onChange={(e) => setPrice(e.target.value)}>
                             <option value="" hidden>
                                 max..
                             </option>
@@ -92,6 +92,7 @@ function Search() {
                         <input
                             type="date"
                             name="start_date"
+                            required
                             value={start_date}
                             onChange={(e) => setStart_date(e.target.value)}
                         />
@@ -99,7 +100,7 @@ function Search() {
 
                     <div>
                         <label>¿Qué capacidad necesitas?</label>
-                        <select value={capacity} onChange={(e) => setCapacity(e.target.value)}>
+                        <select value={capacity} required onChange={(e) => setCapacity(e.target.value)}>
                             <option value="" hidden>
                                 Cantidad
                             </option>

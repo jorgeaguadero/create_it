@@ -4,36 +4,25 @@ import useFetch from '../useFetch';
 import { useSelector } from 'react-redux';
 
 function IncidentsHistory() {
-    const { id } = useParams();
+    const me = useSelector((s) => s.user);
+    let id = '';
+    const { id_user } = useParams();
 
-    const incidents = useFetch(`http://localhost:8080/api/spaces/2/incidents`);
+    me ? (id = me.id_user) : (id = id_user);
+    const incidents = useFetch(`http://localhost:8080/api/users/${id}/incidents`);
 
     if (!incidents) {
         return <div>Loading...</div>;
     }
     return (
         <div className="user">
-            {incidents.map((b) => (
-                <div key={b.id_booking}>
-                    <span>id Reserva --- {b.id_booking}</span>
-                    <br />
-                    <span>Espacio --- {b.id_space}</span>
-                    <br />
-                    <span>Sala --- {b.id_room}</span>
-                    <br />
-                    <span>Pagado? --- {b.pending_payment}</span>
-                    <br />
-                    <span>Precio --- {b.price}</span>
-                    <br />
-                    <span>Fecha --- {b.start_date}</span>
-                    <br />
-                    <button>Solucionar</button>
-                    <button>Pagar</button>
-                    <br />
+            {incidents.map((i) => (
+                <div key={i.id_incident}>
+                    <span>id Reserva --- {i.id_incident}</span>
                 </div>
             ))}
             {!incidents && <i>Loading...</i>}
-            {/*bookings && !bookings && <i>No results found!</i>*/}
+            {incidents && !incidents.length === 0 && <i>No tienes incidentes</i>}
         </div>
     );
 }
