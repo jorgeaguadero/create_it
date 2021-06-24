@@ -27,7 +27,7 @@ function Login() {
         }
     };
     if (isLoggedIn) {
-        return <Redirect to="/Profile" />;
+        return <Redirect to="/Buscador" />;
     }
 
     return (
@@ -53,12 +53,11 @@ function Login() {
                     </label>
                     <button>Iniciar sesión</button>
                     {error && <div className="error">{error}</div>}
-                <p>
-                    <span>Aún no tienes cuenta?</span>
-                    <Link to="/signup">Regístrate</Link>
-                </p>
+                    <p>
+                        <span>Aún no tienes cuenta?</span>
+                        <Link to="/signup">Regístrate</Link>
+                    </p>
                 </form>
-                
             </main>
         </div>
     );

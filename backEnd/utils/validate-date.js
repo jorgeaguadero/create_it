@@ -38,5 +38,6 @@ function isEqualDate(start_date) {
 module.exports = {
     isBeforeDate,
     isAfterDate,
-    isEqualDate,evenDate
+    isEqualDate,
+    evenDate,
 };

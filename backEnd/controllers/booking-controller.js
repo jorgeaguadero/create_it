@@ -41,14 +41,7 @@ async function createBooking(req, res, next) {
             );
             res.status(201);
 
-            res.send({
-                booking: booking.id_booking,
-                user: booking.id_user,
-                space: booking.id_space,
-                room: booking.id_room,
-                date: booking.start_date,
-                price: booking.price,
-            });
+            res.send(booking);
         } else {
             const infoExtra = await bookingsRepository.getExtraInfo(start_date, id_extra, infoRoom.id_space);
             //me devuelve la fecha con una hora menos-->un dia menos formateo a ISO
@@ -113,6 +106,18 @@ async function getBookingsByUser(req, res, next) {
         next(err);
     }
 }
+async function getBookingById(req, res, next) {
+    try {
+        const { id_booking } = req.params;
+        validateAuth.validateProperty(req, req.params);
+
+        const bookings = await bookingsRepository.getBookingById(id_booking);
+
+        res.send(bookings);
+    } catch (err) {
+        next(err);
+    }
+}
 //5.3.1.2-->VER RESERVA POR USUARIO COMPLETA
 async function getBookingsCompletedByUser(req, res, next) {
     try {
@@ -132,7 +137,7 @@ async function getActiveBookingsByUser(req, res, next) {
         const { id_user } = req.params;
         validateAuth.validateProperty(req, req.params);
 
-        const bookings = await bookingsRepository.getPendingBookingsByUser(id_user);
+        const bookings = await bookingsRepository.getActiveBookingsByUser(id_user);
 
         res.send(bookings);
     } catch (err) {
@@ -196,4 +201,5 @@ module.exports = {
     payBooking,
     getBookingsCompletedByUser,
     getActiveBookingsByUser,
+    getBookingById,
 };

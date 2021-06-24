@@ -5,7 +5,7 @@ import { Helmet } from 'react-helmet';
 import User from './User';
 import BookingsActive from '../Bookings/BookingsActive';
 import BookingsHistory from '../Bookings/BookingsHistory';
-
+import Booking from '../Bookings/Booking';
 import UpdateUser from './UpdateUser';
 
 
@@ -35,6 +35,9 @@ function ProfileUser() {
                         </Route>
                         <Route path="/profile/bookings" exact>
                             <BookingsActive />
+                        </Route>
+                        <Route path="/profile/bookings/:id_booking" exact>
+                            <Booking />
                         </Route>
                         <Route path="/profile/history" exact>
                             <BookingsHistory />

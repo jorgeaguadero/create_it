@@ -22,7 +22,7 @@ async function getBookingsCompletedByUser(id_user) {
 
     return booking;
 }
-async function getPendingBookingsByUser(id_user) {
+async function getActiveBookingsByUser(id_user) {
     const query = `SELECT * FROM bookings WHERE id_user =${id_user} AND start_date >=current_timestamp()`;
     const [booking] = await database.pool.query(query);
 
@@ -150,5 +150,5 @@ module.exports = {
     //payBooking,
     getPendingByRoom,
     getBookingsCompletedByUser,
-    getPendingBookingsByUser,
+    getActiveBookingsByUser,
 };

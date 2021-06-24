@@ -2,7 +2,7 @@ const Joi = require('joi');
 
 const { bookingsRepository, incidentsRepository } = require('../repositories');
 const { validateAuth } = require('../middlewares');
-const { dateValidate } = require('../utils');
+const { ValidateDate } = require('../utils');
 //const { sendMails } = require('../utils');
 
 //7.1--> CREAR INCIDENCIA (user)
@@ -20,9 +20,9 @@ async function createIncident(req, res, next) {
         });
         await schema.validateAsync({ type, description });
 
-        const incident_date = dateValidate.isEqualDate(booking.start_date);
+        const incident_date = ValidateDate.isEqualDate(booking.start_date);
 
-        let createdIncident = await incidentsRepository.createIncident(
+        const createdIncident = await incidentsRepository.createIncident(
             id_booking,
             booking.id_space,
             incident_date,
@@ -30,15 +30,11 @@ async function createIncident(req, res, next) {
             description,
             id
         );
-        createdIncident.state === 0 ? (createdIncident.state = 'Open') : (createdIncident.state = 'Closed');
+
         //const dateUTC = formatDate(createdIncident.incident_date);
         //TODO envio Mail
         res.status(201);
-        res.send({
-            'Id Incidencia': createIncident.id_incident,
-            State: createdIncident.state,
-            Message: createdIncident.incident_date,
-        });
+        res.send(createdIncident);
     } catch (err) {
         next(err);
     }

@@ -204,9 +204,16 @@ app.get(
     validateAuth.validateUserActivate,
     bookingsController.getBookingsByUser
 );
+//5.3.1--> VER MIS RESERVAS // ADMIN -->reservas por usuario --> //TODOañadimos query params?
+app.get(
+    '/api/users/:id_user/bookings/:id_booking',
+    validateAuth.validateAuthorization,
+    validateAuth.validateUserActivate,
+    bookingsController.getBookingById
+);
 //5.3.1.2--> VER MIS RESERVAS FINALIZADAS // ADMIN -->reservas por usuario --> //TODOañadimos query params?
 app.get(
-    '/api/users/:id_user/bookings/completed',
+    '/api/users/:id_user/completed/bookings',
     validateAuth.validateAuthorization,
     validateAuth.validateUserActivate,
     bookingsController.getBookingsCompletedByUser
@@ -214,7 +221,7 @@ app.get(
 
 //5.3.1.3--> VER MIS RESERVAS ACTIVAS // ADMIN -->reservas por usuario --> //TODOañadimos query params?
 app.get(
-    '/api/users/:id_user/bookings/active',
+    '/api/users/:id_user/active/bookings',
     validateAuth.validateAuthorization,
     validateAuth.validateUserActivate,
     bookingsController.getActiveBookingsByUser

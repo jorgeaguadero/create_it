@@ -1,15 +1,51 @@
+import { useState } from 'react';
 import { Helmet } from 'react-helmet';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import useFetch from '../useFetch';
 import { priceFormated } from '../Helpers';
 import { useSelector } from 'react-redux';
 
 function Booking() {
+    const [openPay, setOpenPay] = useState(false);
+    const [openIncident, setOpenIncident] = useState(false);
+    const [type, setType] = useState('');
+    const [description, setDescription] = useState('');
+
     const me = useSelector((s) => s.user);
     const id_user = me.id_user;
+    const history = useHistory();
 
     const { id_booking } = useParams();
     const booking = useFetch(`http://localhost:8080/api/users/${id_user}/bookings/${id_booking}`);
+
+    const handlePay = async (e) => {
+        e.preventDefault();
+        const res = await fetch(`http://localhost:8080/api/bookings/${id_booking}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + me.token,
+            },
+        });
+        if (res.ok) {
+            history.push(`/profile/bookings/`);
+        }
+    };
+
+    const handleIncident = async (e) => {
+        e.preventDefault();
+        const res = await fetch(`http://localhost:8080/api/bookings/${id_booking}/incident`, {
+            method: 'POST',
+            body: JSON.stringify({ description, type }),
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + me.token,
+            },
+        });
+        if (res.ok) {
+            history.push(`/profile/bookings/`);
+        }
+    };
 
     if (!booking) {
         return <div>Loading...</div>;
@@ -29,9 +65,49 @@ function Booking() {
             <br />
             <span>Fecha de realización: {new Date(booking.booking_date).toLocaleDateString()}</span>
             <br />
-            {booking.pending_payment === 1 && <button type="button">Pagar</button>}
-            <br />
-            <button>Incidencia</button>
+            {booking.pending_payment === 1 && <button onClick={() => setOpenPay(!openPay)}>Pagar</button>}
+            {openPay && (
+                <div>
+                    <p>
+                        Vas a pagar tu reserva {booking.id_booking} por un importe total de{' '}
+                        {priceFormated.format(booking.price)}
+                    </p>
+                    <button onClick={handlePay}>Confirmar pago</button>
+                </div>
+            )}
+            <button onClick={() => setOpenIncident(!openIncident)}>Crear Incidencia</button>
+            {openIncident && (
+                <form onSubmit={handleIncident}>
+                    <div>
+                        <label>
+                            Tipo de incicencia
+                            <select value={type} onChange={(e) => setType(e.target.value)} required>
+                                <option value="" hidden>
+                                    Tipo de incidencia
+                                </option>
+                                <option value="Limpieza">Limpieza</option>
+                                <option value="Pago">Pago</option>
+                                <option value="Wifi">Wifi</option>
+                                <option value="Aclimatación">Aclimatación</option>
+                                <option value="Iluminación">Iluminación</option>
+                                <option value="Equipo">Equipo</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            <span>Descripción</span>
+                            <textarea
+                                name="description"
+                                required
+                                value={description || ''}
+                                onChange={(e) => setDescription(e.target.value)}
+                            />
+                        </label>
+                    </div>
+                    <button>Enviar</button>
+                </form>
+            )}
         </div>
     );
 }

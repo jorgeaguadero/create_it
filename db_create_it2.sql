@@ -98,7 +98,7 @@ CREATE TABLE incidents (
     closed_date TIMESTAMP,
     type ENUM(
         'Limpieza',
-        'pago',
+        'Pago',
         'Wifi',
         'Aclimatación',
         'Iluminación',
@@ -173,5 +173,5 @@ insert into extras (id_space,extra_code,type,description,price) values (3, "ARCT
 
 insert into bookings (id_user,id_space,id_room,start_date,price) values(2,1,1,current_timestamp(),20);
 insert into bookings (id_user,id_space,id_room,start_date,price) values(2,1,1,'2021-01-01',20);
-insert into bookings (id_user,id_space,id_room,start_date,price) values(2,1,1,'2026-01-01',20);
+insert into bookings (id_user,id_space,id_room,start_date,price) values(3,1,1,'2026-01-01',20);
 
