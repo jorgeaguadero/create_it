@@ -71,7 +71,6 @@ async function closeIncident(req, res, next) {
     }
 }
 
-//7.3.1 VER INCIDENCIAS POR USUARIO
 async function getIncidentsByUserId(req, res, next) {
     try {
         const { id_user } = req.params;
@@ -80,6 +79,19 @@ async function getIncidentsByUserId(req, res, next) {
         const incidents = await incidentsRepository.getIncidentsByUserId(id_user);
 
         res.send(incidents);
+    } catch (err) {
+        next(err);
+    }
+}
+//7.3.1 VER INCIDENCIAS POR USUARIO
+async function getIncidentById(req, res, next) {
+    try {
+        const { id_incident } = req.params;
+
+        validateAuth.validateProperty(req, req.params);
+        const incident = await incidentsRepository.getIncidentById(id_incident);
+
+        res.send(incident);
     } catch (err) {
         next(err);
     }
@@ -113,4 +125,5 @@ module.exports = {
     getAllIncidents,
     closeIncident,
     getIncidentsOpenBySpace,
+    getIncidentById,
 };

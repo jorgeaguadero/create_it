@@ -3,7 +3,6 @@ import { NavLink, Link } from 'react-router-dom';
 import { HashLink } from 'react-router-hash-link';
 
 import './Navbar.css';
-import avatar from './images/avatar.png'
 import logo from './images/logo.png';
 
 function Navbar() {
@@ -32,25 +31,19 @@ function Navbar() {
                 </NavLink>
             </div>
             <div className="userSection">
-                    {!user && (
-                        <Link className="links" to="/login">
-                            Log in
-                        </Link>
-                    )}
-                    {!user && (
-                        <Link className="links"  to="/Signup">
-                            Sign up
-                        </Link>
-                    )}
+                {!user && (
+                    <Link className="links" to="/login">
+                        Log in
+                    </Link>
+                )}
+                {!user && (
+                    <Link className="links" to="/Signup">
+                        Sign up
+                    </Link>
+                )}
 
                 {user && (
                     <Link className="user-info" to="/profile">
-                        <div
-                            className="avatar"
-                            style={{
-                                backgroundImage: `url(${avatar})`,
-                            }}
-                        />
                         <span>{user.name}</span>
                         <span className="logout" onClick={handleLogout}>
                             logout

@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 function Booking() {
     const [openPay, setOpenPay] = useState(false);
     const [openIncident, setOpenIncident] = useState(false);
+    const [openCancel, setOpenCancel] = useState(false);
     const [type, setType] = useState('');
     const [description, setDescription] = useState('');
 
@@ -23,6 +24,20 @@ function Booking() {
 
     const { id_booking } = useParams();
     const booking = useFetch(`http://localhost:8080/api/users/${id_user}/bookings/${id_booking}`);
+
+    const handleCancel = async (e) => {
+        e.preventDefault();
+        const res = await fetch(`http://localhost:8080/api/bookings/${id_booking}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + me.token,
+            },
+        });
+        if (res.ok) {
+            history.push(`/profile/bookings/`);
+        }
+    };
 
     const handlePay = async (e) => {
         e.preventDefault();
@@ -81,7 +96,13 @@ function Booking() {
                     <button onClick={handlePay}>Confirmar pago</button>
                 </div>
             )}
-
+            {<button onClick={() => setOpenCancel(!openCancel)}>Cancelar</button>}
+            {openCancel && (
+                <div>
+                    <p>Oh no! De verdad quieres cancelar tu reserva {booking.id_booking} ?</p>
+                    <button onClick={handleCancel}>Confirmar cancelación</button>
+                </div>
+            )}
             {new Date(booking.start_date) > start && new Date(booking.start_date) < end && (
                 <button onClick={() => setOpenIncident(!openIncident)}>Crear Incidencia</button>
             )}

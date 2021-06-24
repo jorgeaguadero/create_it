@@ -3,9 +3,11 @@ import './Profile.css';
 import { useSelector } from 'react-redux';
 import { Helmet } from 'react-helmet';
 import User from './User';
+import Booking from '../Bookings/Booking';
 
 import IncidentsHistory from '../Incidents/IncidentsHistory';
-import BookingsActive from '../Bookings/BookingsActive'
+import Incident from '../Incidents/Incident';
+import BookingsActive from '../Bookings/BookingsActive';
 
 function ProfileAdmin() {
     const isLoggedIn = useSelector((s) => !!s.user);
@@ -21,7 +23,7 @@ function ProfileAdmin() {
             <div className="box">
                 <div className="tabs">
                     <NavLink to="/profile" exact activeClassName="active">
-                        info del usuario -- modificar perfil
+                        Perfil
                     </NavLink>
                     <NavLink to="/profile/bookingsActive" exact activeClassName="active">
                         Reservas activas
@@ -41,12 +43,19 @@ function ProfileAdmin() {
                         <Route path="/profile/bookingsActive" exact>
                             <BookingsActive />
                         </Route>
+                        <Route path="/profile/bookings/:id_booking" exact>
+                            <Booking />
+                        </Route>
                         <Route path="/profile/bookings" exact>
                             historial...
                         </Route>
                         <Route path="/profile/incidents" exact>
                             <IncidentsHistory />
                         </Route>
+                        <Route path="/profile/incidents/:id_incident" exact>
+                            <Incident />
+                        </Route>
+
                         <Route path="/profile/">
                             <User />
                         </Route>

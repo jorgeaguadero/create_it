@@ -23,7 +23,6 @@ async function getIncidentsOpenBySpace(id) {
     const query = 'SELECT * FROM incidents WHERE id_space = ? AND state=0';
     const incidents = await database.pool.query(query, id);
 
-    //TODO ver datos de devolucion
     return incidents[0];
 }
 

@@ -145,6 +145,17 @@ async function getActiveBookingsByUser(req, res, next) {
     }
 }
 
+async function getAllActiveBookingsBySpace(req, res, next) {
+    try {
+        const { id_space } = req.params;
+        const bookings = await bookingsRepository.getAllActiveBookingsBySpace(id_space);
+
+        res.send(bookings);
+    } catch (err) {
+        next(err);
+    }
+}
+
 //5.3.2-->VER RESERVA POR ESPACIO
 async function getBookingsBySpace(req, res, next) {
     try {
@@ -202,4 +213,5 @@ module.exports = {
     getBookingsCompletedByUser,
     getActiveBookingsByUser,
     getBookingById,
+    getAllActiveBookingsBySpace,
 };

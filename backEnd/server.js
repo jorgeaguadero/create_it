@@ -233,6 +233,14 @@ app.get(
     validateAuth.validateAdmin,
     bookingsController.getBookingsBySpace
 );
+
+//5.3.2--> VER RESERVAS POR ESPACIO //TODOañadimos query params?
+app.get(
+    '/api/bookings/active/spaces/:id_space',
+    validateAuth.validateAuthorization,
+    validateAuth.validateAdmin,
+    bookingsController.getAllActiveBookingsBySpace
+);
 //5.3.3-->VER RESERVAS POR SALA //TODOañadimos query params?
 app.get(
     '/api/bookings/rooms/:id_room',
@@ -303,6 +311,10 @@ app.patch(
 
 //7.3.1-> VER INCIDENCIAS POR USUARIO (user || admin--> todas)
 app.get('/api/users/:id_user/incidents', validateAuth.validateAuthorization, incidentsController.getIncidentsByUserId);
+//7.3.1-> VER INCIDENCIAS POR USUARIO (user || admin--> todas)
+
+app.get('/api/incidents/:id_incident', validateAuth.validateAuthorization, incidentsController.getIncidentById);
+
 //7.3.2-->ADMIN--> VER INCIDENCIAS POR ESPACIO
 app.get(
     '/api/spaces/:id_space/incidents',

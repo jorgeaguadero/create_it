@@ -7,12 +7,15 @@ import { priceFormated } from '../Helpers';
 function BookingsActive() {
     const me = useSelector((s) => s.user);
     let id = '';
-    const { id_user } = useParams();
-
+    const { id_user, id_space } = useParams();
     me ? (id = me.id_user) : (id = id_user);
 
-    const bookings = useFetch(`http://localhost:8080/api/users/${id}/active/bookings
-    `);
+    let url = '';
+    me.role === 'admin'
+        ? (url = `http://localhost:8080/api/bookings/active/spaces/1`)
+        : (url = `http://localhost:8080/api/users/${id}/active/bookings`);
+
+    const bookings = useFetch(url);
 
     if (!bookings) {
         return <div>Loading...</div>;
@@ -21,7 +24,7 @@ function BookingsActive() {
         <div className="BookingsActive">
             {bookings.map((b) => (
                 <div key={b.id_booking}>
-                    <Link to={`/profile/bookings/${b.id_booking}`}>id Reserva {b.id_booking}</Link>
+                    <Link to={`/profile/bookings/${b.id_booking}`}>id Reserva: {b.id_booking}</Link>
                     <br />
                     <span>Estado de pago: {b.pending_payment === 0 ? 'Pagado' : 'Pendiente de pago'}</span>
                     <br />

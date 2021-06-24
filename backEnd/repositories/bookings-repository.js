@@ -29,6 +29,13 @@ async function getActiveBookingsByUser(id_user) {
     return booking;
 }
 
+async function getAllActiveBookingsBySpace(id_space) {
+    const query = `SELECT * FROM bookings WHERE id_space =${id_space} AND start_date >=current_timestamp()`;
+    const [booking] = await database.pool.query(query);
+
+    return booking;
+}
+
 async function getBookingsBySpace(id_space) {
     const query = 'SELECT * FROM bookings WHERE id_space = ?';
     const [booking] = await database.pool.query(query, id_space);
@@ -151,4 +158,5 @@ module.exports = {
     getPendingByRoom,
     getBookingsCompletedByUser,
     getActiveBookingsByUser,
+    getAllActiveBookingsBySpace,
 };
