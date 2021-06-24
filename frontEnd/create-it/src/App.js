@@ -12,10 +12,12 @@ import Signup from './Signup';
 import Profile from './Users/Profile';
 import Spaces from './Spaces/Spaces';
 import Search from './Bookings/Search';
+import ErrorMessage from './ErrorMessage';
 
 function App() {
     return (
         <div className="App">
+            <ErrorMessage />
             <Helmet>
                 <title>Create It</title>
             </Helmet>
@@ -30,7 +32,7 @@ function App() {
                 <Route path="/Signup" exact>
                     <Signup />
                 </Route>
-                <Route path="/Profile" >
+                <Route path="/Profile">
                     <Profile />
                 </Route>
                 <Route path="/Spaces" exact>

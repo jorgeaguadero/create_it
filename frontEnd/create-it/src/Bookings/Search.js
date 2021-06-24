@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import './search.css';
 import SearchCard from './SearchCard';
 
@@ -9,24 +10,40 @@ function Search() {
     const [start_date, setStart_date] = useState('');
     const [capacity, setCapacity] = useState('');
 
+    const dispatch = useDispatch();
+
     const [results, setResults] = useState();
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        try {
+            e.preventDefault();
 
-        const url =
-            `http://localhost:8080/api/search?` +
-            `id_space=${id_space}` +
-            `&type=${type}` +
-            `&price=${price}` +
-            `&start_date=${start_date}` +
-            `&capacity=${capacity}`;
+            if (!id_space || !type || !price || !start_date || !capacity) {
+                throw new Error('Faltan campos por completar');
+            }
 
-        const res = await fetch(url);
+            dispatch({ type: 'CLEAR_ERROR' });
 
-        const data = await res.json();
-        console.log(data);
-        setResults(data);
+            const url =
+                `http://localhost:8080/api/search?` +
+                `id_space=${id_space}` +
+                `&type=${type}` +
+                `&price=${price}` +
+                `&start_date=${start_date}` +
+                `&capacity=${capacity}`;
+
+            const res = await fetch(url);
+
+            const data = await res.json();
+
+            if (res.ok) {
+                setResults(data);
+            } else {
+                throw new Error(data.message);
+            }
+        } catch (error) {
+            dispatch({ type: 'SET_ERROR', message: error.message });
+        }
     };
 
     return (
@@ -97,11 +114,12 @@ function Search() {
                     <button className="searchButton">Buscar espacio</button>
                 </form>
 
-               
                 {results && (
                     <div className="results-search">
                         {results.map((r) => (
-                            <SearchCard key={r.id_room} r={r} start_date={start_date}/>
+                            <div key={r.id_room}>
+                                <SearchCard r={r} start_date={start_date} />
+                            </div>
                         ))}
 
                         {results.length === 0 && (
