@@ -6,6 +6,7 @@ import User from './User';
 import BookingsActive from '../Bookings/BookingsActive';
 import BookingsHistory from '../Bookings/BookingsHistory';
 import Booking from '../Bookings/Booking';
+import IncidentsHistory from '../Incidents/IncidentsHistory';
 import UpdateUser from './UpdateUser';
 
 function ProfileUser() {
@@ -45,7 +46,7 @@ function ProfileUser() {
                             <BookingsHistory />
                         </Route>
                         <Route path="/profile/incidents" exact>
-                            <BookingsHistory />
+                            <IncidentsHistory />
                         </Route>
                         <Route path="/profile/:id_user/update" exact>
                             <UpdateUser />
