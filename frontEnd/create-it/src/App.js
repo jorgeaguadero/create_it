@@ -12,7 +12,7 @@ import Signup from './Users/Signup';
 import Profile from './Users/Profile';
 import Spaces from './Spaces/Spaces';
 import Search from './Bookings/Search';
-import ErrorMessage from './Users/ErrorMessage';
+import ErrorMessage from './ErrorMessage';
 
 function App() {
     return (
