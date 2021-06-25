@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { Helmet } from 'react-helmet';
 import { useParams, useHistory } from 'react-router-dom';
 import useFetch from '../useFetch';
 import { priceFormated } from '../Helpers';
 import { useSelector } from 'react-redux';
 
 function Booking() {
+    const [error, setError] = useState(null);
     const [openPay, setOpenPay] = useState(false);
     const [openIncident, setOpenIncident] = useState(false);
     const [openCancel, setOpenCancel] = useState(false);
@@ -51,8 +51,11 @@ function Booking() {
                 Authorization: 'Bearer ' + me.token,
             },
         });
+        const data = await res.json();
         if (res.ok) {
-            history.push(`/profile/bookings/`);
+            history.push(`/profile/bookings/${data.id_booking}`);
+        } else {
+            setError(data.error);
         }
     };
 
@@ -66,8 +69,11 @@ function Booking() {
                 Authorization: 'Bearer ' + me.token,
             },
         });
+        const data = await res.json();
         if (res.ok) {
-            history.push(`/profile/bookings/`);
+            history.push(`/profile/reviews`);
+        } else {
+            setError(data.error);
         }
     };
 
@@ -81,8 +87,11 @@ function Booking() {
                 Authorization: 'Bearer ' + me.token,
             },
         });
+        const data = await res.json();
         if (res.ok) {
-            history.push(`/profile/bookings/`);
+            history.push(`/profile/incidents/${data.id_incident}`);
+        } else {
+            setError(data.error);
         }
     };
 
@@ -92,8 +101,7 @@ function Booking() {
 
     return (
         <div className="booking">
-            <Helmet>Reserva {booking.booking_id}|CreateIt</Helmet>
-            <h1>{booking.id_booking}</h1>
+            <h1>Reserva:{booking.id_booking}</h1>
             <span>Espacio: {booking.id_space}</span>
             <br />
             <span>Fecha: {new Date(booking.start_date).toLocaleDateString()}</span>
@@ -191,6 +199,7 @@ function Booking() {
                     <button>Enviar</button>
                 </form>
             )}
+            {error && <div className="error">{error}</div>}
         </div>
     );
 }
