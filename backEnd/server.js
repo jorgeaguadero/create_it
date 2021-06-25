@@ -252,16 +252,15 @@ app.get(
 
 //5.3.3-->VER RESERVAS POR ID
 app.get(
-    '/api/bookings/:ud_booking',
+    '/api/bookings/:id_booking',
     validateAuth.validateAuthorization,
-    validateAuth.validateAdmin,
     generalValidators.validateBooking,
     bookingsController.getBookingById
 );
 
 //5.3.3-->VER TODAS LAS RESERVAS
 app.get(
-    '/api/bookings/all',
+    '/api/bookings',
     validateAuth.validateAuthorization,
     validateAuth.validateAdmin,
     bookingsController.getAllBookings
@@ -339,6 +338,15 @@ app.get(
     validateAuth.validateAdmin,
     generalValidators.validateSpace,
     incidentsController.getIncidentsOpenBySpace
+);
+
+app.get('/api/incidents', incidentsController.getAllOpenIncidents);
+
+app.get(
+    '/api/incidents/closed',
+    validateAuth.validateAuthorization,
+    validateAuth.validateAdmin,
+    incidentsController.getAllClosedIncidents
 );
 
 app.use((err, req, res, next) => {

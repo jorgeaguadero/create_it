@@ -26,8 +26,15 @@ async function getIncidentsOpenBySpace(id) {
     return incidents[0];
 }
 
-async function getAllIncidents() {
-    const query = 'SELECT * FROM reviews';
+async function getAllClosedIncidents() {
+    const query = 'SELECT * FROM incidents where state=1';
+    const [reviews] = await database.pool.query(query);
+
+    return reviews;
+}
+
+async function getAllOpenIncidents() {
+    const query = 'SELECT * FROM incidents where state=0';
     const [reviews] = await database.pool.query(query);
 
     return reviews;
@@ -55,10 +62,11 @@ async function closeIncident(id_incident, closed_date, state) {
 }
 
 module.exports = {
-    getAllIncidents,
+    getAllClosedIncidents,
     getIncidentsByUserId,
     createIncident,
     getIncidentById,
     closeIncident,
     getIncidentsOpenBySpace,
+    getAllOpenIncidents,
 };

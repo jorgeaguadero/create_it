@@ -109,11 +109,10 @@ async function getBookingsByUser(req, res, next) {
 async function getBookingById(req, res, next) {
     try {
         const { id_booking } = req.params;
-        validateAuth.validateProperty(req, req.params);
+        const booking = await bookingsRepository.getBookingById(id_booking);
+        validateAuth.validateProperty(req, booking);
 
-        const bookings = await bookingsRepository.getBookingById(id_booking);
-
-        res.send(bookings);
+        res.send(booking);
     } catch (err) {
         next(err);
     }

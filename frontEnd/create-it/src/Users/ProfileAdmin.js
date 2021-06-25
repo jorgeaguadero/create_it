@@ -9,6 +9,7 @@ import IncidentsHistory from '../Incidents/IncidentsHistory';
 import Incident from '../Incidents/Incident';
 import BookingsActive from '../Bookings/BookingsActive';
 import BookingsHistory from '../Bookings/BookingsHistory';
+import OpenIncidents from '../Incidents/OpenIncidents';
 
 function ProfileAdmin() {
     const isLoggedIn = useSelector((s) => !!s.user);
@@ -32,7 +33,10 @@ function ProfileAdmin() {
                     <NavLink to="/profile/bookings" exact activeClassName="active">
                         historial de reservas
                     </NavLink>
-                    <NavLink to="/profile/incidents" exact activeClassName="active">
+                    <NavLink to="/profile/incidents/open" exact activeClassName="active">
+                        Incidencias abiertas
+                    </NavLink>
+                    <NavLink to="/profile/incidents/all" exact activeClassName="active">
                         historial de incidencias
                     </NavLink>
                 </div>
@@ -50,7 +54,10 @@ function ProfileAdmin() {
                         <Route path="/profile/bookings" exact>
                             <BookingsHistory />
                         </Route>
-                        <Route path="/profile/incidents" exact>
+                        <Route path="/profile/incidents/open" exact>
+                            <OpenIncidents />
+                        </Route>
+                        <Route path="/profile/incidents/all" exact>
                             <IncidentsHistory />
                         </Route>
                         <Route path="/profile/incidents/:id_incident" exact>

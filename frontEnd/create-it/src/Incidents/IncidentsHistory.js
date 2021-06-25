@@ -1,45 +1,47 @@
 import './Profile.css';
-import { Link, useParams, useHistory } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import useFetch from '../useFetch';
 import { useSelector } from 'react-redux';
 
-function IncidentsHistory() {
+function BookingsActive() {
     const me = useSelector((s) => s.user);
-    let id = '';
-    const { id_user, id_space } = useParams();
-    me ? (id = me.id_user) : (id = id_user);
-    const history = useHistory();
+    let id_user = '';
+    const { id } = useParams();
 
-    let url = '';
-    me.role === 'admin'
-        ? (url = `http://localhost:8080/api/spaces/1/incidents`)
-        : (url = `http://localhost:8080/api/users/${id}/incidents`);
+    me ? (id_user = me.id_user) : (id_user = id);
 
-    const incidents = useFetch(url);
+    const bookings = useFetch(`http://localhost:8080/api/users/${id_user}/bookings
+    `);
 
-    if (!incidents) {
+    if (!bookings) {
         return <div>Loading...</div>;
     }
     return (
-        <div className="IncidentsHistory">
-            {incidents.map((i) => (
-                <div key={i.id_incident}>
-                    <Link to={`/profile/incidents/${i.id_incident}`}>Incidencia: {i.id_incident}</Link>
+        <div className="user">
+            {bookings.map((b) => (
+                <div key={b.id_booking}>
+                    <span>id Reserva --- {b.id_booking}</span>
                     <br />
-                    <span>Fecha de la incidencia: {new Date(i.incident_date).toLocaleDateString()}</span>
+                    <span>Espacio --- {b.id_space}</span>
                     <br />
-                    <span>Estado: {i.state === 0 ? 'Abierta' : 'Cerrada'}</span>
+                    <span>Sala --- {b.id_room}</span>
                     <br />
-                    <span>Descripción: {i.description}</span>
+                    <span>Pagado? --- {b.pending_payment}</span>
                     <br />
-                    {i.closed_date && <span>Fecha de cierre: {new Date(i.closed_date).toLocaleDateString()}</span>}
+                    <span>Precio --- {b.price}</span>
+                    <br />
+                    <span>Fecha --- {b.start_date}</span>
+                    <br />
+                    <button>Incidencia</button>
+                    <button>Pagar</button>
                     <br />
                 </div>
             ))}
-            {!incidents && <i>Loading...</i>}
-            {incidents && incidents.length === 0 && <i>No hay incidencias abiertas</i>}
+            {!bookings && <i>Loading...</i>}
+            {bookings && !bookings.bookings && <i>No results found!</i>}
+            <button>Moficiar usuario</button>
         </div>
     );
 }
 
-export default IncidentsHistory;
+export default BookingsActive;
