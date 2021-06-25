@@ -9,7 +9,7 @@ function Booking() {
     const [openPay, setOpenPay] = useState(false);
     const [openIncident, setOpenIncident] = useState(false);
     const [openCancel, setOpenCancel] = useState(false);
-    const [openButtonreview, setButtonreview] = useState(false);
+    const [openReview, setOpenReview] = useState(false);
     const [type, setType] = useState('');
     const [description, setDescription] = useState('');
     const [rating, setRating] = useState('');
@@ -30,6 +30,8 @@ function Booking() {
 
     const handleCancel = async (e) => {
         e.preventDefault();
+        setError(null);
+        setOpenCancel(!openCancel);
         const res = await fetch(`http://localhost:8080/api/bookings/${id_booking}`, {
             method: 'DELETE',
             headers: {
@@ -37,13 +39,18 @@ function Booking() {
                 Authorization: 'Bearer ' + me.token,
             },
         });
+        const data = await res.json();
         if (res.ok) {
             history.push(`/profile/bookings/`);
+        } else {
+            setError(data.error);
         }
     };
 
     const handlePay = async (e) => {
         e.preventDefault();
+        setError(null);
+        setOpenPay(!openPay);
         const res = await fetch(`http://localhost:8080/api/bookings/${id_booking}`, {
             method: 'POST',
             headers: {
@@ -53,7 +60,7 @@ function Booking() {
         });
         const data = await res.json();
         if (res.ok) {
-            history.push(`/profile/bookings/${data.id_booking}`);
+            history.push(`/profile/bookings/`);
         } else {
             setError(data.error);
         }
@@ -61,6 +68,7 @@ function Booking() {
 
     const handleReview = async (e) => {
         e.preventDefault();
+        setError(null);
         const res = await fetch(`http://localhost:8080/api/users/${id_user}/bookings/${id_booking}/reviews`, {
             method: 'POST',
             body: JSON.stringify({ rating, text }),
@@ -79,6 +87,7 @@ function Booking() {
 
     const handleIncident = async (e) => {
         e.preventDefault();
+
         const res = await fetch(`http://localhost:8080/api/bookings/${id_booking}/incident`, {
             method: 'POST',
             body: JSON.stringify({ description, type }),
@@ -122,7 +131,7 @@ function Booking() {
                     <button onClick={handlePay}>Confirmar pago</button>
                 </div>
             )}
-            {<button onClick={() => setOpenCancel(!openCancel)}>Cancelar</button>}
+            {new Date(booking.start_date) > end && <button onClick={() => setOpenCancel(!openCancel)}>Cancelar</button>}
             {openCancel && (
                 <div>
                     <p>Oh no! De verdad quieres cancelar tu reserva {booking.id_booking} ?</p>
@@ -165,10 +174,10 @@ function Booking() {
                     <button>Enviar</button>
                 </form>
             )}
-            {new Date(booking.start_date) < start && (
-                <button onClick={() => setButtonreview(!openButtonreview)}>review</button>
+            {new Date(booking.start_date) < start && booking.review === 0 && (
+                <button onClick={() => setOpenReview(!openReview)}>review</button>
             )}
-            {openButtonreview && (
+            {openReview && (
                 <form onSubmit={handleReview}>
                     <div>
                         <label>

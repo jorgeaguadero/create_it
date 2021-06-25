@@ -51,7 +51,9 @@ function Incident() {
                 <span>Fecha de cierre: {new Date(incident.closed_date).toLocaleDateString()}</span>
             )}
 
-            {incident.state === 0 && <button onClick={() => setOpenIncident(!openIncident)}>Cerrar Incidencia</button>}
+            {incident.state === 0 && me.role === 'admin' && (
+                <button onClick={() => setOpenIncident(!openIncident)}>Cerrar Incidencia</button>
+            )}
             {openIncident && (
                 <div>
                     <p>¿Se ha solucionado la incidencia {incident.id_incident}?</p>

@@ -180,6 +180,16 @@ async function getBookingsByRoom(req, res, next) {
     }
 }
 
+async function getAllBookings(req, res, next) {
+    try {
+        const bookings = await bookingsRepository.getAllBookings();
+
+        res.send(bookings);
+    } catch (err) {
+        next(err);
+    }
+}
+
 //5.4-->BORRAR RESERVA
 async function deleteBooking(req, res, next) {
     try {
@@ -214,4 +224,5 @@ module.exports = {
     getActiveBookingsByUser,
     getBookingById,
     getAllActiveBookingsBySpace,
+    getAllBookings,
 };

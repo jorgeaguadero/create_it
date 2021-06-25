@@ -64,6 +64,13 @@ async function getBookingsByRoom(id_room) {
     return booking;
 }
 
+async function getAllBookings() {
+    const query = 'SELECT * FROM bookings';
+    const [booking] = await database.pool.query(query);
+
+    return booking;
+}
+
 async function getRoomInfo(start, room) {
     let query = `SELECT * FROM bookings WHERE start_date= '${start}'AND id_room=${room}`;
     const [bookings] = await database.pool.query(query);
@@ -154,9 +161,9 @@ module.exports = {
     getBookingsByRoom,
     getBookingsBySpace,
     getPendingBySpace,
-    //payBooking,
     getPendingByRoom,
     getBookingsCompletedByUser,
     getActiveBookingsByUser,
     getAllActiveBookingsBySpace,
+    getAllBookings,
 };

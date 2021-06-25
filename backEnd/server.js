@@ -219,14 +219,14 @@ app.get(
     bookingsController.getBookingsCompletedByUser
 );
 
-//5.3.1.3--> VER MIS RESERVAS ACTIVAS // ADMIN -->reservas por usuario --> //TODOañadimos query params?
+//5.3.1.3--> VER MIS RESERVAS ACTIVAS // ADMIN -->reservas por usuario -->
 app.get(
     '/api/users/:id_user/active/bookings',
     validateAuth.validateAuthorization,
     validateAuth.validateUserActivate,
     bookingsController.getActiveBookingsByUser
 );
-//5.3.2--> VER RESERVAS POR ESPACIO //TODOañadimos query params?
+//5.3.2--> VER RESERVAS POR ESPACIO
 app.get(
     '/api/bookings/spaces/:id_space',
     validateAuth.validateAuthorization,
@@ -234,14 +234,14 @@ app.get(
     bookingsController.getBookingsBySpace
 );
 
-//5.3.2--> VER RESERVAS POR ESPACIO //TODOañadimos query params?
+//5.3.2--> VER RESERVAS POR ESPACIO
 app.get(
     '/api/bookings/active/spaces/:id_space',
     validateAuth.validateAuthorization,
     validateAuth.validateAdmin,
     bookingsController.getAllActiveBookingsBySpace
 );
-//5.3.3-->VER RESERVAS POR SALA //TODOañadimos query params?
+//5.3.3-->VER RESERVAS POR SALA
 app.get(
     '/api/bookings/rooms/:id_room',
     validateAuth.validateAuthorization,
@@ -249,7 +249,24 @@ app.get(
     generalValidators.validateRoom,
     bookingsController.getBookingsByRoom
 );
-//5.4--> BORRAR RESERVASER O ADMIN
+
+//5.3.3-->VER RESERVAS POR ID
+app.get(
+    '/api/bookings/:ud_booking',
+    validateAuth.validateAuthorization,
+    validateAuth.validateAdmin,
+    generalValidators.validateBooking,
+    bookingsController.getBookingById
+);
+
+//5.3.3-->VER TODAS LAS RESERVAS
+app.get(
+    '/api/bookings/all',
+    validateAuth.validateAuthorization,
+    validateAuth.validateAdmin,
+    bookingsController.getAllBookings
+);
+//5.4--> BORRAR RESERVA USER O ADMIN
 app.delete(
     '/api/bookings/:id_booking',
     validateAuth.validateAuthorization,
