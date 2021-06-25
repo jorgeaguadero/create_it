@@ -7,7 +7,7 @@ import { priceFormated } from '../Helpers';
 function BookingsActive() {
     const me = useSelector((s) => s.user);
     let id = '';
-    const { id_user, id_space } = useParams();
+    const { id_user } = useParams();
     me ? (id = me.id_user) : (id = id_user);
 
     let url = '';

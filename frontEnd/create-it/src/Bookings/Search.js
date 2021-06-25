@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
 import './search.css';
 import SearchCard from './SearchCard';
 
 function Search() {
+    const [error, setError] = useState(null);
     const [id_space, setId_Space] = useState('');
     const [type, setType] = useState('');
     const [price, setPrice] = useState('');
@@ -14,10 +14,6 @@ function Search() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        if (!id_space || !type || !price || !start_date || !capacity) {
-            throw new Error('Faltan campos por completar');
-        }
 
         const url =
             `http://localhost:8080/api/search?` +
@@ -34,7 +30,7 @@ function Search() {
         if (res.ok) {
             setResults(data);
         } else {
-            throw new Error(data.message);
+            setError(data.error);
         }
     };
 
@@ -106,7 +102,7 @@ function Search() {
 
                     <button className="searchButton">Buscar espacio</button>
                 </form>
-
+                {error && <div className="error">{error}</div>}
                 {results && (
                     <div className="results-search">
                         {results.map((r) => (

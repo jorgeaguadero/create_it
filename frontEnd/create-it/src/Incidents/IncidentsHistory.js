@@ -37,7 +37,7 @@ function IncidentsHistory() {
                 </div>
             ))}
             {!incidents && <i>Loading...</i>}
-            {incidents && !incidents.length === 0 && <i>No hay incidencias abiertas</i>}
+            {incidents && incidents.length === 0 && <i>No hay incidencias abiertas</i>}
         </div>
     );
 }
