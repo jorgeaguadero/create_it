@@ -10,39 +10,31 @@ function Search() {
     const [start_date, setStart_date] = useState('');
     const [capacity, setCapacity] = useState('');
 
-    const dispatch = useDispatch();
-
     const [results, setResults] = useState();
 
     const handleSubmit = async (e) => {
-        try {
-            e.preventDefault();
+        e.preventDefault();
 
-            if (!id_space || !type || !price || !start_date || !capacity) {
-                throw new Error('Faltan campos por completar');
-            }
+        if (!id_space || !type || !price || !start_date || !capacity) {
+            throw new Error('Faltan campos por completar');
+        }
 
-            dispatch({ type: 'CLEAR_ERROR' });
+        const url =
+            `http://localhost:8080/api/search?` +
+            `id_space=${id_space}` +
+            `&type=${type}` +
+            `&price=${price}` +
+            `&start_date=${start_date}` +
+            `&capacity=${capacity}`;
 
-            const url =
-                `http://localhost:8080/api/search?` +
-                `id_space=${id_space}` +
-                `&type=${type}` +
-                `&price=${price}` +
-                `&start_date=${start_date}` +
-                `&capacity=${capacity}`;
+        const res = await fetch(url);
 
-            const res = await fetch(url);
+        const data = await res.json();
 
-            const data = await res.json();
-
-            if (res.ok) {
-                setResults(data);
-            } else {
-                throw new Error(data.message);
-            }
-        } catch (error) {
-            dispatch({ type: 'SET_ERROR', message: error.message });
+        if (res.ok) {
+            setResults(data);
+        } else {
+            throw new Error(data.message);
         }
     };
 

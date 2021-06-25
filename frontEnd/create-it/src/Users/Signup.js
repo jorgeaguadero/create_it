@@ -10,30 +10,27 @@ import Helmet from 'react-helmet';
 
 function Signup() {
     const [newUser, setnewUser] = useState({});
-    const [error, setError] = useState();
+    const [error, setError] = useState(null);
     const user = useSelector((s) => s.user);
     const dispatch = useDispatch();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if(newUser.password !== newUser.repeatedPassword){
-            setError('Las contraseñas no coinciden')
-
-        }else{
-             const ret = await fetch('http://localhost:8080/api/users', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(newUser),
-        });
-        const data = await ret.json();
-        if (ret.ok) {
-            dispatch({ type: 'LOGIN', user: data });
+        if (newUser.password !== newUser.repeatedPassword) {
+            setError('Las contraseñas no coinciden');
         } else {
-            setError(data.error);
+            const ret = await fetch('http://localhost:8080/api/users', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newUser),
+            });
+            const data = await ret.json();
+            if (ret.ok) {
+                dispatch({ type: 'LOGIN', user: data });
+            } else {
+                setError(data.error);
+            }
         }
-        }
-
-       
     };
 
     if (user) return <Redirect to="/" />;
@@ -77,6 +74,7 @@ function Signup() {
                             <input
                                 name="email"
                                 required
+                                type="email"
                                 placeholder="email..."
                                 value={newUser.email || ''}
                                 onChange={(e) => setnewUser({ ...newUser, email: e.target.value })}
@@ -113,7 +111,7 @@ function Signup() {
 
                     <button>Registro</button>
 
-                    {error && <div>{error}</div>}
+                    {error && <div className="error">{error}</div>}
                     <p>
                         <span>Ya tienes cuenta?</span>
                         <Link to="/login">Inicia sesión</Link>
