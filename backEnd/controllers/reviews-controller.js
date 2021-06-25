@@ -44,7 +44,7 @@ async function createReview(req, res, next) {
         );
         //TODO envio Mail
         res.status(201);
-        res.send({ createdReview });
+        res.send(createdReview);
     } catch (err) {
         next(err);
     }
@@ -57,7 +57,7 @@ async function getReviewsByUserId(req, res, next) {
 
         const reviews = await reviewsRepository.getReviewsByUserId(id_user);
         validateAuth.validateProperty(req, req.params);
-        res.send({ reviews });
+        res.send(reviews);
     } catch (err) {
         next(err);
     }

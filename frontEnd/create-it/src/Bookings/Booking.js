@@ -9,8 +9,11 @@ function Booking() {
     const [openPay, setOpenPay] = useState(false);
     const [openIncident, setOpenIncident] = useState(false);
     const [openCancel, setOpenCancel] = useState(false);
+    const [openButtonreview, setButtonreview] = useState(false);
     const [type, setType] = useState('');
     const [description, setDescription] = useState('');
+    const [rating, setRating] = useState('');
+    const [text, setText] = useState('');
 
     const start = new Date();
     start.setHours(0, 0, 0, 0);
@@ -43,6 +46,21 @@ function Booking() {
         e.preventDefault();
         const res = await fetch(`http://localhost:8080/api/bookings/${id_booking}`, {
             method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + me.token,
+            },
+        });
+        if (res.ok) {
+            history.push(`/profile/bookings/`);
+        }
+    };
+
+    const handleReview = async (e) => {
+        e.preventDefault();
+        const res = await fetch(`http://localhost:8080/api/users/${id_user}/bookings/${id_booking}/reviews`, {
+            method: 'POST',
+            body: JSON.stringify({ rating, text }),
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: 'Bearer ' + me.token,
@@ -136,6 +154,40 @@ function Booking() {
                             />
                         </label>
                     </div>
+                    <button>Enviar</button>
+                </form>
+            )}
+            {new Date(booking.start_date) < start && (
+                <button onClick={() => setButtonreview(!openButtonreview)}>review</button>
+            )}
+            {openButtonreview && (
+                <form onSubmit={handleReview}>
+                    <div>
+                        <label>
+                            <select value={rating} onChange={(e) => setRating(e.target.value)} required>
+                                <option value="" hidden>
+                                    ¿Puntua tu experiencia!
+                                </option>
+                                <option value={5}>⭐⭐⭐⭐⭐</option>
+                                <option value={4}>⭐⭐⭐⭐</option>
+                                <option value={3}>⭐⭐⭐</option>
+                                <option value={2}>⭐⭐</option>
+                                <option value={1}>⭐</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            <span>Descripción</span>
+                            <textarea
+                                name="text"
+                                required
+                                value={text || ''}
+                                onChange={(e) => setText(e.target.value)}
+                            />
+                        </label>
+                    </div>
+
                     <button>Enviar</button>
                 </form>
             )}

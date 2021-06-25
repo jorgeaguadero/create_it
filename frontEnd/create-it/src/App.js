@@ -3,16 +3,16 @@ import Helmet from 'react-helmet';
 
 import './App.css';
 
-import Navbar from './Navbar';
-import Footer from './Footer';
+import Navbar from './Navbar/Navbar';
+import Footer from './Footer/Footer';
 
 import Home from './Home';
-import Login from './Login';
-import Signup from './Signup';
+import Login from './Users/Login';
+import Signup from './Users/Signup';
 import Profile from './Users/Profile';
 import Spaces from './Spaces/Spaces';
 import Search from './Bookings/Search';
-import ErrorMessage from './ErrorMessage';
+import ErrorMessage from './Users/ErrorMessage';
 
 function App() {
     return (

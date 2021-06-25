@@ -8,6 +8,7 @@ import BookingsHistory from '../Bookings/BookingsHistory';
 import Booking from '../Bookings/Booking';
 import IncidentsHistory from '../Incidents/IncidentsHistory';
 import Incident from '../Incidents/Incident';
+import Reviews from '../Reviews/UserReviews';
 import UpdateUser from './UpdateUser';
 
 function ProfileUser() {
@@ -20,16 +21,19 @@ function ProfileUser() {
             <div className="box">
                 <div className="tabs">
                     <NavLink to="/profile" exact active ClassName="active">
-                        Perfil-Modificar
+                        Perfil
                     </NavLink>
                     <NavLink to="/profile/bookings" exact activeClassName="active">
                         Reservas activas
                     </NavLink>
                     <NavLink to="/profile/history" exact activeClassName="active">
-                        historial de reservas
+                        Mis reservas pasadas
                     </NavLink>
                     <NavLink to="/profile/incidents" exact activeClassName="active">
-                        historial de incidencias
+                        Mis incidencias
+                    </NavLink>
+                    <NavLink to="/profile/reviews" exact activeClassName="active">
+                        Mis reviews
                     </NavLink>
                 </div>
                 <div className="content">
@@ -54,6 +58,9 @@ function ProfileUser() {
                         </Route>
                         <Route path="/profile/:id_user/update" exact>
                             <UpdateUser />
+                        </Route>
+                        <Route path="/profile/reviews" exact>
+                            <Reviews />
                         </Route>
                         <Route path="/profile/">no existe</Route>
                     </Switch>

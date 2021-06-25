@@ -3,9 +3,9 @@ import { HashLink } from 'react-router-hash-link';
 //npm install --save react-router-hash-link
 
 import ButtonMailto from './ButtonMailto';
-import facebook from './images/facebook.png';
-import instagram from './images/instagram.png';
-import linkedin from './images/linkedin.png';
+import facebook from '../images/facebook.png';
+import instagram from '../images/instagram.png';
+import linkedin from '../images/linkedin.png';
 
 function Footer() {
     return (

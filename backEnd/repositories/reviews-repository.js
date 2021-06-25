@@ -41,6 +41,8 @@ async function createReview(space, id_booking, review_date, rating, text, id_use
         'INSERT INTO reviews (id_space,id_user,id_booking ,review_date, rating, text) VALUES (?,?, ?, ?, ?,?)';
 
     const [result] = await database.pool.query(query, [space, id_user, id_booking, review_date, rating, text]);
+    const query2 = 'UPDATE bookings SET review=1 WHERE id_booking = ?';
+    await database.pool.query(query2, id_booking);
 
     return getReviewById(result.insertId);
 }

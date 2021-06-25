@@ -87,9 +87,9 @@ async function getIncidentsByUserId(req, res, next) {
 async function getIncidentById(req, res, next) {
     try {
         const { id_incident } = req.params;
-
-        validateAuth.validateProperty(req, req.params);
         const incident = await incidentsRepository.getIncidentById(id_incident);
+
+        validateAuth.validateProperty(req, incident);
 
         res.send(incident);
     } catch (err) {

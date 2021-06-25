@@ -10,13 +10,13 @@ import ErrorBoundary from './ErrorBoundary';
 
 ReactDOM.render(
     <React.StrictMode>
-            <Provider store={store}>
-                <Router>
-                    <ErrorBoundary>
-                        <App /> 
-                    </ErrorBoundary>
-                </Router>
-            </Provider>
+        <Provider store={store}>
+            <Router>
+                <ErrorBoundary>
+                    <App />
+                </ErrorBoundary>
+            </Router>
+        </Provider>
     </React.StrictMode>,
     document.getElementById('root')
 );

@@ -30,9 +30,9 @@ function IncidentsHistory() {
                     <br />
                     <span>Estado: {i.state === 0 ? 'Abierta' : 'Cerrada'}</span>
                     <br />
-                    {i.closed_date && <span>Fecha de cierre: {new Date(i.closed_date).toLocaleDateString()}</span>}
-                    <br />
                     <span>Descripción: {i.description}</span>
+                    <br />
+                    {i.closed_date && <span>Fecha de cierre: {new Date(i.closed_date).toLocaleDateString()}</span>}
                     <br />
                 </div>
             ))}
