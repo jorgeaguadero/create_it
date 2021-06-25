@@ -27,7 +27,7 @@ function Login() {
         }
     };
     if (isLoggedIn) {
-        return <Redirect to="/Buscador" />;
+        return <Redirect to="/Profile" />;
     }
 
     return (
