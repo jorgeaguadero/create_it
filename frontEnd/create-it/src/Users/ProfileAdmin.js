@@ -8,6 +8,7 @@ import Booking from '../Bookings/Booking';
 import IncidentsHistory from '../Incidents/IncidentsHistory';
 import Incident from '../Incidents/Incident';
 import BookingsActive from '../Bookings/BookingsActive';
+import BookingsHistory from '../Bookings/BookingsHistory';
 
 function ProfileAdmin() {
     const isLoggedIn = useSelector((s) => !!s.user);
@@ -47,7 +48,7 @@ function ProfileAdmin() {
                             <Booking />
                         </Route>
                         <Route path="/profile/bookings" exact>
-                            historial...
+                            <BookingsHistory />
                         </Route>
                         <Route path="/profile/incidents" exact>
                             <IncidentsHistory />
