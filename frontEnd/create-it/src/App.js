@@ -17,11 +17,11 @@ import ErrorMessage from './ErrorMessage';
 function App() {
     return (
         <div className="App">
-            <ErrorMessage />
             <Helmet>
                 <title>Create It</title>
             </Helmet>
             <Navbar />
+            <ErrorMessage />
             <Switch>
                 <Route path="/" exact>
                     <Home />
