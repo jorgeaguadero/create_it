@@ -20,21 +20,28 @@ function BookingsActive() {
     if (!bookings) {
         return <div>Loading...</div>;
     }
+    if (bookings.error) {
+        return <div className="error">{bookings.error}</div>;
+    }
+
     return (
         <div className="BookingsActive">
-            {bookings.map((b) => (
-                <div key={b.id_booking}>
-                    <Link to={`/profile/bookings/${b.id_booking}`}>id Reserva: {b.id_booking}</Link>
-                    <br />
-                    <span>Estado de pago: {b.pending_payment === 0 ? 'Pagado' : 'Pendiente de pago'}</span>
-                    <br />
-                    <span>Precio: {priceFormated.format(b.price)}</span>
-                    <br />
-                    <span>Fecha: {new Date(b.start_date).toLocaleDateString()}</span>
+            {bookings &&
+                bookings.map((b) => (
+                    <div key={b.id_booking}>
+                        <Link to={`/profile/bookings/${b.id_booking}`}>id Reserva: {b.id_booking}</Link>
+                        <br />
+                        {me.role === 'admin' && <span>Espacio: {b.id_space}</span>}
+                        {me.role === 'admin' && <br />}
+                        <span>Estado de pago: {b.pending_payment === 0 ? 'Pagado' : 'Pendiente de pago'}</span>
+                        <br />
+                        <span>Precio: {priceFormated.format(b.price)}</span>
+                        <br />
+                        <span>Fecha: {new Date(b.start_date).toLocaleDateString()}</span>
 
-                    <br />
-                </div>
-            ))}
+                        <br />
+                    </div>
+                ))}
             {!bookings && <i>Loading...</i>}
             {bookings && bookings.length === 0 && <i>No hay reservas activas en este momento</i>}
         </div>

@@ -24,9 +24,12 @@ function BookingsHistory() {
     if (!bookings) {
         return <div>Loading...</div>;
     }
+    if (bookings.error) {
+        return <div className="error">{bookings.error}</div>;
+    }
     return (
         <div className="bookingsHistory">
-            <input placeholder="Buscar..." value={search} onChange={(e) => setSearch(e.target.value)} />
+            <input placeholder="EN VERSIÓN 2.0" value={search} onChange={(e) => setSearch(e.target.value)} />
             {bookings.map((b) => (
                 <div key={b.id_booking}>
                     <Link to={`/profile/bookings/${b.id_booking}`}>id Reserva {b.id_booking}</Link>

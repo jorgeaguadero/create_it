@@ -21,6 +21,9 @@ function OpenIncidents() {
     if (!incidents) {
         return <div>Loading...</div>;
     }
+    if (incidents.error) {
+        return <div className="error">{incidents.error}</div>;
+    }
     return (
         <div className="OpenIncidents">
             {incidents &&

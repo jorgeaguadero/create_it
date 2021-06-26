@@ -7,6 +7,7 @@ import BookingsActive from '../Bookings/BookingsActive';
 import BookingsHistory from '../Bookings/BookingsHistory';
 import Booking from '../Bookings/Booking';
 import IncidentsHistory from '../Incidents/IncidentsHistory';
+import OpenIncidents from '../Incidents/OpenIncidents';
 import Incident from '../Incidents/Incident';
 import Reviews from '../Reviews/UserReviews';
 import UpdateUser from './UpdateUser';
@@ -27,10 +28,13 @@ function ProfileUser() {
                         Reservas activas
                     </NavLink>
                     <NavLink to="/profile/history" exact activeClassName="active">
-                        Mis reservas pasadas
+                        Historial de reservas
+                    </NavLink>
+                    <NavLink to="/profile/open/incidents" exact activeClassName="active">
+                        Mis incidencias Abiertas
                     </NavLink>
                     <NavLink to="/profile/incidents" exact activeClassName="active">
-                        Mis incidencias
+                        Historial de incidencias
                     </NavLink>
                     <NavLink to="/profile/reviews" exact activeClassName="active">
                         Mis reviews
@@ -49,6 +53,9 @@ function ProfileUser() {
                         </Route>
                         <Route path="/profile/history" exact>
                             <BookingsHistory />
+                        </Route>
+                        <Route path="/profile/open/incidents" exact>
+                            <OpenIncidents />
                         </Route>
                         <Route path="/profile/incidents" exact>
                             <IncidentsHistory />
