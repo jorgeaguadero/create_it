@@ -59,8 +59,8 @@ async function registrer(req, res, next) {
 
         await sendMails.sendMail({
             to: email,
-            subject: 'Gracias por reg',
-            body: ' falta confirmación',
+            subject: 'Bienvenido a Create It',
+            body: `Gracias por registrarte en Create IT , haz click aqui para activar tu cuenta: http://localhost:3000/user/verify/${createdUser.id_user}/${activationCode} `,
         });
         res.status(201);
 
@@ -98,7 +98,7 @@ async function confirmationUser(req, res, next) {
         }
 
         const activateUser = await usersRepository.updateProfile({ activate: 1 }, user.id_user);
-        res.send({ Message: 'Usuario activado', activateUser });
+        res.send(activateUser);
     } catch (error) {
         next(error);
     }

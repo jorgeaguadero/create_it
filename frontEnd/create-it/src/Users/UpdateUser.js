@@ -22,15 +22,44 @@ function UpdateUserMain() {
 }
 
 function UpdateUser({ user }) {
+    const [error, setError] = useState(null);
     const [phone, setPhone] = useState(user.phone || '');
     const [bio, setBio] = useState(user.bio || '');
     const [userUpdated, setUserUpdated] = useState(false);
     const [image, setImage] = useState();
+    const [password, setPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [repeatedNewPassword, setRepeatedNewPassword] = useState('');
 
     const id_user = user.id_user;
 
     const userToken = useSelector((s) => s.user);
 
+    if (userUpdated) {
+        return <Redirect to={`/profile`} />;
+    }
+
+    const handleSubmitPassword = async (e) => {
+        e.preventDefault();
+
+        const res = await fetch(`http://localhost:8080/api/users/${id_user}/updatePassword`, {
+            method: 'PATCH',
+            body: JSON.stringify({
+                password,
+                newPassword,
+                repeatedNewPassword,
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + userToken.token,
+            },
+        });
+        if (res.ok) {
+            setUserUpdated(true);
+        } else {
+            setError(res.error);
+        }
+    };
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -47,12 +76,10 @@ function UpdateUser({ user }) {
         });
         if (res.ok) {
             setUserUpdated(true);
+        } else {
+            setError(res.error);
         }
     };
-
-    if (userUpdated) {
-        return <Redirect to={`/profile`} />;
-    }
 
     const handleSubmitUserImage = async (e) => {
         e.preventDefault();
@@ -68,6 +95,8 @@ function UpdateUser({ user }) {
 
         if (res.ok) {
             setUserUpdated(true);
+        } else {
+            setError(res.error);
         }
     };
 
@@ -107,6 +136,53 @@ function UpdateUser({ user }) {
                 <form className="formUpdate" onSubmit={handleSubmitUserImage}>
                     <input name="image" placeholder="image" type="file" onChange={handleUserImage} />
                     <button className="button-update">Editar Avatar</button>
+                </form>
+            </div>
+
+            <div>
+                <h1>Cambia tu contraseña</h1>
+                <form onSubmit={handleSubmitPassword}>
+                    <div>
+                        <label>
+                            <span>Contraseña actual</span>
+                        </label>
+                        <input
+                            name="password"
+                            type="password"
+                            required
+                            placeholder="Contraseña"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                    </div>
+                    <div>
+                        <label>
+                            <span>Introduce tu nueva contraseña</span>
+                        </label>
+                        <input
+                            name="repeatedPassword"
+                            type="password"
+                            required
+                            placeholder="Repite tu contraseña"
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                        />
+                    </div>
+                    <div>
+                        <label>
+                            <span>Repite tu nueva contraseña</span>
+                        </label>
+                        <input
+                            name="repeatedPassword"
+                            type="password"
+                            required
+                            placeholder="Repite tu contraseña"
+                            value={repeatedNewPassword}
+                            onChange={(e) => setRepeatedNewPassword(e.target.value)}
+                        />
+                    </div>
+                    <button>Cambia tu contraseña</button>
+                    {error && <div className="error">{error}</div>}
                 </form>
             </div>
         </div>

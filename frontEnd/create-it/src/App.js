@@ -14,6 +14,7 @@ import Spaces from './Spaces/Spaces';
 import Search from './Bookings/Search';
 import RecoveryPassword from './Users/RecoveryPassword';
 import ResetRecoveryPassword from './Users/ResetRecoveryPassword';
+import VerifyUser from './Users/VerifyUser';
 
 function App() {
     return (
@@ -44,6 +45,9 @@ function App() {
                 </Route>
                 <Route path="/user/recoveryPassword" exact>
                     <RecoveryPassword />
+                </Route>
+                <Route path="/user/verify/:id_user/:activationCode" exact>
+                    <VerifyUser />
                 </Route>
                 <Route path="/user/recoveryPassword/:id_user/:activationCode" exact>
                     <ResetRecoveryPassword />
