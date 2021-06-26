@@ -12,7 +12,7 @@ function IncidentsHistory() {
 
     let url = '';
     me.role === 'admin'
-        ? (url = `http://localhost:8080/api/incidents`)
+        ? (url = `http://localhost:8080/api/incidents/all`)
         : (url = `http://localhost:8080/api/users/${id}/incidents`);
 
     const incidents = useFetch(url);

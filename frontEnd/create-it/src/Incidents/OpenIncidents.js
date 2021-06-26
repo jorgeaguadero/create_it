@@ -5,7 +5,6 @@ import useFetch from '../useFetch';
 import { useSelector } from 'react-redux';
 
 function OpenIncidents() {
-    const [space, setSpace] = useState('');
     const me = useSelector((s) => s.user);
     let id = '';
     const { id_user } = useParams();

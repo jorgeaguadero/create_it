@@ -12,7 +12,7 @@ async function getIncidentById(id) {
 }
 
 async function getIncidentsByUserId(userId) {
-    const query = 'SELECT * FROM incidents WHERE id_user = ?';
+    const query = 'SELECT * FROM incidents WHERE id_user = ? ORDER BY incident_date DESC ';
     //TODO try/catch gestion de errores-->si no hay nada
     const [reviews] = await database.pool.query(query, userId);
 
@@ -26,8 +26,8 @@ async function getIncidentsOpenBySpace(id) {
     return incidents[0];
 }
 
-async function getAllClosedIncidents() {
-    const query = 'SELECT * FROM incidents where state=1';
+async function getAllIncidents() {
+    const query = 'SELECT * FROM incidents ORDER BY incident_date DESC';
     const [reviews] = await database.pool.query(query);
 
     return reviews;
@@ -62,7 +62,7 @@ async function closeIncident(id_incident, closed_date, state) {
 }
 
 module.exports = {
-    getAllClosedIncidents,
+    getAllIncidents,
     getIncidentsByUserId,
     createIncident,
     getIncidentById,

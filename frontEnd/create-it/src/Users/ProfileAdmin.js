@@ -5,11 +5,11 @@ import { Helmet } from 'react-helmet';
 import User from './User';
 import Booking from '../Bookings/Booking';
 
-import IncidentsHistory from '../Incidents/IncidentsHistory';
 import Incident from '../Incidents/Incident';
 import BookingsActive from '../Bookings/BookingsActive';
 import BookingsHistory from '../Bookings/BookingsHistory';
 import OpenIncidents from '../Incidents/OpenIncidents';
+import UpdateUser from './UpdateUser';
 
 function ProfileAdmin() {
     const isLoggedIn = useSelector((s) => !!s.user);
@@ -36,9 +36,6 @@ function ProfileAdmin() {
                     <NavLink to="/profile/incidents/open" exact activeClassName="active">
                         Incidencias abiertas
                     </NavLink>
-                    <NavLink to="/profile/incidents/all" exact activeClassName="active">
-                        historial de incidencias
-                    </NavLink>
                 </div>
                 <div className="content">
                     <Switch>
@@ -57,13 +54,12 @@ function ProfileAdmin() {
                         <Route path="/profile/incidents/open" exact>
                             <OpenIncidents />
                         </Route>
-                        <Route path="/profile/incidents/all" exact>
-                            <IncidentsHistory />
-                        </Route>
                         <Route path="/profile/incidents/:id_incident" exact>
                             <Incident />
                         </Route>
-
+                        <Route path="/profile/:id_user/update" exact>
+                            <UpdateUser />
+                        </Route>
                         <Route path="/profile/">
                             <User />
                         </Route>

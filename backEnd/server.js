@@ -342,12 +342,7 @@ app.get(
 
 app.get('/api/incidents', incidentsController.getAllOpenIncidents);
 
-app.get(
-    '/api/incidents/closed',
-    validateAuth.validateAuthorization,
-    validateAuth.validateAdmin,
-    incidentsController.getAllClosedIncidents
-);
+app.get('/api/incidents/all', validateAuth.validateAdmin, incidentsController.getAllIncidents);
 
 app.use((err, req, res, next) => {
     console.log(err);

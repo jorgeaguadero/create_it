@@ -110,9 +110,9 @@ async function getIncidentsOpenBySpace(req, res, next) {
 }
 
 //7.3.3 VER TODAS LAS INCIDENCIAS
-async function getAllClosedIncidents(req, res, next) {
+async function getAllIncidents(req, res, next) {
     try {
-        const incidents = await incidentsRepository.getAllClosedIncidents();
+        const incidents = await incidentsRepository.getAllIncidents();
         res.send(incidents);
     } catch (err) {
         next(err);
@@ -131,7 +131,7 @@ async function getAllOpenIncidents(req, res, next) {
 module.exports = {
     createIncident,
     getIncidentsByUserId,
-    getAllClosedIncidents,
+    getAllIncidents,
     closeIncident,
     getIncidentsOpenBySpace,
     getIncidentById,
