@@ -10,6 +10,7 @@ import OpenIncidents from '../Incidents/OpenIncidents';
 import Incident from '../Incidents/Incident';
 import Reviews from '../Reviews/UserReviews';
 import UpdateUser from './UpdateUser';
+import DeleteUser from './DeleteUser';
 
 function ProfileUser() {
     return (
@@ -58,6 +59,9 @@ function ProfileUser() {
                         </Route>
                         <Route path="/profile/:id_user/update" exact>
                             <UpdateUser />
+                        </Route>
+                        <Route path="/profile/:id_user/delete" exact>
+                            <DeleteUser />
                         </Route>
                         <Route path="/profile/reviews" exact>
                             <Reviews />

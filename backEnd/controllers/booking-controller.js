@@ -1,7 +1,9 @@
 const Joi = require('joi');
+const { sendMails } = require('../utils/');
 
 //TODO VALIDATE USER PASARLO A MIDDLEWARE Y ASI ADMIN PUEDE TENER PERMISOS EXTRA
 const { bookingsRepository } = require('../repositories');
+const { usersRepository } = require('../repositories');
 const { validateAuth } = require('../middlewares');
 const { ValidateDate } = require('../utils');
 //const { sendMails } = require('../utils');
@@ -30,6 +32,7 @@ async function createBooking(req, res, next) {
         }
 
         const infoRoom = await bookingsRepository.getRoomInfo(start_date, id_room);
+        const user = await usersRepository.getUserById(id);
 
         if (!id_extra) {
             const booking = await bookingsRepository.createBooking(
@@ -40,7 +43,11 @@ async function createBooking(req, res, next) {
                 infoRoom.price
             );
             res.status(201);
-
+            await sendMails.sendMail({
+                to: user.email,
+                subject: 'Confirmación de Reserva || Create It',
+                body: `¡Te confirmamos la reserva que has realizado para el dia ${start_date} de la sala ${booking.id_room} por un total de ${booking.price}!  http://localhost:3000 `,
+            });
             res.send(booking);
         } else {
             const infoExtra = await bookingsRepository.getExtraInfo(start_date, id_extra, infoRoom.id_space);
@@ -60,7 +67,11 @@ async function createBooking(req, res, next) {
             );
             //const fechaBien = formatISO(booking.start_date, { representation: 'date' });
             res.status(201);
-            //TODO envio Mail
+            await sendMails.sendMail({
+                to: user.email,
+                subject: 'Confirmación de Reserva || Create It',
+                body: `¡Te confirmamos la reserva que has realizado para el dia ${start_date} de la sala ${booking.id_room} por un total de ${booking.price}!  http://localhost:3000 `,
+            });
             res.send({ booking });
         }
     } catch (err) {
@@ -75,7 +86,8 @@ async function payBooking(req, res, next) {
         const { id } = req.auth;
 
         let booking = await bookingsRepository.getBookingById(id_booking);
-        //TODO utils
+        let user = await usersRepository.getUserById(id);
+
         validateAuth.validateProperty(req, booking);
 
         if (booking.pending_payment === 0) {
@@ -84,9 +96,12 @@ async function payBooking(req, res, next) {
         }
 
         const result = await bookingsRepository.payBooking(id_booking, id);
-        //TODO envio Mail
         res.status(201);
-
+        await sendMails.sendMail({
+            to: user.email,
+            subject: 'Confirmación de pago de tu reserva|| Create It',
+            body: `¡Te confirmamos el pago de tu reserva ${id_booking}!  http://localhost:3000 `,
+        });
         res.send(result);
     } catch (error) {
         next(error);
@@ -194,6 +209,7 @@ async function deleteBooking(req, res, next) {
     try {
         const { id_booking } = req.params;
         let booking = await bookingsRepository.getBookingById(id_booking);
+        let user = await usersRepository.getUserById(id_booking.id_user);
 
         validateAuth.validateProperty(req, booking);
         const start_date = booking.start_date;
@@ -202,10 +218,15 @@ async function deleteBooking(req, res, next) {
             const error = new Error('Minimo tiene que haber un dia de antelacion');
             throw error;
         }
-        //TODO envio Mail
+
         booking = await bookingsRepository.deleteBooking(id_booking, booking.id_user);
 
         res.status(201);
+        await sendMails.sendMail({
+            to: user.email,
+            subject: 'Confirmación cancelación de tu reserva|| Create It',
+            body: `¡Te confirmamos que se ha cancelado tu reserva ${id_booking}!  http://localhost:3000 `,
+        });
         res.send({ Message: `Reserva ${id_booking} cancelada` });
     } catch (error) {
         next(error);

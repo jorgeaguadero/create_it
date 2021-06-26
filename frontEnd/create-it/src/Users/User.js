@@ -39,6 +39,11 @@ function User() {
                     Editar
                 </Link>
             </button>
+            <button type="button">
+                <Link to={`/profile/${id_user}/delete`} activeClassName="active" exact>
+                    Borrar usuario
+                </Link>
+            </button>
         </div>
     );
 }

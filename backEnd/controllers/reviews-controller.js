@@ -1,9 +1,9 @@
 const Joi = require('joi');
 
-const { bookingsRepository, reviewsRepository } = require('../repositories');
+const { bookingsRepository, reviewsRepository, usersRepository } = require('../repositories');
 const { validateAuth } = require('../middlewares/');
 const { ValidateDate } = require('../utils');
-//const { sendMails } = require('../utils');
+const { sendMails } = require('../utils/');
 
 //6.1--> CREAR RESERÑA
 async function createReview(req, res, next) {
@@ -20,6 +20,7 @@ async function createReview(req, res, next) {
         await schema.validateAsync({ rating, text });
 
         const booking = await bookingsRepository.getBookingById(id_booking);
+        const user = await usersRepository.getUserById(id);
         validateAuth.validateProperty(req, booking);
 
         const review_date = ValidateDate.isAfterDate(booking.start_date);
@@ -42,8 +43,12 @@ async function createReview(req, res, next) {
             text,
             id_user
         );
-        //TODO envio Mail
         res.status(201);
+        await sendMails.sendMail({
+            to: user.email,
+            subject: 'Review Creada || Create It',
+            body: `Review realizada!  http://localhost:3000 `,
+        });
         res.send(createdReview);
     } catch (err) {
         next(err);

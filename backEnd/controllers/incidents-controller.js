@@ -1,6 +1,7 @@
 const Joi = require('joi');
+const { sendMails } = require('../utils/');
 
-const { bookingsRepository, incidentsRepository } = require('../repositories');
+const { bookingsRepository, incidentsRepository, usersRepository } = require('../repositories');
 const { validateAuth } = require('../middlewares');
 const { ValidateDate } = require('../utils');
 //const { sendMails } = require('../utils');
@@ -12,6 +13,7 @@ async function createIncident(req, res, next) {
         const { type, description } = req.body;
         const { id } = req.auth;
         const booking = await bookingsRepository.getBookingById(id_booking);
+        const user = await usersRepository.getUserById(id);
         validateAuth.validateProperty(req, booking);
 
         const schema = Joi.object({
@@ -32,8 +34,13 @@ async function createIncident(req, res, next) {
         );
 
         //const dateUTC = formatDate(createdIncident.incident_date);
-        //TODO envio Mail
+
         res.status(201);
+        await sendMails.sendMail({
+            to: user.email,
+            subject: 'Incidencia creada || Create It',
+            body: `Incidencia: ${createdIncident.id_incident} creada, para más info consulta en tu perfil, te avisaremos cuando esté cerrada ||  http://localhost:3000 `,
+        });
         res.send(createdIncident);
     } catch (err) {
         next(err);
@@ -53,8 +60,10 @@ async function closeIncident(req, res, next) {
         await schema.validateAsync({ state });
 
         const closed_date = new Date();
-        //TODO comprobar que está cerrada ya
+
         let closedIncident = await incidentsRepository.getIncidentById(id_incident);
+        const user = await usersRepository.getUserById(closedIncident.id_user);
+
         if (closedIncident.state === 1) {
             const err = new Error('La incidencia está cerrada');
             err.httpCode = 401;
@@ -63,8 +72,13 @@ async function closeIncident(req, res, next) {
 
         closedIncident = await incidentsRepository.closeIncident(id_incident, closed_date, state);
         closedIncident.state = 'Closed';
-        //TODO envio Mail
+
         res.status(201);
+        await sendMails.sendMail({
+            to: user.email,
+            subject: 'Incidencia creada || Create It',
+            body: `Incidencia: ${id_incident} cerrada. ||  http://localhost:3000 `,
+        });
         res.send(closedIncident);
     } catch (err) {
         next(err);

@@ -98,13 +98,17 @@ async function confirmationUser(req, res, next) {
         }
 
         const activateUser = await usersRepository.updateProfile({ activate: 1 }, user.id_user);
+
+        await sendMails.sendMail({
+            to: activateUser,
+            subject: 'Registro completo || Create It',
+            body: `¡Acabas de completar tu registro en Create it!  http://localhost:3000 `,
+        });
         res.send(activateUser);
     } catch (error) {
         next(error);
     }
 }
-
-//TODO comprobar si ya está logado o no --> front
 
 //2.1-->LOGIN DE USUARIO
 async function login(req, res, next) {
@@ -270,7 +274,11 @@ async function updatePassword(req, res, next) {
 
         const passwordHash = await bcrypt.hash(data.newPassword, 10);
         user = await usersRepository.updatePassword(passwordHash, id_user);
-        //TODO envio Mail
+        await sendMails.sendMail({
+            to: user.email,
+            subject: 'Cambio de contraseña || Create It',
+            body: `¡Te confirmamos el cambio de contraseña!  http://localhost:3000 `,
+        });
         res.status(201);
         res.send({ message: `password cambiado` });
     } catch (error) {
@@ -353,7 +361,11 @@ async function deleteUser(req, res, next) {
             throw err;
         }
         const email = await usersRepository.deleteUser(id_user);
-
+        await sendMails.sendMail({
+            to: email,
+            subject: 'Cuenta borrada || Create It',
+            body: `¡Te confirmamos que se ha borrado tu usuario de nuestra base de datos!  http://localhost:3000 `,
+        });
         res.status(201);
         res.send({ Message: `Usuario ${email.email} borrado` });
     } catch (error) {
