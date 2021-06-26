@@ -1,6 +1,7 @@
 import { Link, useHistory } from 'react-router-dom';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
+import Swal from 'sweetalert2';
 
 import './Booking.css';
 
@@ -25,6 +26,11 @@ function CreateBooking({ id_room, start_date }) {
 
         const data = await res.json();
         if (res.ok) {
+            Swal.fire({
+                title: 'Reserva',
+                text: 'Tu reserva se ha realizado correctamente',
+                icon: 'success',
+            });
             history.push(`/profile/bookings/${data.id_booking}`);
         } else {
             console.log('Error');

@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, Redirect, useHistory } from 'react-router-dom';
 import './Signup.css';
 import Helmet from 'react-helmet';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 
 {
     /*TODO https://www.youtube.com/watch?v=tli5n_NqQW8*/
@@ -27,6 +29,11 @@ function Signup() {
             });
             const data = await ret.json();
             if (ret.ok) {
+                Swal.fire({
+                    title: 'Registro',
+                    text: 'Te has registrado corractamente, confirma tu usuario en tu correo',
+                    icon: 'success',
+                });
                 history.push('/Login');
             } else {
                 setError(data.error);

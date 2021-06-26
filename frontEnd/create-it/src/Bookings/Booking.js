@@ -3,6 +3,7 @@ import { useParams, useHistory } from 'react-router-dom';
 import useFetch from '../useFetch';
 import { priceFormated } from '../Helpers';
 import { useSelector } from 'react-redux';
+import Swal from 'sweetalert2';
 
 function Booking() {
     const [error, setError] = useState(null);
@@ -42,6 +43,12 @@ function Booking() {
         });
         const data = await res.json();
         if (res.ok) {
+            Swal.fire({
+                title: 'Reserva',
+                text: 'Tu reserva se ha cancelado correctamente',
+                icon: 'success',
+                timer: 1500,
+            });
             history.push(`/profile/bookings/`);
         } else {
             setError(data.error);
@@ -61,6 +68,12 @@ function Booking() {
         });
         const data = await res.json();
         if (res.ok) {
+            Swal.fire({
+                title: 'Pago',
+                text: 'Pago se ha realizado correctamente',
+                icon: 'success',
+                timer: 1500,
+            });
             history.push(`/profile/bookings/`);
         } else {
             setError(data.error);
@@ -80,6 +93,12 @@ function Booking() {
         });
         const data = await res.json();
         if (res.ok) {
+            Swal.fire({
+                title: 'Review',
+                text: 'Tu review se ha cancelado correctamente',
+                icon: 'success',
+                timer: 1500,
+            });
             history.push(`/profile/reviews`);
         } else {
             setError(data.error);
@@ -99,6 +118,12 @@ function Booking() {
         });
         const data = await res.json();
         if (res.ok) {
+            Swal.fire({
+                title: 'Incidencia',
+                text: 'Tu incidencia se ha realizado correctamente',
+                icon: 'success',
+                timer: 1500,
+            });
             history.push(`/profile/incidents/${data.id_incident}`);
         } else {
             setError(data.error);
