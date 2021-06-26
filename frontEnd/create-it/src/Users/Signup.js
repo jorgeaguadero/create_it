@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, Redirect } from 'react-router-dom';
+import { Link, Redirect, useHistory } from 'react-router-dom';
 import './Signup.css';
 import Helmet from 'react-helmet';
 
@@ -13,6 +13,7 @@ function Signup() {
     const [error, setError] = useState(null);
     const user = useSelector((s) => s.user);
     const dispatch = useDispatch();
+    const history = useHistory();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -26,7 +27,7 @@ function Signup() {
             });
             const data = await ret.json();
             if (ret.ok) {
-                dispatch({ type: 'LOGIN', user: data });
+                history.push('/Login');
             } else {
                 setError(data.error);
             }

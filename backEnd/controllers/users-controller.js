@@ -64,7 +64,6 @@ async function registrer(req, res, next) {
         });
         res.status(201);
 
-        //TODO MAIL
         res.send({
             id: createdUser.id_user,
             name: createdUser.first_name,
@@ -190,7 +189,6 @@ async function updateProfile(req, res, next) {
         const user = await usersRepository.updateProfile(data, id_user);
 
         res.status(201);
-        //TODO envio Mail
         res.send(user);
     } catch (error) {
         next(error);
@@ -289,7 +287,11 @@ async function recoverPassword(req, res, next) {
         const user = await usersRepository.getUserByEmail(email);
         await usersRepository.updateUserCodes({ id_user: user.id_user, activationCode });
 
-        //Enviar al mail un link que vaya a la api
+        await sendMails.sendMail({
+            to: email,
+            subject: 'Recupera tu contraseña',
+            body: `http://localhost:3000/user/recoveryPassword/${user.id_user}/${activationCode}`,
+        });
         res.send({
             id_user: user.id_user,
             email,

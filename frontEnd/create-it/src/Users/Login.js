@@ -57,7 +57,7 @@ function Login() {
                         <span>¿Aún no tienes cuenta?</span>
                         <Link to="/signup">Regístrate</Link>
                         <span>¿Has olvidado tu contraseña?</span>
-                        <Link to="/signup">Regístrate</Link>
+                        <Link to="/user/recoveryPassword">Reecupera tu contraseña</Link>
                     </p>
                 </form>
             </main>

@@ -12,12 +12,12 @@ import Signup from './Users/Signup';
 import Profile from './Users/Profile';
 import Spaces from './Spaces/Spaces';
 import Search from './Bookings/Search';
-import ErrorMessage from './ErrorMessage';
+import RecoveryPassword from './Users/RecoveryPassword';
+import ResetRecoveryPassword from './Users/ResetRecoveryPassword';
 
 function App() {
     return (
         <div className="App">
-            <ErrorMessage />
             <Helmet>
                 <title>Create It</title>
             </Helmet>
@@ -41,6 +41,12 @@ function App() {
                 </Route>
                 <Route path="/Buscador" exact>
                     <Search />
+                </Route>
+                <Route path="/user/recoveryPassword" exact>
+                    <RecoveryPassword />
+                </Route>
+                <Route path="/user/recoveryPassword/:id_user/:activationCode" exact>
+                    <ResetRecoveryPassword />
                 </Route>
 
                 {<Route path="/">Not Found </Route>}

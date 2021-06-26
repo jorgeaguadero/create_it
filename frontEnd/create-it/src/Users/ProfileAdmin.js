@@ -28,16 +28,16 @@ function ProfileAdmin() {
                     <NavLink to="/profile" exact activeClassName="active">
                         Perfil
                     </NavLink>
-                    <NavLink to="/profile/bookingsActive" exact activeClassName="active">
+                    <NavLink to="/profile/bookings" exact activeClassName="active">
                         Reservas activas
                     </NavLink>
                     <NavLink to="/profile/bookings" exact activeClassName="active">
                         historial de reservas
                     </NavLink>
-                    <NavLink to="/profile/incidents/open" exact activeClassName="active">
+                    <NavLink to="/profile/incidents" exact activeClassName="active">
                         Incidencias abiertas
                     </NavLink>
-                    <NavLink to="/profile/reviews" exact activeClassName="active">
+                    <NavLink to="/profile/reviews/all" exact activeClassName="active">
                         Ver Reviews
                     </NavLink>
                 </div>
@@ -46,7 +46,7 @@ function ProfileAdmin() {
                         <Route path="/profile" exact>
                             <User />
                         </Route>
-                        <Route path="/profile/bookingsActive" exact>
+                        <Route path="/profile/bookings" exact>
                             <BookingsActive />
                         </Route>
                         <Route path="/profile/bookings/:id_booking" exact>
@@ -55,7 +55,7 @@ function ProfileAdmin() {
                         <Route path="/profile/bookings" exact>
                             <BookingsHistory />
                         </Route>
-                        <Route path="/profile/incidents/open" exact>
+                        <Route path="/profile/incidents" exact>
                             <OpenIncidents />
                         </Route>
                         <Route path="/profile/incidents/:id_incident" exact>
@@ -64,7 +64,7 @@ function ProfileAdmin() {
                         <Route path="/profile/:id_user/update" exact>
                             <UpdateUser />
                         </Route>
-                        <Route path="/profile/reviews" exact>
+                        <Route path="/profile/reviews/all" exact>
                             <AllReviews />
                         </Route>
                         <Route path="/profile/">

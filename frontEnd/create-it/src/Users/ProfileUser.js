@@ -26,7 +26,7 @@ function ProfileUser() {
                     <NavLink to="/profile/bookings" exact activeClassName="active">
                         Reservas activas
                     </NavLink>
-                    <NavLink to="/profile/history" exact activeClassName="active">
+                    <NavLink to="/profile/bookings/history" exact activeClassName="active">
                         Historial de reservas
                     </NavLink>
                     <NavLink to="/profile/incidents" exact activeClassName="active">
@@ -44,11 +44,11 @@ function ProfileUser() {
                         <Route path="/profile/bookings" exact>
                             <BookingsActive />
                         </Route>
+                        <Route path="/profile/bookings/history" exact>
+                            <BookingsHistory />
+                        </Route>
                         <Route path="/profile/bookings/:id_booking" exact>
                             <Booking />
-                        </Route>
-                        <Route path="/profile/history" exact>
-                            <BookingsHistory />
                         </Route>
                         <Route path="/profile/incidents" exact>
                             <OpenIncidents />
