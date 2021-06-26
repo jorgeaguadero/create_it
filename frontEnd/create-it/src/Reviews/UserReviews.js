@@ -14,6 +14,9 @@ function UserReviews() {
     if (!reviews) {
         return <div>Loading...</div>;
     }
+    if (reviews.error) {
+        return <div className="error">{reviews.error}</div>;
+    }
     return (
         <div className="userReviews">
             {reviews.map((r) => (

@@ -1,17 +1,21 @@
 import './Profile.css';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import useFetch from '../useFetch';
 import { useSelector } from 'react-redux';
 
 function IncidentsHistory() {
     const me = useSelector((s) => s.user);
-    let id_user = '';
-    const { id } = useParams();
+    let id = '';
+    const { id_user } = useParams();
 
-    me ? (id_user = me.id_user) : (id_user = id);
+    me ? (id = me.id_user) : (id = id_user);
 
-    const incidents = useFetch(`http://localhost:8080/api/users/${id_user}/Incidents
-    `);
+    let url = '';
+    me.role === 'admin'
+        ? (url = `http://localhost:8080/api/incidents`)
+        : (url = `http://localhost:8080/api/users/${id}/incidents`);
+
+    const incidents = useFetch(url);
 
     if (!incidents) {
         return <div>Loading...</div>;
@@ -20,14 +24,24 @@ function IncidentsHistory() {
         return <div className="error">{incidents.error}</div>;
     }
     return (
-        <div className="user">
-            {incidents.map((i) => (
-                <div key={i.id_incident}>
-                    <span>id Reserva --- {i.id_booking}</span>
-                </div>
-            ))}
+        <div className="OpenIncidents">
+            {incidents &&
+                incidents.map((i) => (
+                    <div key={i.id_incident}>
+                        <Link to={`/profile/incidents/${i.id_incident}`}>Incidencia: {i.id_incident}</Link>
+                        <br />
+                        <span>Fecha de la incidencia: {new Date(i.incident_date).toLocaleDateString()}</span>
+                        <br />
+                        <span>Estado: {i.state === 0 ? 'Abierta' : 'Cerrada'}</span>
+                        <br />
+                        <span>Descripción: {i.description}</span>
+                        <br />
+                        {i.closed_date && <span>Fecha de cierre: {new Date(i.closed_date).toLocaleDateString()}</span>}
+                        <br />
+                    </div>
+                ))}
             {!incidents && <i>Loading...</i>}
-            {incidents && incidents.length === 0 && <i>No hay incidencias </i>}
+            {incidents && incidents.length === 0 && <i>No hay incidencias abiertas</i>}
         </div>
     );
 }
