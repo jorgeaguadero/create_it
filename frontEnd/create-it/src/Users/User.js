@@ -1,4 +1,5 @@
 import './Profile.css';
+import defaultAvatar from '../images/defaultAvatar.png';
 import { useParams } from 'react-router-dom';
 import useFetch from '../useFetch';
 import { useSelector } from 'react-redux';
@@ -31,7 +32,7 @@ function User() {
             <br />
             <span>teléfono : {user.phone} </span>
             <br />
-            {user.avatar && <img src={user.avatar} alt="Avatar" />}
+            {user.avatar ? <img src={user.avatar} alt="Avatar" /> : <img src={defaultAvatar} alt="Avatar" />}
 
             <button type="button">
                 <Link to={`/profile/${id_user}/update`} activeClassName="active" exact>
