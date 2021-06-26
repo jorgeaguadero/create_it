@@ -18,7 +18,7 @@ const userAvatar = multer({
         },
     }),
     limits: {
-        fileSize: 5242880, //  5 MB para avatar
+        fileSize: 1024 * 1024, //  5 MB para avatar
     },
 });
 
@@ -27,7 +27,7 @@ const spacePhotos = multer({
         destination: function (req, file, cb) {
             const { id_space } = req.params;
             const folder = path.join(__dirname, `../static/spaces/${id_space}/`);
-            fs.mkdirSync(folder, { recursive: true });
+            fs.mkdir(folder, { recursive: true });
 
             cb(null, folder);
         },

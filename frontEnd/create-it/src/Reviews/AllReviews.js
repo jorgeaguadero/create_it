@@ -3,12 +3,12 @@ import { useParams } from 'react-router-dom';
 import useFetch from '../useFetch';
 import { useSelector } from 'react-redux';
 
-function UserReviews() {
+function AllReviews() {
     const me = useSelector((s) => s.user);
 
     const { id_user } = me;
 
-    const reviews = useFetch(`http://localhost:8080/api/users/${id_user}/reviews
+    const reviews = useFetch(`http://localhost:8080/api/reviews
     `);
 
     if (!reviews) {
@@ -25,7 +25,6 @@ function UserReviews() {
                     <br />
                     <span>Espacio: {r.id_space}</span>
                     <br />
-
                     <span>Rating: {r.rating}</span>
                     <br />
                     <span>Descripción: {r.text}</span>
@@ -33,9 +32,9 @@ function UserReviews() {
                 </div>
             ))}
             {!reviews && <i>Loading...</i>}
-            {reviews && reviews.length === 0 && <i>No has hecho ninguna review todavia</i>}
+            {reviews && reviews.length === 0 && <i>No hay reviews aún </i>}
         </div>
     );
 }
 
-export default UserReviews;
+export default AllReviews;

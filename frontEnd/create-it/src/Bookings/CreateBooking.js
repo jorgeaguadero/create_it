@@ -23,7 +23,7 @@ function CreateBooking({ id_room, start_date }) {
             method: 'POST',
         });
 
-        const data= await res.json();
+        const data = await res.json();
         if (res.ok) {
             history.push(`/profile/bookings/${data.id_booking}`);
         } else {
@@ -46,7 +46,8 @@ function CreateBooking({ id_room, start_date }) {
                 )}
                 {!userToken && (
                     <div>
-                        <span>Para reservar tienes que registrarte!</span><br />
+                        <span>Para reservar tienes que registrarte!</span>
+                        <br />
                         <Link to="/signup">Regístrate</Link>
                     </div>
                 )}

@@ -107,7 +107,7 @@ function Search() {
                     <div className="results-search">
                         {results.map((r) => (
                             <div key={r.id_room}>
-                                <SearchCard r={r} start_date={start_date} />
+                                <SearchCard r={r} start_date={start_date} type={type} />
                             </div>
                         ))}
 

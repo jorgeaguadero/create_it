@@ -65,7 +65,7 @@ async function getBookingsByRoom(id_room) {
 }
 
 async function getAllBookings() {
-    const query = 'SELECT * FROM bookings';
+    const query = 'SELECT * FROM bookings ORDER BY pending_payment ASC';
     const [booking] = await database.pool.query(query);
 
     return booking;

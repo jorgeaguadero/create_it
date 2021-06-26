@@ -1,7 +1,7 @@
 import './extras.css';
 import useFetch from '../useFetch';
 
-function Extras({ id_space, type, sala }) {
+function Extras({ extra, start_date, type, id_space }) {
     const extras = useFetch(`http://localhost:8080/api/spaces/${id_space}/extras/${type}`);
 
     console.log(extras);
@@ -16,7 +16,7 @@ function Extras({ id_space, type, sala }) {
                 {extras &&
                     extras.map((e) => (
                         <div key={e.id_extra}>
-                            <h4>Extra para la sala {sala} </h4>
+                            <h4>Extra:</h4>
                             <span>Descripción {e.description} </span>
                             <br />
                             <span>Precio {e.price} € </span>

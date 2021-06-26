@@ -9,6 +9,7 @@ import Incident from '../Incidents/Incident';
 import BookingsActive from '../Bookings/BookingsActive';
 import BookingsHistory from '../Bookings/BookingsHistory';
 import OpenIncidents from '../Incidents/OpenIncidents';
+import AllReviews from '../Reviews/AllReviews';
 import UpdateUser from './UpdateUser';
 
 function ProfileAdmin() {
@@ -36,6 +37,9 @@ function ProfileAdmin() {
                     <NavLink to="/profile/incidents/open" exact activeClassName="active">
                         Incidencias abiertas
                     </NavLink>
+                    <NavLink to="/profile/reviews" exact activeClassName="active">
+                        Ver Reviews
+                    </NavLink>
                 </div>
                 <div className="content">
                     <Switch>
@@ -59,6 +63,9 @@ function ProfileAdmin() {
                         </Route>
                         <Route path="/profile/:id_user/update" exact>
                             <UpdateUser />
+                        </Route>
+                        <Route path="/profile/reviews" exact>
+                            <AllReviews />
                         </Route>
                         <Route path="/profile/">
                             <User />
