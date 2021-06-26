@@ -4,6 +4,7 @@ import { HashLink } from 'react-router-hash-link';
 
 import './Navbar.css';
 import logo from '../images/logo.png';
+import defaultAvatar from '../images/defaultAvatar.png';
 
 function Navbar() {
     const user = useSelector((s) => s.user);
@@ -44,7 +45,14 @@ function Navbar() {
 
                 {user && (
                     <Link className="user-info" to="/profile">
-                        <span>{user.name}</span>
+                        <div
+                            className="avatar"
+                            style={
+                                user.avatar
+                                    ? { backgroundImage: `url(${user.avatar})` }
+                                    : { backgroundImage: `url(${defaultAvatar})` }
+                            }
+                        />
                         <span className="logout" onClick={handleLogout}>
                             logout
                         </span>
