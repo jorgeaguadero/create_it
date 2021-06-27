@@ -44,19 +44,21 @@ function Navbar() {
                 )}
 
                 {user && (
-                    <Link className="user-info" to="/profile">
-                        <div
-                            className="avatar"
-                            style={
-                                user.avatar
-                                    ? { backgroundImage: `url(${user.avatar})` }
-                                    : { backgroundImage: `url(${defaultAvatar})` }
-                            }
-                        />
+                    <div className="user-info">
+                        <Link to="/profile">
+                            <div
+                                className="avatar"
+                                style={
+                                    user.avatar
+                                        ? { backgroundImage: `url(${user.avatar})` }
+                                        : { backgroundImage: `url(${defaultAvatar})` }
+                                }
+                            />
+                        </Link>
                         <span className="logout" onClick={handleLogout}>
                             logout
                         </span>
-                    </Link>
+                    </div>
                 )}
             </div>
         </header>

@@ -6,10 +6,17 @@ import ButtonMailto from './ButtonMailto';
 import facebook from '../images/facebook.png';
 import instagram from '../images/instagram.png';
 import linkedin from '../images/linkedin.png';
+import hackABoss from '../images/logoHackABoss.png';
 
 function Footer() {
     return (
-        <footer className="Footer">
+        <footer className="footer">
+            <div className="hackABoss">
+                <p>Con la colaboración de:</p>
+                <a href="https://www.https://hackaboss.com/" target="_blank" rel="noreferrer">
+                    <img className="logo" src={hackABoss} alt="Hack A Boss" />
+                </a>
+            </div>
             <div className="container">
                 <HashLink className="info" to="/#about">
                     About us

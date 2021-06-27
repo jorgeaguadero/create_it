@@ -44,16 +44,18 @@ function Signup() {
     if (user) return <Redirect to="/" />;
 
     return (
-        <div className="registro">
+        <div className="signup">
             <Helmet>
                 <title>CreateIt-Registro</title>
             </Helmet>
-            <main>
-                <h1>Registrate!</h1>
+            <main className="signup-dialog">
                 <form onSubmit={handleSubmit}>
+                    <h1>Registrate!</h1>
                     <div>
-                        <label>
-                            <span>Nombre</span>
+                        <div className="inputs-form">
+                            <label>
+                                <span>Nombre</span>
+                            </label>
                             <input
                                 name="name"
                                 required
@@ -61,11 +63,11 @@ function Signup() {
                                 value={newUser.name || ''}
                                 onChange={(e) => setnewUser({ ...newUser, name: e.target.value })}
                             />
-                        </label>
-                    </div>
-                    <div>
-                        <label>
-                            <span>Apellido</span>
+                        </div>
+                        <div className="inputs-form">
+                            <label>
+                                <span>Apellido</span>
+                            </label>
                             <input
                                 name="last_name"
                                 required
@@ -73,12 +75,12 @@ function Signup() {
                                 value={newUser.last_name || ''}
                                 onChange={(e) => setnewUser({ ...newUser, last_name: e.target.value })}
                             />
-                        </label>
-                    </div>
+                        </div>
 
-                    <div>
-                        <label>
-                            <span>Email</span>
+                        <div className="inputs-form">
+                            <label>
+                                <span>Email</span>
+                            </label>
                             <input
                                 name="email"
                                 required
@@ -87,43 +89,43 @@ function Signup() {
                                 value={newUser.email || ''}
                                 onChange={(e) => setnewUser({ ...newUser, email: e.target.value })}
                             />
-                        </label>
-                    </div>
+                        </div>
 
-                    <div>
-                        <label>
-                            <span>Contraseña</span>
-                        </label>
-                        <input
-                            name="password"
-                            type="password"
-                            required
-                            placeholder="Contraseña..."
-                            value={newUser.password || ''}
-                            onChange={(e) => setnewUser({ ...newUser, password: e.target.value })}
-                        />
-                    </div>
-                    <div>
-                        <label>
-                            <span>Repite Contraseña</span>
-                        </label>
-                        <input
-                            name="repeatedPassword"
-                            type="password"
-                            required
-                            placeholder="Contraseña..."
-                            value={newUser.repeatedPassword || ''}
-                            onChange={(e) => setnewUser({ ...newUser, repeatedPassword: e.target.value })}
-                        />
+                        <div className="inputs-form">
+                            <label>
+                                <span>Contraseña</span>
+                            </label>
+                            <input
+                                name="password"
+                                type="password"
+                                required
+                                placeholder="Contraseña..."
+                                value={newUser.password || ''}
+                                onChange={(e) => setnewUser({ ...newUser, password: e.target.value })}
+                            />
+                        </div>
+                        <div className="inputs-form">
+                            <label>
+                                <span>Repite Contraseña</span>
+                            </label>
+                            <input
+                                name="repeatedPassword"
+                                type="password"
+                                required
+                                placeholder="Contraseña..."
+                                value={newUser.repeatedPassword || ''}
+                                onChange={(e) => setnewUser({ ...newUser, repeatedPassword: e.target.value })}
+                            />
+                        </div>
                     </div>
 
                     <button>Registro</button>
 
                     {error && <div className="error">{error}</div>}
-                    <p>
+                    <div className="text-signup">
                         <span>Ya tienes cuenta?</span>
                         <Link to="/login">Inicia sesión</Link>
-                    </p>
+                    </div>
                 </form>
             </main>
         </div>

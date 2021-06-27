@@ -1,37 +1,47 @@
-.registro {
-    background-color: #68df9f;
+.signup {
+    background-color: #e6e6e6;
     box-sizing: border-box;
-    height: 100vh;
+    height: 90vh;
+    width: 100%;
 }
 
-.registro form {
+.signup .signup-dialog {
     background-color: #f7f7f7;
     display: flex;
-    flex-direction: row;
+    box-sizing: border-box;
+    height: 80vh;
+    width: 90%;
+    margin: auto;
+}
+
+.signup form {
+    display: flex;
+    flex-direction: column;
     justify-content: center;
     max-width: auto;
-    width: 95%;
-    height: 95%;
     margin: auto;
-    padding: 40px;
 }
 
-.registro h1 {
+.signup h1 {
     text-align: center;
-    padding: 1%;
+    padding: 0.5%;
 }
 
-.registro input {
-    font-size: large;
+.signup .inputs-form label {
+    display: flex;
+    flex-direction: row;
+    margin: auto;
+}
+
+.signup input {
+    font-size: larger;
     border-radius: 6px;
     padding: 0.2rem;
-    margin-top: 2rem;
-    margin-left: 2rem;
-    width: 10vw;
-    border-color: white;
+    margin-bottom: 1rem;
+    width: auto;
+    border-color: #f7f7f7;
 }
-
-.registro form button {
+.signup form button {
     border-radius: 10px;
     border: 1px solid;
     font-size: large;
@@ -39,18 +49,32 @@
     box-sizing: border-box;
     margin: 0 auto;
     text-align: center;
-    margin-top: 2rem;
+    margin-top: 1rem;
 }
 
-input:invalid:required {
+.signup input:invalid:required {
     background-image: linear-gradient(to right, #f7f7f7, #68df9f);
 }
 
-input:invalid {
+.signup input:invalid {
     border: 2px solid red;
 }
 
-input:valid {
+.signup input:valid {
     border: 2px solid black;
     background-image: linear-gradient(to left, #f7f7f7, #68df9f);
+}
+
+.signup .text-signup {
+    display: flex;
+    flex-direction: column;
+    background-color: #f7f7f7;
+    text-align: center;
+    margin: auto;
+}
+
+.signup .text-signup a {
+    font-size: bold;
+    text-decoration: none;
+    padding-bottom: 1rem;
 }

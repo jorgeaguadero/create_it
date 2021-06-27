@@ -1,4 +1,4 @@
-import './Profile.css';
+import './Bookings.css';
 import { Link, useParams } from 'react-router-dom';
 import useFetch from '../useFetch';
 import { useSelector } from 'react-redux';

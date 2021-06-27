@@ -31,34 +31,43 @@ function Login() {
     }
 
     return (
-        <div className="page page-login">
+        <div className="login">
             <Helmet>
                 <title>CreateIt-Login</title>
             </Helmet>
-            <main className="login dialog">
-                <h1>Iniciar sesión</h1>
+            <main className="login-dialog">
                 <form onSubmit={handleSubmit}>
-                    <label>
-                        <span>Usuario:</span>
-                        <input value={email} onChange={(e) => setEmail(e.target.value)} required />
-                    </label>
-                    <label>
-                        <span>Contraseña:</span>
-                        <input
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                        />
-                    </label>
+                    <div>
+                        <h1>¡loguéate!</h1>
+                        <label>
+                            <span>Usuario:</span>
+                            <input
+                                type="email"
+                                value={email}
+                                placeholder="email..."
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                            />
+                        </label>
+                        <label>
+                            <span>Contraseña:</span>
+                            <input
+                                type="password"
+                                placeholder="Contraseña..."
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                            />
+                        </label>
+                    </div>
                     <button>Iniciar sesión</button>
                     {error && <div className="error">{error}</div>}
-                    <p>
+                    <div className="text-login">
                         <span>¿Aún no tienes cuenta?</span>
                         <Link to="/signup">Regístrate</Link>
                         <span>¿Has olvidado tu contraseña?</span>
                         <Link to="/user/recoveryPassword">Reecupera tu contraseña</Link>
-                    </p>
+                    </div>
                 </form>
             </main>
         </div>

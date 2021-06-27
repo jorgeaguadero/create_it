@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 const ButtonMailto = ({ mailto, label }) => {
     return (
         <Link
-            to="#"
+            to="/#"
             onClick={(e) => {
                 window.location = mailto;
                 e.preventDefault();

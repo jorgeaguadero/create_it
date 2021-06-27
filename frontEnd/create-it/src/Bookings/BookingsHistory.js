@@ -1,4 +1,4 @@
-import './Profile.css';
+import './Bookings.css';
 import { useParams, Link } from 'react-router-dom';
 import { useState } from 'react';
 import useFetch from '../useFetch';
