@@ -4,6 +4,7 @@ import { useParams, useHistory } from 'react-router-dom';
 import useFetch from '../useFetch';
 import { useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
+import './Incident.css';
 
 function Incident() {
     const [openIncident, setOpenIncident] = useState(false);
@@ -39,34 +40,29 @@ function Incident() {
     }
 
     return (
-        <div className="Incident">
-            <Helmet>Incidencia {incident.id_incident}|CreateIt</Helmet>
-            <h1>{incident.id_incident}</h1>
-            <span>Reserva: {incident.booking}</span>
-            <br />
-            <span>Espacio: {incident.id_space}</span>
-            <br />
-            <span>Fecha de creación: {new Date(incident.incident_date).toLocaleDateString()}</span>
-            <br />
-            <span>Tipo: {incident.type}</span>
-            <br />
-            <span>Descripción: {incident.description}</span>
-            <br />
-            <span>Estado: {incident.state === 1 ? 'Cerrada' : 'Abierta'}</span>
-            <br />
-            {incident.closed_date && (
-                <span>Fecha de cierre: {new Date(incident.closed_date).toLocaleDateString()}</span>
-            )}
+        <div className="incident-indv">
+            <div className="incident-content">
+                <h1>Id de Incidencia: {incident.id_incident}</h1>
+                <li>Reserva: {incident.id_booking}</li>
+                <li>Espacio: {incident.id_space}</li>
+                <li>Fecha de creación: {new Date(incident.incident_date).toLocaleDateString()}</li>
+                <li>Tipo: {incident.type}</li>
+                <li>Descripción: {incident.description}</li>
+                <li>Estado: {incident.state === 1 ? 'Cerrada' : 'Abierta'}</li>
 
-            {incident.state === 0 && me.role === 'admin' && (
-                <button onClick={() => setOpenIncident(!openIncident)}>Cerrar Incidencia</button>
-            )}
-            {openIncident && (
-                <div>
-                    <p>¿Se ha solucionado la incidencia {incident.id_incident}?</p>
-                    <button onClick={handleCloseIncident}>Confirmar</button>
-                </div>
-            )}
+                {incident.closed_date && (
+                    <li>Fecha de cierre: {new Date(incident.closed_date).toLocaleDateString()}</li>
+                )}
+                {incident.state === 0 && me.role === 'admin' && (
+                    <button onClick={() => setOpenIncident(!openIncident)}>Cerrar Incidencia</button>
+                )}
+                {openIncident && (
+                    <div>
+                        <p>¿Se ha solucionado la incidencia {incident.id_incident}?</p>
+                        <button onClick={handleCloseIncident}>Confirmar</button>
+                    </div>
+                )}
+            </div>
         </div>
     );
 }

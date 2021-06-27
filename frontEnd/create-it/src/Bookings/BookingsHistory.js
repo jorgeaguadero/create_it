@@ -31,7 +31,7 @@ function BookingsHistory() {
         <div className="BookingsHistory">
             <div>
                 <input placeholder="EN VERSIÓN 2.0" value={search} onChange={(e) => setSearch(e.target.value)} />
-                <label>Busca tu reserva</label>
+                <label>Buscador</label>
             </div>
 
             {bookings.map((b) => (

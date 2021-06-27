@@ -19,7 +19,6 @@ function ProfileAdmin() {
 
     return (
         <div className="profile">
-            <h1>Perfil</h1>
             <Helmet>
                 <title>CreateIt-Perfil</title>
             </Helmet>
@@ -31,7 +30,7 @@ function ProfileAdmin() {
                     <NavLink to="/profile/bookings" exact activeClassName="active">
                         Reservas activas
                     </NavLink>
-                    <NavLink to="/profile/bookings" exact activeClassName="active">
+                    <NavLink to="/profile/bookings/history" exact activeClassName="active">
                         historial de reservas
                     </NavLink>
                     <NavLink to="/profile/incidents" exact activeClassName="active">
@@ -49,11 +48,11 @@ function ProfileAdmin() {
                         <Route path="/profile/bookings" exact>
                             <BookingsActive />
                         </Route>
+                        <Route path="/profile/bookings/history" exact>
+                            <BookingsHistory />
+                        </Route>
                         <Route path="/profile/bookings/:id_booking" exact>
                             <Booking />
-                        </Route>
-                        <Route path="/profile/bookings" exact>
-                            <BookingsHistory />
                         </Route>
                         <Route path="/profile/incidents" exact>
                             <OpenIncidents />

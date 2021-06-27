@@ -1,4 +1,4 @@
-import './Reviews.css';
+import './AllReviews.css';
 import { useParams } from 'react-router-dom';
 import useFetch from '../useFetch';
 import { useSelector } from 'react-redux';
@@ -20,7 +20,7 @@ function AllReviews() {
     return (
         <div className="AllReviews">
             {reviews.map((r) => (
-                <div key={r.id_booking}>
+                <div key={r.id_booking} className="review-list">
                     <li>id Reserva: {r.id_booking}</li>
                     <li>Espacio: {r.id_space}</li>
                     <li>Rating: {r.rating}</li>

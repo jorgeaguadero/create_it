@@ -1,23 +1,23 @@
-.booking-indv {
+.incident-indv {
     background-color: #e6e6e6;
     box-sizing: border-box;
     height: 100vh;
     width: 100%;
 }
 
-.booking-indv .booking-content {
+.incident-indv .incident-content {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 }
 
-.booking-indv .booking-content li {
+.incident-indv .incident-content li {
     list-style: none;
     padding: 0.5%;
 }
 
-.booking-indv .booking-content button {
+.incident-indv .incident-content button {
     border-radius: 30px;
     background-color: #e9e9e9;
     border: 2px solid #56df9e;

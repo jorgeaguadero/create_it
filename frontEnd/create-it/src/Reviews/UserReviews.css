@@ -1,4 +1,5 @@
-.bookings {
+.UserReviews {
+    display: flex;
     background-color: #e6e6e6;
     box-sizing: border-box;
     height: 100vh;
@@ -6,13 +7,7 @@
     margin: auto;
 }
 
-.BookingsActive {
-    display: flex;
-    height: 100vh;
-    border-bottom: 1rem;
-}
-
-.BookingsActive .booking-list {
+.UserReviews .review-list {
     border-radius: 30px;
     width: 20%;
     height: 7rem;
@@ -23,11 +18,11 @@
     margin-right: 1rem;
 }
 
-.BookingsActive .booking-list li {
+.UserReviews .review-list li {
     list-style: none;
 }
 
-.BookingsActive .booking-list li a {
+.UserReviews .review-list li a {
     background-color: #b2b2b2;
     text-decoration: none;
     display: inline-block;

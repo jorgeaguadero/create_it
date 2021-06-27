@@ -1,4 +1,4 @@
-import './Reviews.css';
+import './UserReviews.css';
 import { useParams } from 'react-router-dom';
 import useFetch from '../useFetch';
 import { useSelector } from 'react-redux';

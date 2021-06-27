@@ -36,7 +36,7 @@
     margin-left: 1rem;
     margin-right: 1rem;
     width: auto;
-    border-color: #f7f7f7;
+    border-color: white;
 }
 
 .login input:invalid:required {
@@ -53,14 +53,15 @@
 }
 
 .login form button {
-    border-radius: 10px;
-    border: 1px solid;
+    border-radius: 30px;
+    background-color: #e9e9e9;
+    border: 2px solid #56df9e;
     font-size: large;
     width: 10vw;
-    margin: 0 auto;
+    margin: auto;
     text-align: center;
     margin-top: 2rem;
-    margin-bottom: 2rem;
+    margin-bottom: 0.5rem;
 }
 
 .login .text-login {
