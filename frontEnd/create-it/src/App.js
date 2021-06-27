@@ -23,7 +23,6 @@ function App() {
                 <title>Create It</title>
             </Helmet>
             <Navbar />
-
             <Switch>
                 <Route path="/" exact>
                     <Home />
