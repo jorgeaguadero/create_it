@@ -1,4 +1,4 @@
-import './Bookings.css';
+import './BookingsHistory.css';
 import { useParams, Link } from 'react-router-dom';
 import { useState } from 'react';
 import useFetch from '../useFetch';
@@ -22,28 +22,28 @@ function BookingsHistory() {
     const bookings = useFetch(url);
 
     if (!bookings) {
-        return <div>Loading...</div>;
+        return <i>Loading...</i>;
     }
     if (bookings.error) {
         return <div className="error">{bookings.error}</div>;
     }
     return (
-        <div className="bookingsHistory">
-            <input placeholder="EN VERSIÓN 2.0" value={search} onChange={(e) => setSearch(e.target.value)} />
-            {bookings.map((b) => (
-                <div key={b.id_booking}>
-                    <Link to={`/profile/bookings/${b.id_booking}`}>id Reserva {b.id_booking}</Link>
-                    <br />
-                    <span>Estado de pago: {b.pending_payment === 0 ? 'Pagado' : 'Pendiente de pago'}</span>
-                    <br />
-                    <span>Precio: {priceFormated.format(b.price)}</span>
-                    <br />
-                    <span>Fecha: {new Date(b.start_date).toLocaleDateString()}</span>
+        <div className="BookingsHistory">
+            <div>
+                <input placeholder="EN VERSIÓN 2.0" value={search} onChange={(e) => setSearch(e.target.value)} />
+                <label>Busca tu reserva</label>
+            </div>
 
-                    <br />
+            {bookings.map((b) => (
+                <div key={b.id_booking} className="booking-list">
+                    <li>
+                        <Link to={`/profile/bookings/${b.id_booking}`}>id Reserva {b.id_booking}</Link>
+                    </li>
+                    <li>Estado de pago: {b.pending_payment === 0 ? 'Pagado' : 'Pendiente de pago'}</li>
+                    <li>Precio: {priceFormated.format(b.price)}</li>
+                    <li>Fecha: {new Date(b.start_date).toLocaleDateString()}</li>
                 </div>
             ))}
-            {!bookings && <i>Loading...</i>}
             {bookings && bookings.length === 0 && <i>No hay reservas activas en este momento</i>}
         </div>
     );

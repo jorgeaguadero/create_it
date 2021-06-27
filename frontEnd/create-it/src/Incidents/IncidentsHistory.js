@@ -1,4 +1,4 @@
-import './Profile.css';
+import './Incidents.css';
 import { useParams, Link } from 'react-router-dom';
 import useFetch from '../useFetch';
 import { useSelector } from 'react-redux';

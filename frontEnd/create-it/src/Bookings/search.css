@@ -1,12 +1,13 @@
 .search {
     background-color: #f7f7f7;
     box-sizing: border-box;
-    width: 95%;
-    margin: auto;
-    height: 90%;
+    height: 100vh;
+    width: 100%;
 }
 
 .search h1 {
+    margin-top: 0;
+    padding-top: 2rem;
     margin-bottom: 2rem;
     text-align: center;
     color: black;
@@ -60,7 +61,7 @@
     border: 2px solid #56df9e;
     outline: none;
     text-decoration: none;
-    background-color: rgba(255, 255, 255, 0.5);
+    background-color: #e9e9e9;
     color: black;
     box-sizing: border-box;
     text-align: center;

@@ -1,0 +1,25 @@
+.bookings {
+    background-color: #e6e6e6;
+    box-sizing: border-box;
+    height: 100vh;
+    width: 100%;
+    margin: auto;
+}
+
+.BookingsActive {
+    display: flex;
+    height: 100vh;
+    border-bottom: 1rem;
+}
+
+.BookingsActive .booking-list li {
+    list-style: none;
+}
+
+.BookingsActive .booking-list li a {
+    background-color: #b2b2b2;
+    text-decoration: none;
+    display: inline-block;
+    color: black;
+    width: auto;
+}

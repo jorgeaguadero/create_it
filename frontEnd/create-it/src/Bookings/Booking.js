@@ -1,3 +1,5 @@
+import './Booking.css';
+
 import { useState } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import useFetch from '../useFetch';
@@ -135,22 +137,17 @@ function Booking() {
     }
 
     return (
-        <div className="booking">
+        <div className="booking-indv">
             {booking && (
                 <div className="booking-content">
                     <h1>Reserva:{booking.id_booking}</h1>
-                    <span>Usuario: {booking.id_user}</span>
-                    <br />
-                    <span>Espacio: {booking.id_space}</span>
-                    <br />
-                    <span>Fecha: {new Date(booking.start_date).toLocaleDateString()}</span>
-                    <br />
-                    <span>Estado de pago: {booking.pending_payment === 0 ? 'Pagado' : 'Pendiente de pago'}</span>
-                    <br />
-                    <span>Precio: {priceFormated.format(booking.price)}</span>
-                    <br />
-                    <span>Fecha de realización: {new Date(booking.booking_date).toLocaleDateString()}</span>
-                    <br />
+                    <li>Usuario: {booking.id_user}</li>
+                    <li>Espacio: {booking.id_space}</li>
+                    <li>Fecha: {new Date(booking.start_date).toLocaleDateString()}</li>
+                    <li>Estado de pago: {booking.pending_payment === 0 ? 'Pagado' : 'Pendiente de pago'}</li>
+                    <li>Precio: {priceFormated.format(booking.price)}</li>
+                    <li>Fecha de realización: {new Date(booking.booking_date).toLocaleDateString()}</li>
+
                     {booking.pending_payment === 1 && <button onClick={() => setOpenPay(!openPay)}>Pagar</button>}
                     {openPay && (
                         <div>
@@ -194,7 +191,7 @@ function Booking() {
                             </div>
                             <div>
                                 <label>
-                                    <span>Descripción</span>
+                                    <li>Descripción</li>
                                     <textarea
                                         name="description"
                                         required
@@ -227,7 +224,7 @@ function Booking() {
                             </div>
                             <div>
                                 <label>
-                                    <span>Descripción</span>
+                                    <li>Descripción</li>
                                     <textarea
                                         name="text"
                                         required

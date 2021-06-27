@@ -1,4 +1,4 @@
-import './Profile.css';
+import './Incidents.css';
 import { useState } from 'react';
 import { Link, useParams, useHistory } from 'react-router-dom';
 import useFetch from '../useFetch';

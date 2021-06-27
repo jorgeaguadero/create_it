@@ -1,4 +1,4 @@
-import './Profile.css';
+import './User.css';
 import defaultAvatar from '../images/defaultAvatar.png';
 import { useParams } from 'react-router-dom';
 import useFetch from '../useFetch';
@@ -20,30 +20,57 @@ function User() {
     }
     return (
         <div className="user">
-            <span>id : {user.id_user} </span>
-            <br />
-            <span>email: {user.email} </span>
-            <br />
-            <span>nombre : {user.first_name} </span>
-            <br />
-            <span>apellido : {user.last_name} </span>
-            <br />
-            <span>bio : {user.bio} </span>
-            <br />
-            <span>teléfono : {user.phone} </span>
-            <br />
-            {user.avatar ? <img src={user.avatar} alt="Avatar" /> : <img src={defaultAvatar} alt="Avatar" />}
+            <div className="user-box">
+                {user.avatar ? (
+                    <img className="avatar" src={user.avatar} alt="Avatar" />
+                ) : (
+                    <img className="avatar" src={defaultAvatar} alt="Avatar" />
+                )}
+                <ul className="user-content">
+                    <li>
+                        <strong>Id de usuario: </strong>
+                        {user.id_user}
+                    </li>
 
-            <button type="button">
-                <Link to={`/profile/${id_user}/update`} activeClassName="active" exact>
-                    Editar
-                </Link>
-            </button>
-            <button type="button">
-                <Link to={`/profile/${id_user}/delete`} activeClassName="active" exact>
-                    Borrar usuario
-                </Link>
-            </button>
+                    <li>
+                        <strong>Email: </strong>
+                        {user.email}
+                    </li>
+
+                    <li>
+                        <strong>Nombre: </strong>
+                        {user.first_name}
+                    </li>
+
+                    <li>
+                        <strong>Apellido:</strong> {user.last_name}
+                    </li>
+
+                    {user.bio && (
+                        <li>
+                            <strong>Bio: </strong> {user.bio}
+                        </li>
+                    )}
+
+                    {user.phone && (
+                        <li>
+                            <strong></strong>Teléfono: {user.phone}
+                        </li>
+                    )}
+                </ul>
+            </div>
+            <div className="button">
+                <button type="button">
+                    <Link to={`/profile/${id_user}/update`} activeClassName="active" exact>
+                        Editar
+                    </Link>
+                </button>
+                <button type="button">
+                    <Link to={`/profile/${id_user}/delete`} activeClassName="active" exact>
+                        Borrar usuario
+                    </Link>
+                </button>
+            </div>
         </div>
     );
 }

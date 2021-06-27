@@ -15,7 +15,6 @@ import DeleteUser from './DeleteUser';
 function ProfileUser() {
     return (
         <div className="profile">
-            <h1>Perfil</h1>
             <Helmet>
                 <title>CreateIt-Perfil</title>
             </Helmet>
