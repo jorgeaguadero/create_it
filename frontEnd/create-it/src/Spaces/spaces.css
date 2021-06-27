@@ -1,30 +1,115 @@
-.spaces {
-    background-color: #EBE26D;
+.Spaces {
+    width: 100%;
+    background-color: #f7f7f7;
     box-sizing: border-box;
-    height: 100vh;
 }
 
-.spaces h1 {
-    background-color: #EBE26D;
-    text-align: center;
-    
-}
-
-
-.spaces .spaces-content{
-    background-color: #F7F7F7;
-    display:flex;
-    flex-direction: row;
+.Spaces .spaces-content {
+    background-color: #f7f7f7;
+    display: flex;
+    flex-direction: column;
     justify-content: center;
     max-width: auto;
+    margin: auto;
+}
+
+.space-1 {
     width: 95%;
-    height: 95%;
-    margin:  auto;
-    padding:40px;
-    
+    height: 100vh;
+    background-image: url('../images/arcane6.jpg');
+    filter: grayscale(100%);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin: auto;
 }
 
-.spaces .spaces-content div{
-    padding: 1%;
+.space-2 {
+    width: 95%;
+    height: 100vh;
+    background-image: url('../images/cotton1.jpg');
+    filter: grayscale(100%);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin: auto;
+}
+.space-3 {
+    width: 95%;
+    height: 100vh;
+    background-image: url('../images/bunker1.jpg');
+    filter: grayscale(100%);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin: auto;
 }
 
+.logo-1 {
+    width: 30vh;
+    height: 30vh;
+    border-radius: 4px;
+    background-image: url('../images/logoArcane.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin: auto;
+}
+.logo-2 {
+    width: 30vh;
+    height: 30vh;
+    vertical-align: middle;
+    border-radius: 4px;
+    background-image: url('../images/logoArcane.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin: auto;
+}
+
+.logo-3 {
+    width: 30vh;
+    height: 30vh;
+    vertical-align: middle;
+    border-radius: 4px;
+    background-image: url('../images/logoBunker.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin: auto;
+}
+
+.spaces-content h2 {
+    font-size: large;
+    margin: auto;
+    color: black;
+    list-style: none;
+    width: fit-content;
+    padding-left: 1rem;
+    background-color: #e6e6e6;
+    margin-top: 2rem;
+}
+
+.spaces-content li {
+    font-size: large;
+    text-align: center;
+    color: black;
+    margin: auto;
+    list-style: none;
+    width: fit-content;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-bottom: 1rem;
+    background-color: #e6e6e6;
+}
+
+.spaces-content li:last-child {
+    font-size: large;
+    margin: auto;
+    color: black;
+    list-style: none;
+    width: fit-content;
+    padding-left: 1rem;
+    background-color: #e6e6e6;
+    margin-bottom: 2rem;
+}

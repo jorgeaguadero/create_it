@@ -8,6 +8,7 @@ import Footer from './Footer/Footer';
 
 import Home from './Home';
 import Login from './Users/Login';
+import Rooms from './Rooms/Rooms';
 import Signup from './Users/Signup';
 import Profile from './Users/Profile';
 import Spaces from './Spaces/Spaces';
@@ -42,6 +43,10 @@ function App() {
                 <Route path="/Buscador" exact>
                     <Search />
                 </Route>
+                <Route path="/Rooms/:id_space" exact>
+                    <Rooms />
+                </Route>
+
                 <Route path="/user/recoveryPassword" exact>
                     <RecoveryPassword />
                 </Route>

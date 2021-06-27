@@ -127,9 +127,9 @@ insert into users (first_name,last_name, email, passwordHash,phone,role,activate
 insert into users (first_name,last_name, email, passwordHash,activate,activation_code ) values ('Prueba2', 'Probando', 'prueba2@createit.com','$2a$10$uNY2e/48xjzjnZR9Vs5k6erkdOU9O9P0VrCSsYfglPdASCDwd46pa',1,'asdfafwefawef');
 insert into users (first_name,last_name, email, passwordHash,activate,activation_code,pending_payment ) values ('Prueba3', 'pendientePago', 'prueba3@createit.com','$2a$10$uNY2e/48xjzjnZR9Vs5k6erkdOU9O9P0VrCSsYfglPdASCDwd46pa',1,'asdfafwefawef',1);
 
-insert into spaces (id_user,space_name, description, location,address,email,phone ) values (1, "Arcane Planet", 'Salas de Ensayo y estudio de grabación','Salamanca','Calle Mallorca 16,37006,Salamanca','arcaneplanet@createit.com',666112233 );
-insert into spaces (id_user,space_name, description, location,address,email,phone ) values (1, "Arcane Cotton Club", 'Salas de Ensayo y sala de conciertos','Salamanca','Calle Wesley,9,37188,Carbajosa de la Sagrada,Salamanca','cottonclub@createit.com',666223344 );
-insert into spaces (id_user,space_name, description, location,address,email,phone ) values (1, "El Bunker", 'Alquiler de salas de esayo, estudio, y salas de audiovisuales','León','Calle Maestro Nicolás 58,24005, León','elbunker@createit.com',666334455 );
+insert into spaces (id_user,space_name, description, location,address,email,phone ) values (1, "Arcane Planet", 'Salas de Ensayo y estudio de grabación en el centro de salamanca, contamos con salas de ensayo para grupos e individuales y también con dos salas para audiovisuales','Salamanca','Calle Mallorca 16,37006,Salamanca','arcaneplanet@createit.com',666112233 );
+insert into spaces (id_user,space_name, description, location,address,email,phone ) values (1, "Arcane Cotton Club", 'Salas de Ensayo y estudio de grabación en el polígono del Montalvo (Salamanca), contamos con salas de ensayo para grupos e individuales y también con una sala para audiovisuales','Calle Wesley,9,37188,Carbajosa de la Sagrada,Salamanca','cottonclub@createit.com',666223344 );
+insert into spaces (id_user,space_name, description, location,address,email,phone ) values (1, "El Bunker", 'Alquiler de salas de esayo, estudio, y salas de audiovisuales en el pleno centro de León','Calle Maestro Nicolás 58,24005, León','elbunker@createit.com',666334455 );
 
 insert into rooms (id_space,room_code,type,description,price,capacity) values (1, "ARCGRU01",1, 'Sala grupal 1',20,10 );
 insert into rooms (id_space,room_code,type,description,price,capacity) values (1, "ARCGRU02",1, 'Sala grupal 2',20,10 );
@@ -171,7 +171,18 @@ insert into extras (id_space,extra_code,type,description,price) values (3, "ARCB
 insert into extras (id_space,extra_code,type,description,price) values (3, "ARCAUD01", 2, 'Pack 2 focos + Chroma',10 );
 insert into extras (id_space,extra_code,type,description,price) values (3, "ARCTCH01", 3, 'técnico de sonido',5 );
 
-insert into bookings (id_user,id_space,id_room,start_date,price) values(2,1,1,current_timestamp(),20);
+insert into bookings (id_user,id_space,id_room,start_date,price) values(2,1,1,'2021-06-27 23:30:45',20);
+insert into bookings (id_user,id_space,id_room,start_date,price) values(2,1,1,'2021-02-01',20);
 insert into bookings (id_user,id_space,id_room,start_date,price) values(2,1,1,'2021-01-01',20);
-insert into bookings (id_user,id_space,id_room,start_date,price) values(3,1,1,'2026-01-01',20);
+insert into bookings (id_user,id_space,id_room,start_date,price) values(2,1,1,'2021-03-01',20);
+insert into bookings (id_user,id_space,id_room,start_date,price) values(2,1,1,'2021-04-01',20);
+insert into bookings (id_user,id_space,id_room,start_date,price) values(2,1,2,'2021-06-27 23:30:45',20);
+
+select * from bookings where id_user=2;
+
+select * from bookings ;
+
+select * from users ;
+delete from users where id_user=6;
+
 

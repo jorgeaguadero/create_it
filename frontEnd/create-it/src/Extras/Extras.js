@@ -12,7 +12,7 @@ function Extras({ id_space, type, sala }) {
 
     return (
         <div className="extras">
-            <div className="rooms-content">
+            <div className="extra-content">
                 {extras &&
                     extras.map((e) => (
                         <div key={e.id_extra}>
