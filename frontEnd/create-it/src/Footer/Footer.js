@@ -21,9 +21,6 @@ function Footer() {
                 <HashLink className="info" to="/#about">
                     About us
                 </HashLink>
-                <HashLink className="info" to="/#location">
-                    ¿Dónde estamos?
-                </HashLink>
                 <ButtonMailto className="info" label="Contacto" mailto="mailto:contact@createit.com" />
             </div>
             <div className="rrss">

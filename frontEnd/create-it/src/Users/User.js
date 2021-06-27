@@ -31,6 +31,10 @@ function User() {
                         <strong>Id de usuario: </strong>
                         {user.id_user}
                     </li>
+                    <li>
+                        <strong>Estado de activación: </strong>
+                        {user.activate === 1 ? '✅' : '❌'}
+                    </li>
 
                     <li>
                         <strong>Email: </strong>

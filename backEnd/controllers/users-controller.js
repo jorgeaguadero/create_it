@@ -98,13 +98,13 @@ async function confirmationUser(req, res, next) {
         }
 
         const activateUser = await usersRepository.updateProfile({ activate: 1 }, user.id_user);
-
+        res.status(201);
         await sendMails.sendMail({
             to: activateUser,
             subject: 'Registro completo || Create It',
             body: `¡Acabas de completar tu registro en Create it!  http://localhost:3000 `,
         });
-        res.send(activateUser);
+        res.send({ message: 'ok' });
     } catch (error) {
         next(error);
     }
@@ -187,7 +187,6 @@ async function updateProfile(req, res, next) {
                 .min(9) //numeros int
                 .max(14)
                 .error(() => new Error('movil')),
-            bio: Joi.string().error(() => new Error('bio')),
         });
         await schema.validateAsync(data);
         const user = await usersRepository.updateProfile(data, id_user);

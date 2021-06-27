@@ -1,4 +1,5 @@
 import './UpdateUser.css';
+import defaultAvatar from '../images/defaultAvatar.png';
 import { useParams } from 'react-router-dom';
 import useFetch from '../useFetch';
 import { useState } from 'react';
@@ -54,6 +55,7 @@ function UpdateUser({ user }) {
                 Authorization: 'Bearer ' + userToken.token,
             },
         });
+        const data = await res.json();
         if (res.ok) {
             Swal.fire({
                 title: 'perfil',
@@ -63,7 +65,12 @@ function UpdateUser({ user }) {
             });
             setUserUpdated(true);
         } else {
-            setError(res.error);
+            Swal.fire({
+                title: 'perfil',
+                text: `${data.error}`,
+                icon: 'error',
+                timer: 1500,
+            });
         }
     };
     const handleSubmit = async (e) => {
@@ -73,17 +80,22 @@ function UpdateUser({ user }) {
             method: 'PATCH',
             body: JSON.stringify({
                 phone,
-                bio,
             }),
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: 'Bearer ' + userToken.token,
             },
         });
+        const data = await res.json();
         if (res.ok) {
             setUserUpdated(true);
         } else {
-            setError(res.error);
+            Swal.fire({
+                title: 'perfil',
+                text: `${data.error}`,
+                icon: 'error',
+                timer: 1500,
+            });
         }
     };
 
@@ -98,11 +110,16 @@ function UpdateUser({ user }) {
                 Authorization: 'Bearer ' + userToken.token,
             },
         });
-
+        const data = await res.json();
         if (res.ok) {
             setUserUpdated(true);
         } else {
-            setError(res.error);
+            Swal.fire({
+                title: 'Foto',
+                text: `${data.error}`,
+                icon: 'error',
+                timer: 1500,
+            });
         }
     };
 
@@ -112,20 +129,10 @@ function UpdateUser({ user }) {
     };
 
     return (
-        <div className="updateUser">
-            <div className="updateInfo">
-                <h2>Edita tu perfil</h2>
+        <div className="UpdateUser">
+            <div className="update-info">
                 <form className="formUser" onSubmit={handleSubmit}>
-                    <h2>Bio</h2>
-                    <input
-                        name="bio"
-                        placeholder={bio}
-                        type="text"
-                        required
-                        value={bio}
-                        onChange={(e) => setBio(e.target.value)}
-                    />
-                    <h2>Teléfono</h2>
+                    <label>Teléfono</label>
                     <input
                         name="phone"
                         placeholder={phone}
@@ -138,20 +145,10 @@ function UpdateUser({ user }) {
                 </form>
             </div>
             <div>
-                <p>Subir imagen</p>
-                <form className="formUpdate" onSubmit={handleSubmitUserImage}>
-                    <input name="image" placeholder="image" type="file" onChange={handleUserImage} />
-                    <button className="button-update">Editar Avatar</button>
-                </form>
-            </div>
-
-            <div>
                 <h1>Cambia tu contraseña</h1>
                 <form onSubmit={handleSubmitPassword}>
                     <div>
-                        <label>
-                            <span>Contraseña actual</span>
-                        </label>
+                        <label>Contraseña actual</label>
                         <input
                             name="password"
                             type="password"
@@ -162,9 +159,7 @@ function UpdateUser({ user }) {
                         />
                     </div>
                     <div>
-                        <label>
-                            <span>Introduce tu nueva contraseña</span>
-                        </label>
+                        <label>Introduce tu nueva contraseña</label>
                         <input
                             name="repeatedPassword"
                             type="password"
@@ -189,6 +184,17 @@ function UpdateUser({ user }) {
                     </div>
                     <button>Cambia tu contraseña</button>
                     {error && <div className="error">{error}</div>}
+                </form>
+            </div>
+            <div>
+                {user.avatar ? (
+                    <img className="avatar" src={user.avatar} alt="Avatar" />
+                ) : (
+                    <img className="avatar" src={defaultAvatar} alt="Avatar" />
+                )}
+                <form className="formUpdate" onSubmit={handleSubmitUserImage}>
+                    <input name="image" placeholder="image" type="file" onChange={handleUserImage} />
+                    <button className="button-update">Editar Avatar</button>
                 </form>
             </div>
         </div>

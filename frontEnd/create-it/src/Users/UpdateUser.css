@@ -1,31 +1,56 @@
-.update-user form {
-  display: flex;
-  flex-direction: column;
-  justify-self: center;
-  width: 40vw;
-  gap: 14px;
+.UpdateUser {
+    background-color: #e9e9e9;
+    box-sizing: border-box;
+    min-height: 100vh;
+    height: auto;
+    width: 100%;
+    margin: auto;
+}
+.UpdateUser .update-info {
+    display: flex;
+    flex-direction: column;
+    justify-self: center;
+    width: 40vw;
+    gap: 14px;
 }
 
-.formUser {
-  align-content: center;
-  margin-left: 25em;
+.UpdateUser form {
+    display: flex;
+    flex-direction: row;
+    justify-self: center;
+    width: 40vw;
+    gap: 14px;
 }
+
 input {
-  width: 200px;
+    font-size: larger;
+    border-radius: 6px;
+    padding: 0.2rem;
+    margin-bottom: 1rem;
+    width: auto;
+    background-image: linear-gradient(to right, #f7f7f7, #68df9f);
 }
-.button-update {
-  width: 60px;
-  margin-top: 10px;
-}
-
-.back a {
-  width: 60px;
-  align-self: center;
-}
-
-
 
 .formUpdate button {
-  display: flex;
-  flex-direction: row;
+    margin-left: 1rem;
+}
+button {
+    border-radius: 30px;
+    background-color: #e9e9e9;
+    border: 2px solid #56df9e;
+    font-size: large;
+    width: 30vh;
+    height: auto;
+    margin: 0 auto;
+    text-align: center;
+    margin-top: 0.5rem;
+}
+label {
+    text-align: center;
+}
+
+.avatar {
+    background-size: cover;
+    height: 12rem;
+    width: 12rem;
 }

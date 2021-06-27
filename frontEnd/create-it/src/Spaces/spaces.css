@@ -3,6 +3,11 @@
     background-color: #f7f7f7;
     box-sizing: border-box;
 }
+.Spaces h1 {
+    margin-top: 0;
+    padding-top: 2rem;
+    text-align: center;
+}
 
 .Spaces .spaces-content {
     background-color: #f7f7f7;
@@ -47,7 +52,7 @@
 
 .logo-1 {
     width: 30vh;
-    height: 30vh;
+    height: 40vh;
     border-radius: 4px;
     background-image: url('../images/logoArcane.png');
     background-position: center;
@@ -57,7 +62,7 @@
 }
 .logo-2 {
     width: 30vh;
-    height: 30vh;
+    height: 40vh;
     vertical-align: middle;
     border-radius: 4px;
     background-image: url('../images/logoArcane.png');
@@ -80,6 +85,16 @@
 }
 
 .spaces-content h2 {
+    font-size: large;
+    margin: auto;
+    color: black;
+    list-style: none;
+    width: fit-content;
+    padding-left: 1rem;
+    background-color: #e6e6e6;
+    margin-top: 2rem;
+}
+.spaces-content h1 {
     font-size: large;
     margin: auto;
     color: black;
