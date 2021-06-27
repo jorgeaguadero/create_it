@@ -1,7 +1,7 @@
 import './Location.css';
 
 function About() {
-    return <div>Mapa</div>;
+    return <div></div>;
 }
 
 export default About;

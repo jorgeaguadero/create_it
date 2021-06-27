@@ -10,9 +10,9 @@ export const SearchCard = ({ r, start_date, type }) => {
     return (
         <div className="card">
             <div className="card-content">
-                <h2>{r[0].id_room}</h2>
+                <h2>Sala: {r[0].id_room}</h2>
                 <br />
-                <span>{r[0].room_code}</span>
+                <span>Código de la sala{r[0].room_code}</span>
                 <label>
                     <input type="checkbox" checked={show} onChange={(e) => setShow(e.target.checked)} />
                     Quiero un extra para mi reserva

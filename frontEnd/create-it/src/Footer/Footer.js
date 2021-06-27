@@ -13,7 +13,7 @@ function Footer() {
         <footer className="footer">
             <div className="hackABoss">
                 <p>Con la colaboración de:</p>
-                <a href="https://www.https://hackaboss.com/" target="_blank" rel="noreferrer">
+                <a href="https://www.hackaboss.com/" target="_blank" rel="noreferrer">
                     <img className="logo" src={hackABoss} alt="Hack A Boss" />
                 </a>
             </div>
