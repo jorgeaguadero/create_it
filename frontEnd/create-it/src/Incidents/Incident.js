@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet';
 import { useParams, useHistory } from 'react-router-dom';
 import useFetch from '../useFetch';
 import { useSelector } from 'react-redux';
+import Swal from 'sweetalert2';
 
 function Incident() {
     const [openIncident, setOpenIncident] = useState(false);
@@ -23,6 +24,12 @@ function Incident() {
             },
         });
         if (res.ok) {
+            Swal.fire({
+                title: 'Incidencia',
+                text: 'Tu incidencia se ha cerrado correctamente',
+                icon: 'success',
+                timer: 1500,
+            });
             history.push(`/profile/bookings/`);
         }
     };

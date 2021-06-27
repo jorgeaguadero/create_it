@@ -16,7 +16,7 @@ function Navbar() {
     };
 
     return (
-        <header className="header">
+        <header className="navbar">
             <div>
                 <HashLink to="/#principal">
                     <img className="logo" src={logo} alt="CreateIt" />

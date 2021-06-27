@@ -1,0 +1,42 @@
+.about {
+    height: 80vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    height: auto;
+    background-color: #e6e6e6;
+    margin: auto;
+}
+
+.about .text-content {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+    font-size: 2rem;
+    color: #68df9f;
+    text-align: center;
+    margin: auto;
+}
+
+.about .text-content strong {
+    text-decoration-line: underline;
+    text-decoration-color: #68df9f;
+}
+
+.about .text-content span {
+    text-decoration-line: line-through;
+    text-decoration-color: #68df9f;
+}
+
+.images {
+    width: 95%;
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.images img {
+    width: 33%;
+    height: auto;
+}

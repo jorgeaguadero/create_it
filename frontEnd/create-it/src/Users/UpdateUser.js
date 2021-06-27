@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import useFetch from '../useFetch';
 import { useState } from 'react';
 import { Redirect } from 'react-router-dom';
-
+import Swal from 'sweetalert2';
 import { useSelector } from 'react-redux';
 
 function UpdateUserMain() {
@@ -55,6 +55,12 @@ function UpdateUser({ user }) {
             },
         });
         if (res.ok) {
+            Swal.fire({
+                title: 'perfil',
+                text: 'Tus datos se han actualizado correctamente',
+                icon: 'success',
+                timer: 1500,
+            });
             setUserUpdated(true);
         } else {
             setError(res.error);
