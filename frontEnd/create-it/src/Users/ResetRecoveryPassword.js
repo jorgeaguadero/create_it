@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Swal from 'sweetalert2';
 
 import { useHistory, Link, useParams } from 'react-router-dom';
 import Helmet from 'react-helmet';
@@ -22,6 +23,11 @@ function ResetRecoveryPassword() {
         });
         const data = await res.json();
         if (res.ok) {
+            Swal.fire({
+                title: 'Cambio de Contraseña',
+                text: 'Contraseña cambiada correctamente',
+                icon: 'success',
+            });
             history.push('/Login');
         } else {
             setError(data.error);

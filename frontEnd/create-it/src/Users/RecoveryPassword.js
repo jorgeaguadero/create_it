@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useHistory, Link } from 'react-router-dom';
 import Helmet from 'react-helmet';
 import './Login.css';
+import Swal from 'sweetalert2';
 
 function RecoveryPassword() {
     const [email, setEmail] = useState('');
@@ -18,6 +19,11 @@ function RecoveryPassword() {
         });
         const data = await res.json();
         if (res.ok) {
+            Swal.fire({
+                title: 'Cambio de Contraseña',
+                text: 'Vaya a su bandeja de entrada para cambiar su contraseña',
+                icon: 'success',
+            });
             history.push('/Login');
         } else {
             setError(data.error);

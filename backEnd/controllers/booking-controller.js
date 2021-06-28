@@ -209,7 +209,7 @@ async function deleteBooking(req, res, next) {
     try {
         const { id_booking } = req.params;
         let booking = await bookingsRepository.getBookingById(id_booking);
-        let user = await usersRepository.getUserById(id_booking.id_user);
+        let user = await usersRepository.getUserById(booking.id_user);
 
         validateAuth.validateProperty(req, booking);
         const start_date = booking.start_date;
