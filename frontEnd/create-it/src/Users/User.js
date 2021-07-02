@@ -12,7 +12,7 @@ function User() {
 
     me ? (id_user = me.id_user) : (id_user = id);
 
-    const user = useFetch(`http://localhost:8080/api/users/${id_user}
+    const user = useFetch(`${process.env.REACT_APP_BACKEND}/api/users/${id_user}
     `);
 
     if (!user) {
@@ -22,7 +22,11 @@ function User() {
         <div className="user">
             <div className="user-box">
                 {user.avatar ? (
-                    <img className="avatar" src={user.avatar} alt="Avatar" />
+                    <img
+                        className="avatar"
+                        src={`${process.env.REACT_APP_BACKEND}/users/${user.id_user}/${user.avatar}`}
+                        alt="Avatar"
+                    />
                 ) : (
                     <img className="avatar" src={defaultAvatar} alt="Avatar" />
                 )}

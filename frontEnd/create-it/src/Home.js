@@ -1,6 +1,7 @@
 import './Home.css';
 import Principal from './Principal';
 import About from './About';
+import Location from './Location'
 
 function Home() {
     return (
@@ -10,6 +11,9 @@ function Home() {
             </div>
             <div id="about" className="about">
                 <About />
+            </div>
+            <div id="about" className="about">
+                <Location />
             </div>
         </div>
     );

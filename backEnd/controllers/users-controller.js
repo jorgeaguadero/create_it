@@ -217,8 +217,7 @@ async function addAvatar(req, res, next) {
         if (user.avatar) {
             await images.deleteImage(user.avatar);
         }
-        const url = path.join(__dirname, `../static/users/${id_user}/${file.filename}`);
-        const updateUser = await usersRepository.updateAvatar(url, id_user);
+        const updateUser = await usersRepository.updateAvatar(file.filename, id_user);
 
         res.status(201);
         res.send({ user: updateUser });

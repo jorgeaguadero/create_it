@@ -50,7 +50,9 @@ function Navbar() {
                                 className="avatar"
                                 style={
                                     user.avatar
-                                        ? { backgroundImage: `url(${user.avatar})` }
+                                        ? {
+                                              backgroundImage: `url(${process.env.REACT_APP_BACKEND}/users/${user.id_user}/${user.avatar})`,
+                                          }
                                         : { backgroundImage: `url(${defaultAvatar})` }
                                 }
                             />
