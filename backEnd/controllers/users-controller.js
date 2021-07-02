@@ -3,7 +3,7 @@ const sgMail = require('@sendgrid/mail');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { nanoid } = require('nanoid');
-const path = require('path');
+//const path = require('path');
 const { usersRepository } = require('../repositories');
 const { sendMails, images } = require('../utils/');
 
