@@ -127,31 +127,31 @@ insert into users (first_name,last_name, email, passwordHash,phone,role,activate
 insert into users (first_name,last_name, email, passwordHash,activate,activation_code ) values ('Prueba2', 'Probando', 'prueba2@createit.com','$2a$10$uNY2e/48xjzjnZR9Vs5k6erkdOU9O9P0VrCSsYfglPdASCDwd46pa',1,'asdfafwefawef');
 insert into users (first_name,last_name, email, passwordHash,activate,activation_code,pending_payment ) values ('Prueba3', 'pendientePago', 'prueba3@createit.com','$2a$10$uNY2e/48xjzjnZR9Vs5k6erkdOU9O9P0VrCSsYfglPdASCDwd46pa',1,'asdfafwefawef',1);
 
-insert into spaces (id_user,space_name, description, location,address,email,phone ) values (1, "Arcane Planet", 'Salas de Ensayo y estudio de grabación en el centro de salamanca, contamos con salas de ensayo para grupos e individuales y también con dos salas para audiovisuales','Salamanca','Calle Mallorca 16,37006,Salamanca','arcaneplanet@createit.com',666112233 );
-insert into spaces (id_user,space_name, description, location,address,email,phone ) values (1, "Arcane Cotton Club", 'Salas de Ensayo y estudio de grabación en el polígono del Montalvo (Salamanca), contamos con salas de ensayo para grupos e individuales y también con una sala para audiovisuales','Calle Wesley,9,37188,Carbajosa de la Sagrada,Salamanca','cottonclub@createit.com',666223344 );
-insert into spaces (id_user,space_name, description, location,address,email,phone ) values (1, "El Bunker", 'Alquiler de salas de esayo, estudio, y salas de audiovisuales en el pleno centro de León','Calle Maestro Nicolás 58,24005, León','elbunker@createit.com',666334455 );
+insert into spaces (id_user,space_name, description, location,address,email,phone ) values (1, "Arcane Planet", 'Salas de Ensayo y estudio de grabación en el centro de salamanca, contamos con salas de ensayo para grupos e individuales y también con dos salas para audiovisuales','Salamanca','Calle Mallorca, 16, 37006, Salamanca','arcaneplanet@createit.com',666112233 );
+insert into spaces (id_user,space_name, description, location,address,email,phone ) values (1, "Arcane Cotton Club", 'Salas de Ensayo y estudio de grabación en el polígono del Montalvo (Salamanca), contamos con salas de ensayo para grupos e individuales y también con una sala para audiovisuales','Salamanca','Calle Wesley, 9, 37188, Carbajosa de la Sagrada, Salamanca','cottonclub@createit.com',666223344 );
+insert into spaces (id_user,space_name, description, location,address,email,phone ) values (1, "El Bunker", 'Alquiler de salas de esayo, estudio, y salas de audiovisuales en el pleno centro de León','León','Calle Maestro Nicolás 58,24005, León','elbunker@createit.com',666334455 );
 
-insert into rooms (id_space,room_code,type,description,price,capacity) values (1, "ARCGRU01",1, 'Sala grupal 1',20,10 );
-insert into rooms (id_space,room_code,type,description,price,capacity) values (1, "ARCGRU02",1, 'Sala grupal 2',20,10 );
-insert into rooms (id_space,room_code,type,description,price,capacity) values (1, "ARCGRU03", 1,'Sala grupal 3',20,10 );
-insert into rooms (id_space,room_code,description,price,capacity) values (1, "ARCIND01", 'Sala individual 1',10,2 );
-insert into rooms (id_space,room_code,description,price,capacity) values (1, "ARCIND02", 'Sala individual 1',10,2 );
-insert into rooms (id_space,room_code,type,description,price,capacity) values (1, "ARCAUV01",2,'Sala de audiovisuales 1',20,10);
-insert into rooms (id_space,room_code,type,description,price,capacity) values (1, "ARCAUV02", 2,'Sala de audiovisuales 1',40,20);
-insert into rooms (id_space,room_code,type,description,price,capacity) values (1, "ARCSTU01",3, 'Estudio de grabación 1',200,20 );
-insert into rooms (id_space,room_code,type,description,price,capacity) values (2, "COTGRU01",1, 'Sala grupal 1',20,10  );
-insert into rooms (id_space,room_code,type,description,price,capacity) values (2, "COTGRU02", 1,'Sala grupal 2',40,15 );
-insert into rooms (id_space,room_code,type,description,price,capacity) values (2, "COTAUV01",2, 'Sala de audiovisuales',20,10  );
-insert into rooms (id_space,room_code,description,price,capacity) values (2, "COTIND01", 'Sala individual 1',10,2 );
-insert into rooms (id_space,room_code,description,price,capacity) values (2, "COTIND02", 'Sala individual 2',10,2 );
-insert into rooms (id_space,room_code,type,description,price,capacity) values (2, "COTLIV01",3, 'Sala de conciertos',200,300 );
-insert into rooms (id_space,room_code,type,description,price,capacity) values (3, "BUNGRU01",1, 'Sala grupal 1',20,10  );
-insert into rooms (id_space,room_code,type,description,price,capacity) values (3, "BUNGRU02",1, 'Sala grupal 2',20,10  );
-insert into rooms (id_space,room_code,type,description,price,capacity) values (3, "BUNGRU03", 1,'Sala grupal 3',20,10  );
-insert into rooms (id_space,room_code,description,price,capacity) values (3, "BUNIND01", 'Sala individual 1',10,2 );
-insert into rooms (id_space,room_code,description,price,capacity) values (3, "BUNIND02", 'Sala individual 2',10,2 );
-insert into rooms (id_space,room_code,type,description,price,capacity) values (3, "BUNAUV01", 2,'Sala de audiovisuales',20,10 );
-insert into rooms (id_space,room_code,type,description,price,capacity) values (3, "BUNLIV01", 3,'Sala de conciertos',200,300 );
+insert into rooms (id_space,room_code,type,description,price,capacity) values (1, "ARCGRU01",1, 'Sala grupal con backline completo ',20,10 );
+insert into rooms (id_space,room_code,type,description,price,capacity) values (1, "ARCGRU02",1, 'Sala grupal con backline completoi',20,10 );
+insert into rooms (id_space,room_code,type,description,price,capacity) values (1, "ARCGRU03", 1,'Sala grupal con backline completo',20,10 );
+insert into rooms (id_space,room_code,description,price,capacity) values (1, "ARCIND01", 'Sala individual con equipo de voces y/o amplificador',10,2 );
+insert into rooms (id_space,room_code,description,price,capacity) values (1, "ARCIND02", 'Sala individual con equipo de voces y/o amplificador',10,2 );
+insert into rooms (id_space,room_code,type,description,price,capacity) values (1, "ARCAUV01",2,'Sala de audiovisuales con pack de focos+Chroma',20,10);
+insert into rooms (id_space,room_code,type,description,price,capacity) values (1, "ARCAUV02", 2,'Sala de audiovisuales con pack de focos+Chroma',40,20);
+insert into rooms (id_space,room_code,type,description,price,capacity) values (1, "ARCSTU01",3, 'Estudio de grabación totalmente equipado',200,20 );
+insert into rooms (id_space,room_code,type,description,price,capacity) values (2, "COTGRU01",1, 'Sala grupal con backline completo ',20,10  );
+insert into rooms (id_space,room_code,type,description,price,capacity) values (2, "COTGRU02", 1,'Sala grupal con backline completo ',40,15 );
+insert into rooms (id_space,room_code,type,description,price,capacity) values (2, "COTAUV01",2, 'Sala de audiovisuales con pack de focos+Chroma',20,10  );
+insert into rooms (id_space,room_code,description,price,capacity) values (2, "COTIND01", 'Sala individual con equipo de voces y/o amplificador',10,2 );
+insert into rooms (id_space,room_code,description,price,capacity) values (2, "COTIND02", 'Sala individual con equipo de voces y/o amplificador',10,2 );
+insert into rooms (id_space,room_code,type,description,price,capacity) values (2, "COTLIV01",3, 'Sala de conciertos con capacidad para 300 personas',200,300 );
+insert into rooms (id_space,room_code,type,description,price,capacity) values (3, "BUNGRU01",1, 'Sala grupal con backline completo ',20,10  );
+insert into rooms (id_space,room_code,type,description,price,capacity) values (3, "BUNGRU02",1, 'Sala grupal con backline completo ',20,10  );
+insert into rooms (id_space,room_code,type,description,price,capacity) values (3, "BUNGRU03", 1,'Sala grupal con backline completo ',20,10  );
+insert into rooms (id_space,room_code,description,price,capacity) values (3, "BUNIND01", 'Sala individual con equipo de voces y/o amplificador',10,2 );
+insert into rooms (id_space,room_code,description,price,capacity) values (3, "BUNIND02", 'Sala individual con equipo de voces y/o amplificador',10,2 );
+insert into rooms (id_space,room_code,type,description,price,capacity) values (3, "BUNAUV01", 2,'Sala de audiovisuales con pack de focos+Chroma',20,10 );
+insert into rooms (id_space,room_code,type,description,price,capacity) values (3, "BUNLIV01", 3,'Sala de conciertos con capacidad para 300 personas',200,300 );
 
 
 
@@ -178,7 +178,7 @@ insert into bookings (id_user,id_space,id_room,start_date,price) values(2,1,1,'2
 insert into bookings (id_user,id_space,id_room,start_date,price) values(2,1,1,'2021-04-01',20);
 insert into bookings (id_user,id_space,id_room,start_date,price) values(2,1,2,'2021-06-27 23:30:45',20);
 
-select * from bookings where id_user=2;
+select * from users where id_user=2;
 
 select * from bookings ;
 
